@@ -1,1 +1,0 @@
-[{"title":"Lord of rings","price":10,"thumbnail":"www.url1.com","id":1},{"title":"Game of thrones","price":9,"thumbnail":"www.url2.com","id":2},{"title":"Avengers 3: Thanos return","price":11,"thumbnail":"www.url3.com","id":3}]
