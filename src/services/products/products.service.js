@@ -1,16 +1,40 @@
-fs = require("fs");
+//const fs = require('fs');
+
+const { options } = require('../db/mariaDB');
+const knex = require('knex')(options);
 
 class ProductService{
     constructor(){
-        this.ruta = __dirname + "/products.json";
+        //this.ruta = __dirname + "/products.json";
+        this.tableName = 'products';
+        // knex.schema.createTable(this.tableName, table =>{
+        //     table.increments('id')
+        //     table.string('name')
+        //     table.string('description')
+        //     table.integer('price')
+        //     table.string('code')
+        //     table.string('thumbnail')
+        //     table.string('uuid')
+        //     table.integer('stock')
+        //     table.integer('timestamp')
+        // })
+        // .then(()=> console.log("table created"))
+        // .catch((err)=>{
+        //     console.log(err);
+        //     throw err
+        // })
+        // .finally(()=>{
+        //     knex.destroy();
+        // })
     }
 
     async getAllProducts(){
         try{
-            const productsRaw = await fs.promises.readFile(this.ruta);
+            const data = await knex.from(this.tableName).select("*")
+            const object = Object.values(JSON.parse(JSON.stringify(data)))
             return ({
                 success: true,
-                data: JSON.parse(productsRaw)
+                data: object
             });
         } catch (err){
             console.error(err);
@@ -18,17 +42,18 @@ class ProductService{
                 success: false,
                 data: err.message
             });
+        } finally {
+            //knex.destroy();
         }
     }
 
     async getProduct(uuid){
         try{
-            const productsRaw = await fs.promises.readFile(this.ruta);
-            const productsObject = JSON.parse(productsRaw);
-            const product = productsObject.filter(it => it.uuid == uuid)
+            const data = await knex.from(this.tableName).select("*").where('uuid','=',uuid)
+            const object = Object.values(JSON.parse(JSON.stringify(data)))
             return ({
                 success: true,
-                data: product[0]
+                data: object
             });
         } catch (err){
             console.error(err);
@@ -36,19 +61,17 @@ class ProductService{
                 success: false,
                 data: err.message
             });
+        } finally {
+            //knex.destroy();
         }
     }
 
-    async createProduct(data){
+    async createProduct(dataToInsert){
         try{
-            console.log(data)
-            const productsRaw = await fs.promises.readFile(this.ruta);
-            const productsObject = JSON.parse(productsRaw);
-            productsObject.push(data);
-            await fs.promises.writeFile(this.ruta, JSON.stringify(productsObject));
+            const data = await knex.from(this.tableName).insert([dataToInsert])
             return ({
                 success: true,
-                data: `Product ${data.uuid} created successfully`
+                data: `Product ${dataToInsert.uuid} created successfully`
             });
         } catch (err){
             console.error(err);
@@ -56,15 +79,14 @@ class ProductService{
                 success: false,
                 data: err.message
             });
+        } finally {
+            //knex.destroy();
         }
     }
 
-    async updateProduct(uuid, data){
+    async updateProduct(uuid, dataToInsert){
         try{
-            const productsRaw = await fs.promises.readFile(this.ruta);
-            const productsObject = JSON.parse(productsRaw);
-            const productsNew = productsObject.map(it => (it.uuid == uuid) ? data : it)            
-            await fs.promises.writeFile(this.ruta, JSON.stringify(productsNew));
+            const data = await knex.from(this.tableName).where('uuid', '=', uuid).update([dataToInsert]);
             return ({
                 success: true,
                 data: `Product ${uuid} updated successfully`
@@ -75,15 +97,14 @@ class ProductService{
                 success: false,
                 data: err.message
             });
+        } finally {
+            //knex.destroy();
         }
     }
 
     async deleteProduct(uuid){
         try{
-            const productsRaw = await fs.promises.readFile(this.ruta);
-            const productsObject = JSON.parse(productsRaw);
-            const filteredProducts = productsObject.filter(it => it.uuid !== uuid)
-            await fs.promises.writeFile(this.ruta, JSON.stringify(filteredProducts));
+            const data = knex.from(this.tableName).where('uuid', '=', uuid).del();
             return ({
                 success: true,
                 data: `Product ${uuid} deleted successfully`
@@ -94,6 +115,8 @@ class ProductService{
                 success: false,
                 data: err.message
             });
+        } finally {
+            //knex.destroy();
         }
     }
 }
