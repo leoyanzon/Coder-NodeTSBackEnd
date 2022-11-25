@@ -1,5 +1,5 @@
 const authMiddleware = (_req, res, next) => {
-    let administrator = false;
+    let administrator = true;
     if (administrator == false) res.status(500).json({
         error: -1,
         descripcion: "No tiene privilegios de administrador"
