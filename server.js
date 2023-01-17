@@ -1,10 +1,7 @@
-//Express http from app
-const { http } = require("./app");
+const app = require('./app');
 
-//ENV
 const PORT = process.env.PORT || 8080;
 
-const server = http.listen(PORT, ()=>{
-    console.log(`Server up and running on port: ${server.address().port}`)
+app.listen(PORT, ()=>{
+    console.info(`Server up and running in port ${PORT}`)
 })
-

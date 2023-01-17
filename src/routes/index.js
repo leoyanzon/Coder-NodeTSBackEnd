@@ -1,20 +1,19 @@
-const express = require("express");
+const express = require('express');
+const router = express.Router();
 
-const { Router } = express;
-const router = Router();
+const cookiesRouter = require('./cookies/cookies.routes');
+const sessionRouter = require('./session/session.routes');
+const pagesRouter = require('./pages/pages.routes');
 
-const productsRouter = require("./products/products.router");
-const cartRouter = require("./cart/cart.router");
-
-router.get("/health", async (_req, res)=>{
+router.get("/health", async(_req, res)=>{
     res.status(200).json({
-        sucess: true,
-        health: "up",
-        environment: process.env.ENVIRONMENT || "not found"
+        success: true,
+        health:'up',
+        environment: process.env.environment || "not found"
     })
 })
-
-.use("/productos", productsRouter)
-.use("/carrito", cartRouter)
+router.use('/cookies', cookiesRouter);
+//router.use('/session', sessionRouter);
+router.use('/', pagesRouter);
 
 module.exports = router;
