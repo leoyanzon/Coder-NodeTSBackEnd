@@ -4,27 +4,31 @@ const authMiddleware = require('../../middlewares/auth.middleware');
 const statusCode = require('http-status');
 
 router.get('/signin', (req, res) => {
+    if(req.isAuthenticated()){
+        return res.redirect('/home')
+    }
     res.render('signin');
 });
 
 router.get('/signup', (req, res) => {
+    if(req.isAuthenticated()){
+        return res.redirect('/home')
+    }
     res.render('signup');
 });
 
-router.get('/error', (req, res) => {
+router.get('/error', (_req, res) => {
     res.render('error');
 })
 
-router.get('/home', authMiddleware, (req, res) => {
-    if(!req.session.contador){
-        req.session.contador = 0;
-    }
-    req.session.contador = req.session.contador+1;
-    const message = {
-        username: req.session.username,
-        contador: req.session.contador
-    }
-    res.render('home', {message});
+router.get('/home', authMiddleware, (_req, res) => {
+    res.render('home');
 })
+
+router.post('/signout', ( req, res) => {
+    req.logout(() => {
+        res.redirect('/signin');
+    })
+});
 
 module.exports = router

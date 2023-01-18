@@ -3,6 +3,8 @@ const basicDecode = require('basic-auth');
 const _ = require('lodash');
 
 const authMiddleware = require('../../middlewares/auth.middleware');
+const passport = require('passport');
+
 const UserService = require('../../services/user/user.service');
 const userService = new UserService();
 
@@ -15,16 +17,16 @@ const httpStatus = require('http-status');
 
 router.post('/signin', async( req, res) => {
     try{
-        const { name, pass } = basicDecode(req);
-        if (_.isNil(name) || _.isNil(pass)) {
+        const { username, password } = req.body;
+        if (_.isNil(username) || _.isNil(password)) {
             return res.status(400).json({
                 success: false,
                 message: `${httpStatus[400]}: Username or password missing`
             })
         }
         const userData = await userService.getUserByCondition({
-            username: name,
-            password: bcryptService.hashPassword(pass)
+            username: username,
+            password: password,//bcryptService.hashPassword(password)
         });
         if (!userData) {
             return res.status(403).json({
@@ -34,8 +36,6 @@ router.post('/signin', async( req, res) => {
         }
 
         const userDataFormatted = new UserDTO(userData).build();
-
-        //Aqui va el passport???
 
         return res.status(200).json({
             success: true,
@@ -69,7 +69,7 @@ router.post('/signup', async( req, res) => {
         }
         const newUser = await userService.createUser({
             username,
-            password: bcryptService.hashPassword(password),
+            password: password,//bcryptService.hashPassword(password),
             fullName,
         });
         if ( !newUser ){
@@ -80,8 +80,6 @@ router.post('/signup', async( req, res) => {
         }
 
         const userDataFormatted = new UserDTO(newUser).build();
-
-        //Aqui va el passport???
 
         res.status(200).json({
             success: true,

@@ -3,13 +3,16 @@ const app = express();
 const ejs = require('ejs');
 
 const logger = require('morgan');
+require('dotenv').config();
 
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const FileStore = require('session-file-store')(session)
-const MongoStore = require('connect-mongo');
 
-require('dotenv').config();
+const MongoStore = require('connect-mongo');
+const mongooseConnect = require('./src/services/mongo/connect');
+
+
+
 const indexRouter = require('./src/routes/index');
 
 
@@ -17,71 +20,31 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(logger('tiny'));
 
-const COOKIES_SECRET = process.env.COOKIES_SECRET || '';
+const COOKIES_SECRET = process.env.COOKIES_SECRET || 'default';
 app.use(cookieParser(COOKIES_SECRET));
+
+const { getStoreConfig } = require('./src/services/session/session.config');
+
+app.use(session({
+    store: MongoStore.create(getStoreConfig()),
+    secret: COOKIES_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: false,
+        secure: false
+    }
+}));
+
+mongooseConnect();
 
 app.set('view engine', 'ejs');
 app.set('views', './views');
 
-if(process.env.SESSION_STORAGE == "MONGO_ATLAS"){
-    console.info("MONGO ATLAS STORAGE");
-    const mongoConfig = {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    }
-    const storeConfig = {
-        mongoUrl: process.env.MONGO_ATLAS_URL,
-        mongoOptions: mongoConfig
-    }
-    app.use(session({
-        store: new MongoStore.create(storeConfig),
-        secret: process.env.COOKIES_SECRET,
-        resave: true,
-        saveUninitialized: true
-    }))
-}
+const passportService = require('./src/services/passport/passport.service');
 
-if(process.env.SESSION_STORAGE == "MONGO_DB"){
-    console.info("MONGO DB STORAGE");
-    const mongoConfig = {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    }
-    const storeConfig = {
-        mongoUrl: process.env.MONGO_LOCAL_URL,
-        mongoOptions: mongoConfig
-    }
-    app.use(session({
-        store: new MongoStore.create(storeConfig),
-        secret: process.env.COOKIES_SECRET,
-        resave: true,
-        saveUninitialized: true
-    }))
-}
-
-if(process.env.SESSION_STORAGE == "EXPRESS_SESSION"){
-    console.info("SESSION STORAGE")
-    app.use(session({
-        secret: process.env.COOKIES_SECRET,
-        resave: true,
-        saveUninitialized: true
-    }))
-}
-
-if(process.env.SESSION_STORAGE == "FILE_STORE"){
-    console.info("FILE-STORE STORAGE")
-    const fileStoreConfig = {
-        path: './session',
-        ttl: 300,
-        retries: 5
-    }
-    app.use(session({
-        store: new FileStore(fileStoreConfig),
-        secret: process.env.COOKIES_SECRET,
-        resave: true,
-        saveUninitialized: true
-    }))
-}
+app.use(passportService.initialize());
+app.use(passportService.session());
 
 app.use("/", indexRouter);
 

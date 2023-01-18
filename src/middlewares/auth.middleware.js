@@ -1,6 +1,5 @@
 const authMiddleware = (req, res, next) => {
-    console.info("auth", req.session.username);
-    if(!req.session.username || !req.session.password){
+    if(!req.isAuthenticated()){
         return res.render('signin')
     }
     next();

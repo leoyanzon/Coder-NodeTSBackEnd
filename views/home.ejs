@@ -8,10 +8,10 @@
     <title>Home</title>
 </head>
 <body class="d-flex flex-column justify-content-center align-items-center p-5">
-    <h1>Bienvenido <%= message.username %> </h1>
+    <h1>Bienvenido</h1>
     <p>
-        Usted ha ingresado <%=message.contador%> veces </p> 
-    <form action="/logout" method="POST" class="w-50">
+        Usted ha ingresado</p> 
+    <form action="/api/auth/signout" method="GET" class="w-50">
         <button type="submit" class="btn btn-primary">Logout</button>
       </form>
     

@@ -5,9 +5,8 @@ class BcryptService {
     constructor() {}
 
     async hashPassword(password){
-        return await bcrypt.hash(password, saltRounds, ( hash ) => {
-            return hash
-        })
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        return hashedPassword
     }
 
     async checkPassword(plainPassword, passwordHash){

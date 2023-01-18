@@ -4,7 +4,7 @@ class UserService {
     constructor() {}
 
     async getUserByCondition(condition){
-        return await UserModel.findeOne(condition);
+        return await UserModel.findOne(condition);
     }
 
     async createUser(userData){
