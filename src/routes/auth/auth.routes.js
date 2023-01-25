@@ -10,8 +10,8 @@ const userService = new UserService();
 
 const UserDTO = require('../../dto/user.dto');
 
-const BcryptService = require('../../services/bcrypt/bcrypt.service');
-const bcryptService = new BcryptService();
+const EncryptService = require('../../services/encrypt/encrypt.service');
+const encryptService = new EncryptService();
 
 const httpStatus = require('http-status');
 

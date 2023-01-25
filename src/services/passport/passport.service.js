@@ -3,33 +3,52 @@ const LocalStrategy = require('passport-local').Strategy;
 
 const UserModel = require('../mongo/models/user.model');
 
-const BcryptService = require('../bcrypt/bcrypt.service');
-const bcryptService = new BcryptService();
+const EncryptService = require('../encrypt/encrypt.service');
+const encryptService = new EncryptService();
 
 
 passport.use('signin', new LocalStrategy(async(username, password, done) => {
-    const userData = await UserModel.findOne({username});
-    const passwordChecked = await bcryptService.checkPassword(password, userData.password);
-    if(!userData || !passwordChecked){
+    try{
+        const userData = await UserModel.findOne({username});
+        console.info('trying to check data')
+        if(!userData){
+            return done(null, false);
+        }
+        const passwordChecked = await encryptService.checkPassword('argon2', password, userData.password);
+        if(!passwordChecked){
+            return done(null, false);
+        }
+        return done(null,userData);
+    } catch(err) {
+        console.info("error ocurrido")
         return done(null, false);
     }
-    return done(null,userData);
+    
 }));
 
 passport.use('signup', new LocalStrategy({
     passReqToCallback: true
 }, async (req, username, password, done) => {
-    const userData = await UserModel.findOne({ username });
-    if(userData){
-        return done(null, false);
+    try{
+        const userData = await UserModel.findOne({ username });
+        if(userData){
+            console.info('encontrado')
+            return done(null, false);
+        }
+        
+        const stageUser = new UserModel({
+            username,
+            password: await encryptService.hashPassword('argon2', password),
+            fullName: req.body.fullName
+        });
+        console.info('creacion nuevo usuario');
+        const newUser = await stageUser.save();
+
+        done(null, newUser);
+    } catch(err) {
+        done(null, false);
     }
-    const stageUser = new UserModel({
-        username,
-        password: await bcryptService.hashPassword(password),
-        fullName: req.body.fullName
-    });
-    const newUser = await stageUser.save();
-    done(null, newUser);
+    
 }))
 
 passport.serializeUser((user, done) => {
