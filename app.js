@@ -11,8 +11,6 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const mongooseConnect = require('./src/services/mongo/connect');
 
-
-
 const indexRouter = require('./src/routes/index');
 
 
