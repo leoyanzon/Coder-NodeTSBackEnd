@@ -5,7 +5,17 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "start:dev": "nodemon server.js"
+    "start:dev": "nodemon server.js",
+    "start:dev:FORK": "nodemon server.js -- --mode=FORK",
+    "start:dev:CLUSTER": "nodemon server.js -- --mode=CLUSTER",
+    "forever:start": "forever start server.js",
+    "forever:list": "forever list",
+    "forever:stopall": "forever stopall",
+    "pm2:start:fork": "pm2 start server.js --name='server' --watch",
+    "pm2:start:cluster": "pm2 start server.js --name='server' --watch -i max",
+    "pm2:list": "pm2 list",
+    "pm2:deleteall": "pm2 delete all"
+
   },
   "keywords": [],
   "author": "",

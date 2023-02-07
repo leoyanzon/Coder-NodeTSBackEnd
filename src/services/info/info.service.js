@@ -4,6 +4,8 @@ const yargs = Yargs();
 const { hideBin} = require('yargs/helpers');
 const argv = Yargs(hideBin(process.argv)).argv;
 
+const numCPUs = require('os').cpus().length;
+
 class InfoService{
     constructor(){}
 
@@ -15,7 +17,8 @@ class InfoService{
             version: process.version,
             memory: process.memoryUsage().rss,
             executionPath: process.execPath,
-            projectPath: process.cwd()
+            projectPath: process.cwd(),
+            numCPUs: numCPUs
         }
         return await data
     }
