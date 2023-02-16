@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const basicDecode = require('basic-auth');
 const _ = require('lodash');
+const { logger } = require('../../services/logger/index');
 
 const authMiddleware = require('../../middlewares/auth.middleware');
 const passport = require('passport');
@@ -43,7 +44,7 @@ router.post('/signin', async( req, res) => {
         });
 
     } catch(err) {
-        console.error(err);
+        logger.error(err);
         return res.status(500).json({
             success: false,
             message: `${httpStatus[500]}: Internal error`
@@ -88,7 +89,7 @@ router.post('/signup', async( req, res) => {
         })
 
     } catch(err) {
-        console.error(err);
+        logger.error(err);
         return res.status(500).json({
             success: false,
             message: `${httpStatus[500]}: Internal error`

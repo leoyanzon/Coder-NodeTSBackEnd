@@ -1,8 +1,10 @@
 const express = require('express');
 const app = express();
 const ejs = require('ejs');
+const compression = require('compression');
+const { logger, loggerHttp } = require('./src/services/logger/index');
 
-const logger = require('morgan');
+const endPointLogger = require('morgan');
 require('dotenv').config();
 
 const cookieParser = require('cookie-parser');
@@ -13,10 +15,11 @@ const mongooseConnect = require('./src/services/mongo/connect');
 
 const indexRouter = require('./src/routes/index');
 
-
+app.use(loggerHttp);
+app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
-app.use(logger('tiny'));
+app.use(endPointLogger('tiny'));
 
 const COOKIES_SECRET = process.env.COOKIES_SECRET || 'default';
 app.use(cookieParser(COOKIES_SECRET));

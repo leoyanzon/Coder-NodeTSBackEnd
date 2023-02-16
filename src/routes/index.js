@@ -7,7 +7,7 @@ const sessionRouter = require('./session/session.routes');
 const infoRouter = require('./info/info.routes');
 const childProcessRouter = require('./childProcess/childProcess.routes')
 
-router.get("/health", async(_req, res)=>{
+router.get("/health", async(req, res)=>{
     res.status(200).json({
         success: true,
         health:'up',

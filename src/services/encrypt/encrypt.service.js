@@ -3,6 +3,7 @@ const saltRounds = 10;
 
 const argon2 = require('argon2');
 
+const { logger } = require('../logger/index');
 
 class EncryptService {
     constructor() {}
@@ -13,7 +14,7 @@ class EncryptService {
                 const hashedPassword = await bcrypt.hash(password, saltRounds);
                 return hashedPassword
             }
-            console.info("argon encoded")
+            logger.info("argon encoded")
             const hashedPassword = await argon2.hash(password);
             return hashedPassword
         } catch(err) {
@@ -26,7 +27,7 @@ class EncryptService {
             if (method == 'bcrypt'){
                 return await bcrypt.compare(plainPassword, passwordHash)
             }
-            console.log("argon decoded")
+            logger.info("argon decoded")
             return await argon2.verify(passwordHash, plainPassword)
         } catch(err) {
             return undefined

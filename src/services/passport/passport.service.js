@@ -6,11 +6,12 @@ const UserModel = require('../mongo/models/user.model');
 const EncryptService = require('../encrypt/encrypt.service');
 const encryptService = new EncryptService();
 
+const { logger } = require('../logger/index');
 
 passport.use('signin', new LocalStrategy(async(username, password, done) => {
     try{
         const userData = await UserModel.findOne({username});
-        console.info('trying to check data')
+        logger.info('trying to check data')
         if(!userData){
             return done(null, false);
         }
@@ -20,7 +21,7 @@ passport.use('signin', new LocalStrategy(async(username, password, done) => {
         }
         return done(null,userData);
     } catch(err) {
-        console.info("error ocurrido")
+        logger.error("error ocurrido")
         return done(null, false);
     }
     
@@ -32,7 +33,7 @@ passport.use('signup', new LocalStrategy({
     try{
         const userData = await UserModel.findOne({ username });
         if(userData){
-            console.info('encontrado')
+            logger.info('encontrado')
             return done(null, false);
         }
         
@@ -41,7 +42,7 @@ passport.use('signup', new LocalStrategy({
             password: await encryptService.hashPassword('argon2', password),
             fullName: req.body.fullName
         });
-        console.info('creacion nuevo usuario');
+        logger.info('creacion nuevo usuario');
         const newUser = await stageUser.save();
 
         done(null, newUser);
