@@ -20,7 +20,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "pino-pretty": "^9.3.0"
   },
   "dependencies": {
     "argon2": "^0.30.3",
@@ -38,12 +39,14 @@
     "lodash": "^4.17.21",
     "mongoose": "^6.8.4",
     "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.9.1",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "pino": "^8.10.0",
     "pino-http": "^8.3.3",
-    "pino-pretty": "^9.2.0",
     "session-file-store": "^1.5.0",
+    "twilio": "^4.8.0",
     "yargs": "^17.6.2"
   }
 }

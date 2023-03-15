@@ -6,7 +6,23 @@ const UserModel = require('../mongo/models/user.model');
 const EncryptService = require('../encrypt/encrypt.service');
 const encryptService = new EncryptService();
 
+const sendEmail = require('../nodeMailer/nodeMailer.service');
+const sendWhatsapp = require('../twilio/whatsapp.services');
+
 const { logger } = require('../logger/index');
+
+passport.use('pass', new LocalStrategy(async(username, password, done) => {
+    try{
+        logger.info("ACAAAA");
+        return done(null, {
+            username: 'admin',
+            password: 'admin',
+            fullName: 'admin'
+        });
+    } catch(err){
+        return;
+    }}));
+
 
 passport.use('signin', new LocalStrategy(async(username, password, done) => {
     try{
@@ -36,14 +52,21 @@ passport.use('signup', new LocalStrategy({
             logger.info('encontrado')
             return done(null, false);
         }
-        
+        console.info(req)
         const stageUser = new UserModel({
-            username,
+            username: username,
             password: await encryptService.hashPassword('argon2', password),
-            fullName: req.body.fullName
+            fullName: req.body.fullName,
+            address: req.body.address,
+            age: req.body.age,
+            phone: req.body.phone,
+            avatar: undefined
         });
         logger.info('creacion nuevo usuario');
         const newUser = await stageUser.save();
+
+        sendWhatsapp(JSON.stringify(newUser));
+        sendEmail(JSON.stringify(newUser), 'leoyanzon@gmail.com')
 
         done(null, newUser);
     } catch(err) {

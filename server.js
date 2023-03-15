@@ -1,15 +1,6 @@
 const app = require('./app');
 
-const appLogger = require('pino')(
-    {
-        transport: {
-            target: 'pino-pretty',
-            options: {
-                colorize: true
-            }
-        },
-    }
-);
+const { logger } = require('./src/services/logger/index');
 
 const Yargs = require('yargs/yargs')
 const yargs = Yargs();
@@ -30,17 +21,17 @@ if (args.mode == 'CLUSTER'){
             cluster.fork();
         }
         cluster.on('exit', (worker, code, signal) =>{
-            appLogger.warn(`worker ${worker.process.pid} died. Code: ${code}`);
+            logger.warn(`worker ${worker.process.pid} died. Code: ${code}`);
         })
     
     } else {
         app.listen(SERVER_PORT, ()=>{
-            appLogger.info(`Server up and running in port ${SERVER_PORT} in mode: ${args.mode}`);
+            logger.info(`Server up and running in port ${SERVER_PORT} in mode: ${args.mode}`);
         });
     }
 } else {
     app.listen(SERVER_PORT, ()=>{
-        appLogger.info(`Server up and running in port ${SERVER_PORT} in mode: ${args.mode}`);
+        logger.info(`Server up and running in port ${SERVER_PORT} in mode: ${args.mode}`);
     });
     
 }

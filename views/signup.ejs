@@ -10,27 +10,48 @@
 <body class="d-flex flex-column justify-content-center align-items-center p-5">
     <h1>Register</h1>
     
-    <form action="/api/auth/signup" method="POST" class="w-50">
-        <div class="form-group">
-          <label for="fullName">Full Name</label>
-          <input type="text" class="form-control" id="fullName" name="fullName" aria-describedby="userHelp" placeholder="Enter username">
-          <small id="userHelp" class="form-text text-muted">We'll never share your data with anyone else.</small>
-        </div>
-        <div class="form-group">
-          <label for="username">Username</label>
-          <input type="text" class="form-control" id="username" name="username" aria-describedby="userHelp" placeholder="Enter username">
-          <small id="userHelp" class="form-text text-muted">We'll never share your data with anyone else.</small>
-        </div>
-        <div class="form-group">
-          <label for="exampleInputPassword1">Password</label>
-          <input type="password" class="form-control" name="password" id="password placeholder="Password">
-        </div>
+    <form method="POST" action="/api/auth/signup" class="w-50">
+      <div class="form-group">
+        <label for="fullName">Full Name</label>
+        <input type="text" class="form-control" id="fullName" name="fullName" aria-describedby="userHelp" placeholder="Enter username">
+        <small id="userHelp" class="form-text text-muted">We'll never share your data with anyone else.</small>
+      </div>
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" class="form-control" id="username" name="username" aria-describedby="userHelp" placeholder="Enter username">
+        <small id="userHelp" class="form-text text-muted">We'll never share your data with anyone else.</small>
+      </div>
+      <div class="form-group">
+        <label for="address">Address</label>
+        <input type="text" class="form-control" id="address" name="address" aria-describedby="userHelp" placeholder="Enter address">
+        <small id="userHelp" class="form-text text-muted">Not mandatory</small>
+      </div>
+      <div class="form-group">
+          <label for="age">Age</label>
+          <input type="text" class="form-control" id="age" name="age" aria-describedby="userHelp" placeholder="Enter age">
+          <small id="userHelp" class="form-text text-muted">Not mandatory</small>
+      </div>
+      <div class="form-group">
+          <label for="phone">Phone</label>
+          <input type="text" class="form-control" id="phone" name="phone" aria-describedby="userHelp" placeholder="Enter phone">
+          <small id="userHelp" class="form-text text-muted">Not mandatory</small>
+      <div>
+      <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+          <small id="userHelp" class="form-text text-muted"></small>
+      </div>
+
+        
         <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
-      <br>
-      <form action="/signin" class="w-50"> 
-        <button type="submit" class="btn btn-primary">Login</button>
-      </form>
+    </form>
+    <br>
+    <br>
+    <br>
+    <h4>If already registered:</h4>
+    <form action="/signin" class="w-50"> 
+      <button type="submit" class="btn btn-primary">Login</button>
+    </form>
     
     <script src="main.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
