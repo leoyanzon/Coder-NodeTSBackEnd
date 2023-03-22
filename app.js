@@ -41,8 +41,8 @@ mongooseConnect();
 
 app.set('view engine', 'ejs');
 app.set('views', './views');
-app.use(express.static(__dirname + '/public'));
-app.use('/uploads', express.static('uploads'));
+//app.use(express.static(__dirname + 'public'));
+app.use('/uploads', express.static('public/images'));
 
 const passportService = require('./src/services/passport/passport.service');
 

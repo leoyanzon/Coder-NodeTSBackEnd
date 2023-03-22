@@ -65,8 +65,8 @@ passport.use('signup', new LocalStrategy({
         logger.info('creacion nuevo usuario');
         const newUser = await stageUser.save();
 
-        sendWhatsapp(JSON.stringify(newUser));
-        sendEmail(JSON.stringify(newUser), 'leoyanzon@gmail.com')
+        //sendWhatsapp(JSON.stringify(newUser));
+        //sendEmail(JSON.stringify(newUser), 'leoyanzon@gmail.com')
 
         done(null, newUser);
     } catch(err) {

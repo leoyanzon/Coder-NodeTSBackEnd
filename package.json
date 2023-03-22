@@ -8,6 +8,7 @@
     "start:dev": "nodemon server.js",
     "start:dev:FORK": "nodemon server.js -- --mode=FORK",
     "start:dev:CLUSTER": "nodemon server.js -- --mode=CLUSTER",
+    "start:dev:CLUSTER:8082": "nodemon server.js --port=8082 --mode=CLUSTER",
     "forever:start": "forever start server.js",
     "forever:list": "forever list",
     "forever:stopall": "forever stopall",
