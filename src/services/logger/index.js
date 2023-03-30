@@ -2,6 +2,8 @@ const pino = require('pino');
 const pinoHttp = require('pino-http');
 const pretty = require('pino-pretty');
 
+const config = require('../../config/config');
+
 const levels = {
   emerg: 80,
   alert: 70,
@@ -20,7 +22,7 @@ const stream = pretty({
 })
 
 const logger = pino({
-    level: process.env.LOG_LEVEL || 'info',
+    level: config.PINO_LOG_LEVEL || 'info',
     transport: {
         target: 'pino-pretty',
         options: {
@@ -48,7 +50,7 @@ streams.push({
 
 
 const loggerToFile = pino({
-    level: process.env.PINO_LOG_LEVEL || 'info',
+    level: config.PINO_LOG_LEVEL || 'info',
     customLevels: levels,
     useOnlyCustomLevels: true,
     formatters: {

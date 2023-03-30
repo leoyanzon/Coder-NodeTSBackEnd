@@ -1,7 +1,7 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
-const UserModel = require('../mongo/models/user.model');
+const UserModel = require('../../models/user.model');
 
 const EncryptService = require('../encrypt/encrypt.service');
 const encryptService = new EncryptService();
@@ -65,8 +65,8 @@ passport.use('signup', new LocalStrategy({
         logger.info('creacion nuevo usuario');
         const newUser = await stageUser.save();
 
-        //sendWhatsapp(JSON.stringify(newUser));
-        //sendEmail(JSON.stringify(newUser), 'leoyanzon@gmail.com')
+        sendWhatsapp(JSON.stringify(newUser));
+        sendEmail(JSON.stringify(newUser), 'leoyanzon@gmail.com')
 
         done(null, newUser);
     } catch(err) {

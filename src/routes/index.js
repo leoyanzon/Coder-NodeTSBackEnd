@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+const config = require('../config/config');
+
 const pagesRouter = require('./pages/pages.routes');
 const authRouter = require('./auth/auth.routes');
 const sessionRouter = require('./session/session.routes');
@@ -9,10 +11,11 @@ const childProcessRouter = require('./childProcess/childProcess.routes')
 const multerRouter = require('./multer/multer.routes')
 
 router.get("/health", async(req, res)=>{
+
     res.status(200).json({
         success: true,
         health:'up',
-        environment: process.env.ENVIRONMENT || "not found"
+        environment: config.ENVIRONMENT || "not found"
     })
 })
 

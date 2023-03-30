@@ -15,13 +15,15 @@ const mongooseConnect = require('./src/services/mongo/connect');
 
 const indexRouter = require('./src/routes/index');
 
+const config = require('./src/config/config');
+
 app.use(loggerHttp);
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(endPointLogger('tiny'));
 
-const COOKIES_SECRET = process.env.COOKIES_SECRET || 'default';
+const COOKIES_SECRET = config.COOKIES_SECRET || 'default';
 app.use(cookieParser(COOKIES_SECRET));
 
 const { getStoreConfig } = require('./src/services/session/session.config');

@@ -1,22 +1,28 @@
 const auth = require('basic-auth');
 const twilio = require('twilio');
 
+const config = require('../../config/config');
+
 const { logger } = require('../logger/index');
 
-const accountSid = process.env.TWILIO_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
 
-const client = twilio(accountSid, authToken);
 
 const sendWhatsapp = ( msg = 'No message', to = 'whatsapp:+5493874137312', from = 'whatsapp:+14155238886' ) => {
-    client.messages
-    .create({
-        body: msg,
-        from,
-        to
-    })
-    .then(message => logger.info(message.sid))
-    .done();
+    try{
+        const accountSid = config.TWILIO_SID;
+        const authToken = config.TWILIO_AUTH_TOKEN;
+        const client = twilio(accountSid, authToken);
+
+        client.messages
+            .create({
+                from,
+                body: msg,
+                to,
+            })
+            .then(message => logger.info(message.sid));
+    } catch (err) {
+        logger.error(err);
+    }
 }
 
 module.exports = sendWhatsapp;

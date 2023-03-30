@@ -1,14 +1,18 @@
 const nodemailer = require('nodemailer');
 
+const { logger } = require('../logger/index');
+
+const config = require('../../config/config');
+
 const sendEmail = async (msg, destination) => {
 
-    const emailSender = process.env.EMAIL_USER + '@gmail.com'
+    const emailSender = config.EMAIL_USER + '@gmail.com'
     const transportOptions = {
         service: 'gmail',
         port: 587,
         auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
+            user: config.EMAIL_USER,
+            pass: config.EMAIL_PASS
         }
     };   
     const transporter = nodemailer.createTransport(transportOptions);
@@ -25,7 +29,9 @@ const sendEmail = async (msg, destination) => {
 
         const result = await transporter.sendMail(emailOptions);
     } catch (err) {
-        logger.err(err);
+        logger.info(config)
+        logger.error(err);
+
     }
 }
 

@@ -1,4 +1,4 @@
-const UserModel = require('../mongo/models/user.model');
+const UserModel = require('../../models/user.model');
 
 class UserService {
     constructor() {}

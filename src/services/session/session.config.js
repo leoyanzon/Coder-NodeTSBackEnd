@@ -1,3 +1,5 @@
+const config = require('../../config/config');
+
 const getMongoConfig = () => {
     return {
         useNewUrlParser: true,
@@ -6,7 +8,7 @@ const getMongoConfig = () => {
 }
 
 const getStoreConfig = () => {
-    const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/ecommerce';
+    const MONGO_URI = config.MONGO_URI || 'mongodb://localhost:27017/ecommerce';
     return {
         mongoUrl: MONGO_URI,
         ttl: 3600,

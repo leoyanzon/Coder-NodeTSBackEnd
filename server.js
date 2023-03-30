@@ -1,4 +1,5 @@
 const app = require('./app');
+const config = require('./src/config/config');
 
 const { logger } = require('./src/services/logger/index');
 
@@ -8,7 +9,7 @@ const yargs = Yargs();
 const { hideBin} = require('yargs/helpers');
 const argv = Yargs(hideBin(process.argv));
 
-const args = argv.default('port', 8080).argv;
+const args = argv.default('port', config.SERVER_PORT).argv;
 const SERVER_PORT = args.port;
 
 const cluster = require('cluster');
