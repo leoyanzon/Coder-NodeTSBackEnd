@@ -1,7 +1,8 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
-const UserModel = require('../../models/user.model');
+const UserModel = require('../../dao/models/user.model');
+const ProductModel = require('../../dao/models/products.model');
 
 const EncryptService = require('../encrypt/encrypt.service');
 const encryptService = new EncryptService();
@@ -10,19 +11,6 @@ const sendEmail = require('../nodeMailer/nodeMailer.service');
 const sendWhatsapp = require('../twilio/whatsapp.services');
 
 const { logger } = require('../logger/index');
-
-passport.use('pass', new LocalStrategy(async(username, password, done) => {
-    try{
-        logger.info("ACAAAA");
-        return done(null, {
-            username: 'admin',
-            password: 'admin',
-            fullName: 'admin'
-        });
-    } catch(err){
-        return;
-    }}));
-
 
 passport.use('signin', new LocalStrategy(async(username, password, done) => {
     try{
@@ -62,8 +50,16 @@ passport.use('signup', new LocalStrategy({
             phone: req.body.phone,
             avatar: undefined
         });
+        const stageProduct = new ProductModel({
+            name: "Nombre",
+            description: 'Descripcion',
+            price: 10,
+            image: 'url',
+            stock: 1,
+        });
         logger.info('creacion nuevo usuario');
         const newUser = await stageUser.save();
+        const newProduct = await stageProduct.save();
 
         sendWhatsapp(JSON.stringify(newUser));
         sendEmail(JSON.stringify(newUser), 'leoyanzon@gmail.com')

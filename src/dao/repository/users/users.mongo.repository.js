@@ -1,6 +1,5 @@
 const UserModel = require('../../models/user.model');
-
-class UserService {
+class UsersMongoRepository{
     constructor() {}
 
     async getUserByCondition(condition){
@@ -13,4 +12,4 @@ class UserService {
     }
 }
 
-module.exports = UserService;
+module.exports = UsersMongoRepository;

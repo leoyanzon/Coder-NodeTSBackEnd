@@ -22,7 +22,7 @@ const stream = pretty({
 })
 
 const logger = pino({
-    level: config.PINO_LOG_LEVEL || 'info',
+    level: config.logger.PINO_LOG_LEVEL || 'info',
     transport: {
         target: 'pino-pretty',
         options: {
@@ -50,7 +50,7 @@ streams.push({
 
 
 const loggerToFile = pino({
-    level: config.PINO_LOG_LEVEL || 'info',
+    level: config.logger.PINO_LOG_LEVEL || 'info',
     customLevels: levels,
     useOnlyCustomLevels: true,
     formatters: {

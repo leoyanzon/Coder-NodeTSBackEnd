@@ -6,10 +6,10 @@ const { logger } = require('../../services/logger/index');
 const authMiddleware = require('../../middlewares/auth.middleware');
 const passport = require('passport');
 
-const UserService = require('../../services/user/user.service');
-const userService = new UserService();
+const { UsersFactory } = require('../../dao/factory');
+const userFactory = new UsersFactory();
 
-const UserDTO = require('../../dto/user.dto');
+const UserDTO = require('../../dao/dto/user.dto');
 
 const EncryptService = require('../../services/encrypt/encrypt.service');
 const encryptService = new EncryptService();
@@ -25,7 +25,7 @@ router.post('/signin', async( req, res) => {
                 message: `${httpStatus[400]}: Username or password missing`
             })
         }
-        const userData = await userService.getUserByCondition({
+        const userData = await userFactory.getUserByCondition({
             username: username,
             password: password,//bcryptService.hashPassword(password)
         });
@@ -61,14 +61,14 @@ router.post('/signup', async( req, res) => {
                 message: `${httpStatus[400]}: Username, password or name missing}`
             });
         }
-        const checkUser = await userService.getUserByCondition({ username });
+        const checkUser = await userFactory.getUserByCondition({ username });
         if (checkUser){
             return res.status(409).json({
                 success: false,
                 message: `${httpStatus[409]}: User already exists`
             });
         }
-        const newUser = await userService.createUser({
+        const newUser = await userFactory.createUser({
             username,
             password: password,//bcryptService.hashPassword(password),
             fullName,

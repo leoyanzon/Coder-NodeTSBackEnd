@@ -3,17 +3,18 @@ const app = express();
 const ejs = require('ejs');
 const compression = require('compression');
 const { logger, loggerHttp } = require('./src/services/logger/index');
+const cors = require('cors');
 
 const endPointLogger = require('morgan');
-require('dotenv').config();
 
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
 const MongoStore = require('connect-mongo');
-const mongooseConnect = require('./src/services/mongo/connect');
+const MongooseConnect = require('./src/services/mongo/connect');
 
-const indexRouter = require('./src/routes/index');
+const Router = require('./src/routes/index');
+const router = new Router();
 
 const config = require('./src/config/config');
 
@@ -23,14 +24,15 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(endPointLogger('tiny'));
 
-const COOKIES_SECRET = config.COOKIES_SECRET || 'default';
-app.use(cookieParser(COOKIES_SECRET));
+app.use(cookieParser(config.cookies.COOKIES_SECRET));
 
-const { getStoreConfig } = require('./src/services/session/session.config');
+if (config.server.ENVIRONMENT == 'development') app.use(cors());
+
+const { getStoreConfig } = require('./src/services/mongo/mongo.config');
 
 app.use(session({
     store: MongoStore.create(getStoreConfig()),
-    secret: COOKIES_SECRET,
+    secret: config.cookies.COOKIES_SECRET,
     resave: true,
     saveUninitialized: true,
     cookie: {
@@ -39,11 +41,10 @@ app.use(session({
     }
 }));
 
-mongooseConnect();
+MongooseConnect.getInstance();
 
 app.set('view engine', 'ejs');
 app.set('views', './views');
-//app.use(express.static(__dirname + 'public'));
 app.use('/uploads', express.static('public/images'));
 
 const passportService = require('./src/services/passport/passport.service');
@@ -51,6 +52,6 @@ const passportService = require('./src/services/passport/passport.service');
 app.use(passportService.initialize());
 app.use(passportService.session());
 
-app.use("/", indexRouter);
+app.use("/", router);
 
 module.exports = app;

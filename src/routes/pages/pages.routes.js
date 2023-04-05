@@ -1,34 +1,23 @@
 const router = require('express').Router();
-const session = require('express-session');
 const authMiddleware = require('../../middlewares/auth.middleware');
 const statusCode = require('http-status');
 
-router.get('/signin', (req, res) => {
-    if(req.isAuthenticated()){
-        return res.redirect('/home')
+const PagesController = require('../../controllers/pages/pages.controller');
+class PagesRouter {
+    constructor(){
+        this.pagesController = new PagesController();
     }
-    res.render('signin');
-});
 
-router.get('/signup', (req, res) => {
-    if(req.isAuthenticated()){
-        return res.redirect('/home')
+    start() {
+        router.get('/home', authMiddleware, this.pagesController.home);
+
+        router.get('/signin', this.pagesController.signIn);
+        router.get('/signup', this.pagesController.signUp);
+        router.get('/signout', this.pagesController.signOut);
+        router.get('/error', this.pagesController.error);
+
+        return router
     }
-    res.render('signup');
-});
+}
 
-router.get('/error', (_req, res) => {
-    res.render('error');
-})
-
-router.get('/home', authMiddleware, (_req, res) => {
-    res.render('home');
-})
-
-router.post('/signout', ( req, res) => {
-    req.logout(() => {
-        res.redirect('/signin');
-    })
-});
-
-module.exports = router
+module.exports = PagesRouter;
