@@ -4,6 +4,9 @@ const LocalStrategy = require('passport-local').Strategy;
 const UserModel = require('../../dao/models/user.model');
 const ProductModel = require('../../dao/models/products.model');
 
+//tengo que remplazar Usermodel por UsersFactory
+const { UsersFactory } = require('../../dao/models/user.model');
+
 const EncryptService = require('../encrypt/encrypt.service');
 const encryptService = new EncryptService();
 

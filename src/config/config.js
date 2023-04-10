@@ -10,14 +10,15 @@ const config = {
         ENVIRONMENT: process.env.ENVIRONMENT || 'development',
         HOST: process.env.HOST || 'localhost',
         SERVER_PORT: process.env.SERVER_PORT || 8080,
+        SESSION_STORAGE: process.env.SESSION_STORAGE || "FILE"
     },
     cookies: {
         COOKIES_SECRET: process.env.COOKIES_SECRET || 'undefined',
     },
     db: {
         DB_NAME: process.env.DB_NAME || 'undefined',
-        SESSION_STORAGE: process.env.SESSION_STORAGE || 'mongoDb',
-        MONGO_URI: process.env.MONGO_URI + process.env.DB_NAME|| 'undefined',
+        DATA_STORAGE: process.env.DATA_STORAGE || 'MONGO_DB',
+        MONGO_URI: "mongodb+srv://admin:UsmlimEKRAbFXzYZ@coderh.ztk2j6n.mongodb.net/ecommerce",
         MONGO_ATLAS_URL: process.env.MONGO_ATLAS_URL + process.env.DB_NAME || 'undefined',
     },
     logger: {

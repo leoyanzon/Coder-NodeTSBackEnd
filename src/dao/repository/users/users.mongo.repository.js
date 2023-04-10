@@ -1,6 +1,10 @@
 const UserModel = require('../../models/user.model');
+const MongooseConnect = require('../../../services/mongo/connect')
+
 class UsersMongoRepository{
-    constructor() {}
+    constructor() {
+        MongooseConnect.getInstance();
+    }
 
     async getUserByCondition(condition){
         return await UserModel.findOne(condition);

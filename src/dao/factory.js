@@ -11,17 +11,17 @@ const UsersMongoRepository = require('./repository/users/users.mongo.repository'
 
 class UsersFactory{
     static get(type){
-        if(type == 'mem') return new UsersMemRepository();
-        if(type == 'mongoAltas') return new UsersMongoAtlasRepository();
+        if(type == 'MEM') return new UsersMemRepository();
+        if(type == 'MONGO_ATLAS') return new UsersMongoAtlasRepository();
         return new UsersMongoRepository();
     }
 }
 
 class ProductsFactory{
     static get(type){
-        if(type == 'file') return new ProductsFile('Products');
-        if(type == 'mem') return new ProductsMem();
-        if(type == 'mongoAltas') return new ProductsMongoAtlas();
+        if(type == 'FILE') return new ProductsFile('Products');
+        if(type == 'MEM') return new ProductsMem();
+        if(type == 'MONGO_ATLAS') return new ProductsMongoAtlas();
         return new ProductsMongo();
     }
 }

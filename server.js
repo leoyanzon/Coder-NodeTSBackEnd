@@ -26,14 +26,14 @@ if (args.mode == "CLUSTER") {
   } else {
     app.listen(SERVER_PORT, () => {
       logger.info(
-        `Server up and running in port ${SERVER_PORT} in mode: ${args.mode}`
+        `Server up and running in port ${SERVER_PORT} in mode: ${config.server.ENVIRONMENT}`
       );
     });
   }
 } else {
   app.listen(SERVER_PORT, () => {
     logger.info(
-      `Server up and running in port ${SERVER_PORT} in mode: ${args.mode}`
+      `Server up and running in port ${SERVER_PORT} in mode: ${config.server.ENVIRONMENT}`
     );
   });
 }

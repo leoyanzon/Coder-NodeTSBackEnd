@@ -4,20 +4,15 @@ const { logger } = require('../logger/index');
 
 const config = require('../../config/config');
 
-const MONGO_URI = config.db.MONGO_URI;
-
 class MongooseConnect {
     static #instance;
 
     constructor(){
-        try{
-            mongoose.set('strictQuery', false);
-            mongoose.connect(MONGO_URI, getMongoConfig()).then(() => {
-                logger.info('Mongoose connected');
-            })
-        } catch(err) {
-            logger.error(err);
-        }
+        console.info('Initiating connection to Mongo')
+        mongoose.set('strictQuery', false);
+        mongoose.connect(config.db.MONGO_URI, getMongoConfig()).then(() => {
+            logger.info('Mongoose connected');
+        })
     }
 
     static getInstance(){
