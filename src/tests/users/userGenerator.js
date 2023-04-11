@@ -5,7 +5,7 @@ const get = () => ({
     username: faker.internet.userName(),
     address: faker.address.direction(),
     age: faker.datatype.number({min: 17, max:100}),
-    phone: faker.phone.number(),
+    phone: faker.datatype.number({min: 17, max:100}),
     password: faker.internet.password(),
 })
 

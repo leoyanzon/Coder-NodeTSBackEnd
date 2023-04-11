@@ -7,8 +7,8 @@ const getMongoConfig = () => {
     }
 }
 
-const getStoreConfig = () => {
-    const MONGO_URI = config.db.MONGO_URI;
+const getStoreConfig = (dbURI) => {
+    const MONGO_URI = dbURI;
     return {
         mongoUrl: MONGO_URI,
         ttl: 3600,

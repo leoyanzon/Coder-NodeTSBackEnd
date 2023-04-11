@@ -7,20 +7,20 @@ const config = require('../../config/config');
 class MongooseConnect {
     static #instance;
 
-    constructor(){
-        console.info('Initiating connection to Mongo')
+    constructor(dbURI){
+        logger.info('Initiating Mongo Connection')
         mongoose.set('strictQuery', false);
-        mongoose.connect(config.db.MONGO_URI, getMongoConfig()).then(() => {
-            logger.info('Mongoose connected');
+        mongoose.connect(dbURI, getMongoConfig()).then(() => {
+            logger.info('Mongoose connected successfully');
         })
     }
 
-    static getInstance(){
+    static async getInstance(dbURI){
         if(this.#instance){
-            logger.warn("Connection exists already");
+            logger.warn("Mongoose connection failed: exists already");
             return this.#instance;
         }
-        this.#instance = new MongooseConnect();
+        this.#instance = await new MongooseConnect(dbURI);
         return this.#instance
     }
 }

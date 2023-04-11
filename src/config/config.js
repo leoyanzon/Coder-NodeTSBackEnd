@@ -18,8 +18,8 @@ const config = {
     db: {
         DB_NAME: process.env.DB_NAME || 'undefined',
         DATA_STORAGE: process.env.DATA_STORAGE || 'MONGO_DB',
-        MONGO_URI: "mongodb+srv://admin:UsmlimEKRAbFXzYZ@coderh.ztk2j6n.mongodb.net/ecommerce",
-        MONGO_ATLAS_URL: process.env.MONGO_ATLAS_URL + process.env.DB_NAME || 'undefined',
+        MONGO_URI: process.env.MONGO_URI,
+        MONGO_ATLAS_URL: process.env.MONGO_ATLAS_URL || 'undefined',
     },
     logger: {
         PINO_LOG_LEVEL: process.env.PINO_LOG_LEVEL || 'info'

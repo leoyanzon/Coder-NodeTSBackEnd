@@ -1,4 +1,4 @@
-const request = require('supertest')('http://localhost:8080');
+const request = require('supertest')('http://localhost:8081');
 const expect = require('chai').expect;
 const generator = require('./userGenerator');
 
@@ -14,24 +14,18 @@ describe('test de creacion de usuario', function(){
         console.info('\n ***** Final total del test *****');
     });
 
-    beforeEach(function(){
-        console.info('\n ***** Comienzo test individual *****');
+    it('Debería devolver el health con async await', async() => {
+        const test = await request.get('/health').set('Accept', 'application/json');
+        expect(test.status).to.equal(200)
+        expect(test.body.success).to.equal(true)
     });
 
-    afterEach(function(){
-        console.info('\n ***** Final test individual *****');
-    });
-
-    it('Creacion de usuario - POST', async () => {
+    it('Deberia ingresar un usuario nuevo', async() => {
         let randomUser = generator.get();
-        console.info(randomUser);
-
-        let response = await request.post('/signup').send(randomUser);
-        expect(response.status).to.eql(200);
-
-        const user = response.body;
-        expect(user).to.include.keys('username', 'password');
-        expect(user.username).to.eql(randomUser.username);
-        expect(user.password).to.eql(randomUser.password);
-    })
+        const test = await request.post('/api/auth/signup').set('Accept', 'application/x-www-form-urlencoded')
+        .send(randomUser);
+        expect(test.error).to.equal(false);
+        expect(test.status).to.equal(302);
+        expect(test.req.res.statusMessage).to.equal('Found');
+    });
 })

@@ -2,19 +2,22 @@ const expressLoader = require('./express.loader');
 const sessionLoader = require('./session.loader');
 const loggerLoader = require('./logger.loader');
 const routerLoader = require('./router.loader');
+const mongooseLoader = require('./mongoose.loader');
 
 const { logger } = require('../services/logger/index');
-//const mongooseLoader = require('./mongoose.loader');
+
 
 const indexLoader = async (app) => {
     await expressLoader( app );
-    logger.info('Express Initialized');
+    logger.info('Loaders: Express Initialized');
     await sessionLoader( app );
-    logger.info('Session Initialized');
+    logger.info('Loaders: Session Initialized');
     await loggerLoader( app );
-    logger.info('Loggers Initialized');
-    await routerLoader( app );
-    logger.info('Router Initialized');
+    logger.info('Loaders: Loggers Initialized');
+    await routerLoader( app ); 
+    logger.info('Loaders: Router Initialized');
+    await mongooseLoader( app );
+    logger.info('Loaders: Mongoose Connections Initialized');
 }
 
 module.exports = indexLoader;
