@@ -1,15 +1,16 @@
-const { GraphQLSchema, GraphQLObjectType, GraphQLString } = require('graphql');
+const { createSchema } = require('graphql-yoga');
 
-const schema = new GraphQLSchema({
-    query: new GraphQLObjectType({
-      name: 'Query',
-      fields: {
-        hello: {
-          type: GraphQLString,
-          resolve: () => 'world',
-        },
-      },
-    }),
-  });
+const schema = createSchema({
+  typeDefs: /* GraphQL */ `
+    type Query {
+      productos: String
+    }
+  `,
+  resolvers: {
+    Query: {
+      hello: () => 'world'
+    }
+  }
+})
 
-module.exports = schema;
+module.exports = schema

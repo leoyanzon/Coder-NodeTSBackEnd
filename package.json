@@ -29,6 +29,7 @@
     "pino-pretty": "^9.3.0"
   },
   "dependencies": {
+    "@graphql-yoga/plugin-sofa": "^1.8.0",
     "argon2": "^0.30.3",
     "axios": "^1.3.5",
     "basic-auth": "^2.0.1",
@@ -42,7 +43,7 @@
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "graphql": "^16.6.0",
-    "graphql-http": "^1.17.1",
+    "graphql-yoga": "^3.8.0",
     "http-status": "^1.6.2",
     "http-status-codes": "^2.2.0",
     "lodash": "^4.17.21",

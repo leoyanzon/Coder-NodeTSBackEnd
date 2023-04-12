@@ -8,11 +8,18 @@ class MongooseConnect {
     static #instance;
 
     constructor(dbURI){
-        logger.info('Initiating Mongo Connection')
-        mongoose.set('strictQuery', false);
-        mongoose.connect(dbURI, getMongoConfig()).then(() => {
-            logger.info('Mongoose connected successfully');
-        })
+        this.init(dbURI); 
+    } 
+
+    async init(dbUri){
+        logger.info('Initiating Mongo Connection');
+        try{
+            mongoose.set('strictQuery', false);
+            const response = await mongoose.connect(db[URIError, getMongoConfig()]);
+            if (response) logger.info('Mongoose connected successfully');
+        } catch(err) {
+            logger.error(err)
+        }
     }
 
     static async getInstance(dbURI){
