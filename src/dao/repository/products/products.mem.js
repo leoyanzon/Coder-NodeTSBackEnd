@@ -37,6 +37,7 @@ class ProductsMem{
     async deleteAll(){
         try{
             this.products = [];
+            return true
         } catch(err) {
             console.log("Error en la eliminacion", err.message);
         }

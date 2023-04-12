@@ -1,10 +1,10 @@
 const { loggerHttp } = require('../services/logger/index');
-const endPointLogger = require('morgan');
+const morgan = require('morgan');
 
 const loggerLoader = async( app ) => {
 
     app.use(loggerHttp);
-    app.use(endPointLogger('tiny'));
+    app.use(morgan('dev'));
 
     return app;
 }

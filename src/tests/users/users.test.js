@@ -1,4 +1,4 @@
-const request = require('supertest')('http://localhost:8081');
+const request = require('supertest')('http://localhost:3005');
 const expect = require('chai').expect;
 const generator = require('./userGenerator');
 

@@ -4,7 +4,7 @@ const router = express.Router();
 const config = require('../config/config');
 
 const PagesRouter = require('./pages/pages.routes');
-const authRouter = require('./auth/auth.routes');
+const ProductsRouter = require('./products/products.routes');
 const sessionRouter = require('./session/session.routes');
 const infoRouter = require('./info/info.routes');
 const childProcessRouter = require('./childProcess/childProcess.routes')
@@ -24,6 +24,8 @@ router.use('/api/randoms', childProcessRouter);
 router.use('/', (new PagesRouter).start() );
 router.use('/info', infoRouter);
 router.use('/uploads', multerRouter);
+router.use('/products', (new ProductsRouter).start());
+
 
 class Router{
     constructor(){
