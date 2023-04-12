@@ -1,7 +1,9 @@
-const request = require('supertest')('http://localhost:3005');
+const config = require('../../config/config');
 const expect = require('chai').expect;
 const generator = require('./productGenerator');
 
+const supertest = require('supertest');
+const request = supertest(`http://localhost:${config.server.SERVER_PORT}`);
 const assert = require('assert').strict;
 
 describe('test de creacion de products', function(){

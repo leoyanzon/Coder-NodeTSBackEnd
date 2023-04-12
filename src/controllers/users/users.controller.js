@@ -1,16 +1,16 @@
-const { ProductsFactory } = require('../../dao/factory');
+const { UsersFactory } = require('../../dao/factory');
 const { logger } = require('../../services/logger/index'); 
 
 const httpStatus = require('http-status');
 
-class ProductController{
+class UserController{
     constructor(){
-        this.productFactory = ProductsFactory.get("MEM");
+        this.userFactory = UsersFactory.get("MEM");
     }
 
     getAll = async(_req, res) =>{
         try {
-            const data = await this.productFactory.getAll();
+            const data = await this.userFactory.getAll();
             
             if (!data) {
                 return res.status(500).json({
@@ -33,32 +33,10 @@ class ProductController{
         }
     }
 
-    getGraphQLAll = async(_req, res) =>{
-        try {
-            const data = await this.productFactory.getAll();
-            
-            if (!data) {
-                return res.status(500).json({
-                    success: false,
-                    message: `${httpStatus[500]}`
-                })
-            }
-            
-            return data
-
-        } catch(err){
-            logger.error(err);
-            res.send({
-                success: false,
-                message: err
-            });
-        }
-    }
-
     getById = async(req, res) =>{
         try {
             const id = parseInt(req.params.id);
-            const data = await this.productFactory.getById(id);
+            const data = await this.userFactory.getById(id);
             
             if (!data) {
                 return res.status(500).json({
@@ -83,7 +61,7 @@ class ProductController{
 
     save = async(req, res) =>{
         try {
-            const data = await this.productFactory.save(req.body);
+            const data = await this.userFactory.save(req.body);
             if (!data) {
                 return res.status(500).json({
                     success: false,
@@ -106,7 +84,7 @@ class ProductController{
     deleteById = async(req, res) =>{
         try {
             const id = parseInt(req.params.id);
-            const data = await this.productFactory.deleteById(id);
+            const data = await this.userFactory.deleteById(id);
             if (!data) {
                 return res.status(500).json({
                     success: false,
@@ -128,7 +106,7 @@ class ProductController{
 
     deleteAll = async(_req, res) =>{
         try {
-            const data = await this.productFactory.deleteAll();
+            const data = await this.userFactory.deleteAll();
             if (!data) {
                 return res.status(500).json({
                     success: false,
@@ -149,4 +127,4 @@ class ProductController{
     }
 }
 
-module.exports = ProductController;
+module.exports = UserController;

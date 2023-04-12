@@ -10,14 +10,14 @@ const config = {
         ENVIRONMENT: process.env.ENVIRONMENT || 'development',
         HOST: process.env.HOST || 'localhost',
         SERVER_PORT: process.env.SERVER_PORT || 8080,
-        SESSION_STORAGE: process.env.SESSION_STORAGE || "FILE"
+        SESSION_STORAGE: process.env.SESSION_STORAGE || "MEM"
     },
     cookies: {
         COOKIES_SECRET: process.env.COOKIES_SECRET || 'undefined',
     },
     db: {
         DB_NAME: process.env.DB_NAME || 'undefined',
-        DATA_STORAGE: process.env.DATA_STORAGE || 'MONGO_DB',
+        DATA_STORAGE: process.env.DATA_STORAGE || 'MEM',
         MONGO_URI: process.env.MONGO_URI,
         MONGO_ATLAS_URL: process.env.MONGO_ATLAS_URL || 'undefined',
     },

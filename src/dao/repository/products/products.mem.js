@@ -15,6 +15,7 @@ class ProductsMem{
     }
     async getAll(){
         try{
+            console.info("GETTING PRODUCTS")
             return this.products;
         } catch (err){
             console.error("no existe el archivo:", err.message)
