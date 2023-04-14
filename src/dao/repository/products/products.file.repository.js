@@ -1,10 +1,21 @@
 const fs = require('fs');
+const { logger } = require('../../../services/logger')
 
-class ProductsFile {
+class ProductsFileRepository {
     constructor(_nombreArchivo){
         this.ruta = `./${_nombreArchivo}.txt`
         this.createFile();
     }
+
+    static getInstance(){
+        if (!this.instance){
+            this.instance = new ProductsFileRepository();
+            logger.info('File Repository for products Created');
+        }
+        
+        return this.instance
+    }
+
     async createFile(){
         try{
             await fs.promises.writeFile(this.ruta, "");
@@ -64,4 +75,4 @@ class ProductsFile {
     }
 }
 
-module.exports = ProductsFile;
+module.exports = ProductsFileRepository;

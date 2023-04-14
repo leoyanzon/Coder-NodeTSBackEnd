@@ -6,6 +6,13 @@ class UsersMongoRepository{
         MongooseConnect.getInstance();
     }
 
+    static getInstance(){
+        if (!this.instance){
+            this.instance = new UsersMongoRepository()
+        }
+        return this.instance
+    }
+
     async getUserByCondition(condition){
         return await UserModel.findOne(condition);
     }

@@ -1,7 +1,7 @@
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
 const MongoStore = require('connect-mongo');
-const { getStoreConfig } = require('../services/mongo/mongo.config'); 
+const { getStoreConfig } = require('../config/mongo.config'); 
 
 const cookieParser = require('cookie-parser');
 

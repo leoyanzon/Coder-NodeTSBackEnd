@@ -2,10 +2,18 @@ const { UsersFactory } = require('../../dao/factory');
 const { logger } = require('../../services/logger/index'); 
 
 const httpStatus = require('http-status');
+const config = require('../../config/config');
 
-class UserController{
+class UsersController{
     constructor(){
-        this.userFactory = UsersFactory.get("MEM");
+        this.userFactory = UsersFactory.get(config.db.DATA_STORAGE);
+    }
+
+    static getInstance(){
+        if (!this.instance){
+            this.instance = new UserController()
+        }
+        return this.instance
     }
 
     getAll = async(_req, res) =>{
@@ -70,7 +78,7 @@ class UserController{
             }
             res.status(200).json({
                 success: true,
-                message: `Product ${data} created`
+                message: `User ${data} created`
             });
         } catch(err){
             logger.error(err);
@@ -127,4 +135,4 @@ class UserController{
     }
 }
 
-module.exports = UserController;
+module.exports = UsersController;

@@ -1,34 +1,39 @@
 const mongoose = require('mongoose');
-const { getMongoConfig } = require('./mongo.config');
-const { logger } = require('../logger/index');
-
 const config = require('../../config/config');
+const { getMongoConfig } = require('../../config/mongo.config');
 
-class MongooseConnect {
-    static #instance;
+const { logger } = require('../logger/index');
+class MongooseConnect{
 
-    constructor(dbURI){
-        this.init(dbURI); 
+    constructor(){
+        this.initConnection()
     } 
 
-    async init(dbUri){
+    static getInstance(){
+        if (!this.instance){
+            this.instance = new MongooseConnect()
+        }
+        return this.instance
+    }
+
+    getDataStorageURI = () => {
+        if (config.db.DATA_STORAGE == 'MONGO_DB') {
+            return `${config.db.MONGO_URI}/${config.db.DB_NAME}`
+        }
+        if (config.db.DATA_STORAGE == 'MONGO_ATLAS') {
+            return `${config.db.MONGO_ATLAS_URL}/${config.db.DB_NAME}`
+        }
+    }
+
+    async initConnection(){
         logger.info('Initiating Mongo Connection');
         try{
             mongoose.set('strictQuery', false);
-            const response = await mongoose.connect(db[URIError, getMongoConfig()]);
+            const response = await mongoose.connect(this.getDataStorageURI(), getMongoConfig());
             if (response) logger.info('Mongoose connected successfully');
         } catch(err) {
             logger.error(err)
         }
-    }
-
-    static async getInstance(dbURI){
-        if(this.#instance){
-            logger.warn("Mongoose connection failed: exists already");
-            return this.#instance;
-        }
-        this.#instance = await new MongooseConnect(dbURI);
-        return this.#instance
     }
 }
 

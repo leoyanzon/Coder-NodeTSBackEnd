@@ -1,10 +1,9 @@
 const config = require('../../config/config');
 const expect = require('chai').expect;
-const generator = require('./productGenerator');
+const generator = require('./userGenerator');
 
 const supertest = require('supertest');
 const request = supertest(`http://localhost:${config.server.SERVER_PORT}`);
-
 const assert = require('assert').strict;
 
 describe('test de creacion de usuario', function(){

@@ -1,11 +1,18 @@
 const { ProductsFactory } = require('../../dao/factory');
-const { logger } = require('../../services/logger/index'); 
+const { logger } = require('../../services/logger/index');
 
 const httpStatus = require('http-status');
 
-class ProductController{
+class ProductsRestController{
     constructor(){
-        this.productFactory = ProductsFactory.get("MEM");
+        this.productFactory = ProductsFactory.getInstance();
+    }
+
+    static getInstance(){
+        if (!this.instance){
+            this.instance = new ProductsRestController()
+        }
+        return this.instance
     }
 
     getAll = async(_req, res) =>{
@@ -21,30 +28,8 @@ class ProductController{
             
             return res.status(200).json({
                 success: true,
-                message: data
+                message:data
             });
-
-        } catch(err){
-            logger.error(err);
-            res.send({
-                success: false,
-                message: err
-            });
-        }
-    }
-
-    getGraphQLAll = async(_req, res) =>{
-        try {
-            const data = await this.productFactory.getAll();
-            
-            if (!data) {
-                return res.status(500).json({
-                    success: false,
-                    message: `${httpStatus[500]}`
-                })
-            }
-            
-            return data
 
         } catch(err){
             logger.error(err);
@@ -57,7 +42,7 @@ class ProductController{
 
     getById = async(req, res) =>{
         try {
-            const id = parseInt(req.params.id);
+            const id = req.params.id;
             const data = await this.productFactory.getById(id);
             
             if (!data) {
@@ -149,4 +134,4 @@ class ProductController{
     }
 }
 
-module.exports = ProductController;
+module.exports = ProductsRestController;

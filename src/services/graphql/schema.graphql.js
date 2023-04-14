@@ -1,14 +1,14 @@
 const { createSchema } = require('graphql-yoga');
-const { ProductsFactory } = require('../../dao/factory');
+const ProductsGraphQlController = require('../../controllers/products/products.graphql.controller')
 const { UsersFactory } = require('../../dao/factory');
 
-const productFactory = ProductsFactory.get("MEM");
-const userFactory = UsersFactory.get("MEM");
+const productGraphQlController = ProductsGraphQlController.getInstance();
+const userFactory = UsersFactory.getInstance();
 
 const schema = createSchema({
   typeDefs: /* GraphQL */ `
     type Product {
-      id: ID!
+      _id: String!
       name: String!
       description: String
       price: Float!
@@ -16,7 +16,7 @@ const schema = createSchema({
     }
  
     type User {
-      id: ID!
+      _id: String!
       fullName: String!
       username: String!
       address: String!
@@ -32,11 +32,11 @@ const schema = createSchema({
       ADMIN
       NORMAL
     }
- 
+
     type Query {
-      user(id: ID!): User
+      user(_id: String!): User
       users: [User!]
-      product(id: ID!): Product
+      product(_id: String!): Product
       products: [Product!]
     }
  
@@ -51,22 +51,22 @@ const schema = createSchema({
   `,
   resolvers: {
     Query: {
-      user(id) {
-        return userFactory.getById(id)
+      user(parent,args,ctx,info) {
+        return userFactory.getById(args._id)
       },
       users() {
         return userFactory.getAll()
       },
-      product(id) {
-        return productFactory.getById(id)
+      product(parent,args,ctx,info) {
+        return productGraphQlController.getById(args._id)
       },
       products() {
-        return productFactory.getAll()
+        return productGraphQlController.getAll()
       }
     },
     Mutation: {
       addProduct(title) {
-        const product = productFactory.save(title)
+        const product = productGraphQlController.save(title)
         return product
       }
     }
