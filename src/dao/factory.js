@@ -22,7 +22,7 @@ class ProductsFactory{
         if(config.db.DATA_STORAGE == 'FILE') return ProductsFileRepository.getInstance('Products');
         if(config.db.DATA_STORAGE == 'MEM') return ProductsMemRepository.getInstance();
         if(config.db.DATA_STORAGE == 'MONGO_ATLAS') return ProductsMongoAtlasRepository.getInstance();
-        return ProductsMongoRepository().getInstance();
+        return ProductsMongoRepository.getInstance();
     }
 }
 

@@ -18,7 +18,7 @@ const config = {
     db: {
         DB_NAME: process.env.DB_NAME || 'undefined',
         DATA_STORAGE: process.env.DATA_STORAGE || 'MEM',
-        MONGO_URI: process.env.MONGO_URI,
+        MONGO_URI: process.env.MONGO_URI || 'undefined',
         MONGO_ATLAS_URL: process.env.MONGO_ATLAS_URL || 'undefined',
     },
     logger: {
