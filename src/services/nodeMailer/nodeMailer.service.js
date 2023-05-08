@@ -28,11 +28,16 @@ const sendEmail = async (msg, destination) => {
         }
 
         const result = await transporter.sendMail(emailOptions);
-        return result;
+        return {
+            success: true,
+            message: result
+        };
     } catch (err) {
-        logger.info(config)
-        logger.error(err);
-
+        logger.error(err.message);
+        return{
+            success: false,
+            message: err.message
+        }
     }
 }
 

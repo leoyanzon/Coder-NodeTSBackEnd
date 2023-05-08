@@ -7,14 +7,14 @@ class PagesController {
 
     signIn = async(req, res) => {
         if (req.isAuthenticated()){
-            return res.redirect('/home')
+            return res.redirect('/')
         }
         res.render('signin');
     }
 
     signUp = async(req, res) => {
         if (req.isAuthenticated()){
-            return res.redirect('/home')
+            return res.redirect('/')
         }
         res.render('signup');
     }

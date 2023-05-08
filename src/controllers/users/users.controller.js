@@ -2,16 +2,20 @@ const { UsersFactory } = require('../../dao/factory');
 const { logger } = require('../../services/logger/index'); 
 
 const httpStatus = require('http-status');
-const config = require('../../config/config');
+
+const EncryptService = require('../../services/encrypt/encrypt.service');
+const encryptService = new EncryptService();
+
+const UserDTO = require('../../dao/dto/user.dto');
 
 class UsersController{
     constructor(){
-        this.userFactory = UsersFactory.get(config.db.DATA_STORAGE);
+        this.userFactory = UsersFactory.getInstance();
     }
 
     static getInstance(){
         if (!this.instance){
-            this.instance = new UserController()
+            this.instance = new UsersController()
         }
         return this.instance
     }
@@ -40,49 +44,98 @@ class UsersController{
             });
         }
     }
-
-    getById = async(req, res) =>{
-        try {
-            const id = parseInt(req.params.id);
-            const data = await this.userFactory.getById(id);
-            
-            if (!data) {
-                return res.status(500).json({
+    userExists = async( username ) => {
+        try{
+            const data = await this.userFactory.getUserByUserName(username);
+            if (!data){
+                return {
                     success: false,
-                    message: `${httpStatus[500]}`
-                })
-            }
-
-            return res.status(200).json({
+                    message: `User ${username} not found`
+                }
+            }     
+            return {
                 success: true,
-                message: data
-            });
-
+                message: `User ${username} found`,
+            }
         } catch(err){
             logger.error(err);
-            res.send({
+            return({
                 success: false,
                 message: err
             });
         }
     }
 
-    save = async(req, res) =>{
-        try {
-            const data = await this.userFactory.save(req.body);
-            if (!data) {
-                return res.status(500).json({
+    userCheck = async( username, password ) => {
+        try{
+            const data = await this.userFactory.getUserByUserName(username);
+            if (!data){
+                return {
                     success: false,
-                    message: `${httpStatus[500]}`
-                })
+                    message: `User not found`
+                }
             }
-            res.status(200).json({
+            const passwordChecked = await encryptService.checkPassword('argon2', password, data.password);
+            if (!passwordChecked) return {
+                success: false,
+                message: 'Wrong password'
+            }
+            return {
                 success: true,
-                message: `User ${data} created`
-            });
+                message: data,
+            }
         } catch(err){
             logger.error(err);
-            res.send({
+            return({
+                success: false,
+                message: err
+            });
+        }
+    }
+
+    save = async(userData) =>{
+        try {
+            const userDTO = await UserDTO.build(userData);
+            const newUser = {...userDTO};
+
+            const data = await this.userFactory.save(newUser);
+            if (!data) {
+                return {
+                    success: false,
+                    message: `${httpStatus[500]}`
+                }
+            }
+            return {
+                success: true,
+                message: data
+            };
+        } catch(err){
+            logger.error(err);
+            return ({
+                success: false,
+                message: err
+            });
+        }
+        //logger.info("req",req);
+        
+    }
+
+    getUserById = async( _id ) => {
+        try{
+            const data = await this.userFactory.getUserById(_id);
+            if (!data){
+                return {
+                    success: false,
+                    message: `User id ${_id} not found`
+                }
+            }     
+            return {
+                success: true,
+                message: data,
+            }
+        } catch(err){
+            logger.error(err);
+            return({
                 success: false,
                 message: err
             });

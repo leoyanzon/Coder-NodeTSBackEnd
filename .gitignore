@@ -5,3 +5,4 @@ development.env
 production.env
 **.env
 /.vscode
+/temp

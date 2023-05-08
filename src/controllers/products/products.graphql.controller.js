@@ -25,9 +25,7 @@ class ProductsGraphQlController{
     getById = async(id) =>{
         try {
             const query = await this.productFactory.getById(id);
-
             return query
-
         } catch(err){
             return err
         }

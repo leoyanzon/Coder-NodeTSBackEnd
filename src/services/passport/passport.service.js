@@ -1,32 +1,24 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
-const UserModel = require('../../dao/models/user.model');
-const ProductModel = require('../../dao/models/products.model');
-
 //tengo que remplazar Usermodel por UsersFactory
-const { UsersFactory } = require('../../dao/models/user.model');
-
-const EncryptService = require('../encrypt/encrypt.service');
-const encryptService = new EncryptService();
+const UsersController = require('../../controllers/users/users.controller');
+const usersController = UsersController.getInstance();
 
 const sendEmail = require('../nodeMailer/nodeMailer.service');
-const sendWhatsapp = require('../twilio/whatsapp.services');
+const sendWhatsappAsync = require('../twilio/whatsapp.services');
 
 const { logger } = require('../logger/index');
 
 passport.use('signin', new LocalStrategy(async(username, password, done) => {
     try{
-        const userData = await UserModel.findOne({username});
-        logger.info('trying to check data')
-        if(!userData){
+        const data = await usersController.userCheck( username, password );
+        if(!data.success){
+            logger.error(data.message)
             return done(null, false);
         }
-        const passwordChecked = await encryptService.checkPassword('argon2', password, userData.password);
-        if(!passwordChecked){
-            return done(null, false);
-        }
-        return done(null,userData);
+        logger.info('User logged in successfully');
+        return done(null,data.message);
     } catch(err) {
         logger.error("error ocurrido")
         return done(null, false);
@@ -36,51 +28,40 @@ passport.use('signin', new LocalStrategy(async(username, password, done) => {
 
 passport.use('signup', new LocalStrategy({
     passReqToCallback: true
-}, async (req, username, password, done) => {
+}, async (req, username, _password, done) => {
     try{
-        const userData = await UserModel.findOne({ username });
-        if(userData){
+        const data = await usersController.userExists( username );
+        if(data.success){
             logger.info('encontrado')
             return done(null, false);
         }
-        console.info(req)
-        const stageUser = new UserModel({
-            username: username,
-            password: await encryptService.hashPassword('argon2', password),
-            fullName: req.body.fullName,
-            address: req.body.address,
-            age: req.body.age,
-            phone: req.body.phone,
-            avatar: undefined
-        });
-        const stageProduct = new ProductModel({
-            name: "Nombre",
-            description: 'Descripcion',
-            price: 10,
-            image: 'url',
-            stock: 1,
-        });
-        logger.info('creacion nuevo usuario');
-        const newUser = await stageUser.save();
-        const newProduct = await stageProduct.save();
 
-        sendWhatsapp(JSON.stringify(newUser));
-        sendEmail(JSON.stringify(newUser), 'leoyanzon@gmail.com')
+        const stageUser = await usersController.save(req.body);
+        if(!stageUser.success){
+            logger.error('Error creating user')
+            return done(null, false);
+        }
+        const newUser = stageUser.message;
+        logger.info('New user created successfully');
+
+        const whatsapp = await sendWhatsappAsync(`User ${newUser.username} created successfully`);
+        if (whatsapp.success) logger.info(`Whatsapp message sent with sid:${whatsapp.message}`);
+        const email = await sendEmail(`User ${newUser.username} created successfully`, 'leoyanzon@gmail.com');
+        if (email.success) logger.info(`Email message sent:${email.message}`)
 
         done(null, newUser);
     } catch(err) {
-        done(null, false);
-    }
-    
+        done(null, err);
+    } 
 }))
 
 passport.serializeUser((user, done) => {
     done(null, user._id);
 })
 
-passport.deserializeUser(async (id, done) => {
-    const userData = await UserModel.findById(id);
-    done(null, userData);
+passport.deserializeUser(async (_id, done) => {
+    const userData = await usersController.getUserById(_id);
+    done(null, userData.message);
 })
 
 module.exports = passport;

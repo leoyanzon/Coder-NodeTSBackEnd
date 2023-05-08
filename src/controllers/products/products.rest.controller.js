@@ -90,7 +90,7 @@ class ProductsRestController{
 
     deleteById = async(req, res) =>{
         try {
-            const id = parseInt(req.params.id);
+            const id = req.params.id;
             const data = await this.productFactory.deleteById(id);
             if (!data) {
                 return res.status(500).json({

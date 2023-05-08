@@ -4,6 +4,7 @@ const ProductsMongoRepository = require('./repository/products/products.mongo.re
 const ProductsMongoAtlasRepository = require('./repository/products/products.mongoAtlas.repository');
 
 const UsersMemRepository = require('./repository/users/users.mem.repository');
+const UsersFileRepository = require('./repository/users/users.file.repository');
 const UsersMongoAtlasRepository = require('./repository/users/users.mongoAtlas.repository');
 const UsersMongoRepository = require('./repository/users/users.mongo.repository');
 
@@ -12,6 +13,7 @@ const config = require('../config/config');
 class UsersFactory{
     static getInstance(){
         if(config.db.DATA_STORAGE == 'MEM') return UsersMemRepository.getInstance();
+        if(config.db.DATA_STORAGE == 'FILE') return UsersFileRepository.getInstance('Users');
         if(config.db.DATA_STORAGE == 'MONGO_ATLAS') return UsersMongoAtlasRepository.getInstance();
         return UsersMongoRepository.getInstance();
     }
@@ -19,8 +21,8 @@ class UsersFactory{
 
 class ProductsFactory{
     static getInstance(){
-        if(config.db.DATA_STORAGE == 'FILE') return ProductsFileRepository.getInstance('Products');
         if(config.db.DATA_STORAGE == 'MEM') return ProductsMemRepository.getInstance();
+        if(config.db.DATA_STORAGE == 'FILE') return ProductsFileRepository.getInstance('Products');
         if(config.db.DATA_STORAGE == 'MONGO_ATLAS') return ProductsMongoAtlasRepository.getInstance();
         return ProductsMongoRepository.getInstance();
     }

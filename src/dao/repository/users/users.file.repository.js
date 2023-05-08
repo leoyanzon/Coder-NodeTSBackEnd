@@ -1,10 +1,9 @@
-const ProductDTO = require('../../dto/product.dto');
 const { logger } = require('../../../services/logger');
 const { v4: uuidv4 } = require('uuid');
 
 const fs = require('fs');
 
-class ProductsFileRepository {
+class UsersFileRepository {
     constructor(_nombreArchivo){
         this.ruta = `./temp/${_nombreArchivo}.txt`
         this.createFile();
@@ -12,8 +11,8 @@ class ProductsFileRepository {
 
     static getInstance(_nombreArchivo){
         if (!this.instance){
-            this.instance = new ProductsFileRepository(_nombreArchivo);
-            logger.info(`Products repository created: File ${this.instance.ruta}`);
+            this.instance = new UsersFileRepository(_nombreArchivo);
+            logger.info(`Users repository created: File ${this.instance.ruta}`);
         }
         
         return this.instance
@@ -40,28 +39,37 @@ class ProductsFileRepository {
             console.error("no existe el archivo:", err.message)
         }
     }
-    async save(productData){
+    async save(userData){
         try{
             const objetosExistentes = await this.getAll();
             const _id = uuidv4();
-            const productDTO = await new ProductDTO(productData);
 
-            objetosExistentes.push({...productDTO, _id:_id});
+            const newUser = {...userData, _id: _id};
+            objetosExistentes.push(newUser);
 
             const data = JSON.stringify(objetosExistentes);
             await fs.promises.writeFile(this.ruta, data)
-            return _id
+            return newUser
         } catch (err){
             console.error("Error al guardar objeto:", err);
         }
     }
-    async getById(_id){
+    async getUserByUserName( username ){
+        try{
+            const objetosExistentes = await this.getAll();
+            const [ query ] = objetosExistentes.filter(it => it.username === username)
+            return query;
+        } catch(err) {
+            logger.error("Error en la busqueda", err.message);
+        }
+    }
+    async getUserById( _id ){
         try{
             const objetosExistentes = await this.getAll();
             const [ query ] = objetosExistentes.filter(it => it._id === _id)
             return query;
         } catch(err) {
-            console.log("Error en la busqueda", err.message);
+            logger.error("Error en la busqueda", err.message);
         }
     }
     async deleteById(_id){
@@ -84,4 +92,4 @@ class ProductsFileRepository {
     }
 }
 
-module.exports = ProductsFileRepository;
+module.exports = UsersFileRepository;

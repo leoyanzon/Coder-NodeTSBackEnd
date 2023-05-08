@@ -3,8 +3,8 @@ const morgan = require('morgan');
 
 const loggerLoader = async( app ) => {
 
-    app.use(loggerHttp);
-    app.use(morgan('dev'));
+    //app.use(loggerHttp);
+    //app.use(morgan('dev'));
 
     return app;
 }

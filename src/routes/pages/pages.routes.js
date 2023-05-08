@@ -8,7 +8,7 @@ class PagesRouter {
     }
 
     start() {
-        router.get('/home', authMiddleware, this.pagesController.home);
+        router.get('/', authMiddleware, this.pagesController.home);
         router.get('/signin', this.pagesController.signIn);
         router.get('/signup', this.pagesController.signUp);
         router.get('/signout', this.pagesController.signOut);

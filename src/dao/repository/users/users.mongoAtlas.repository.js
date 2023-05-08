@@ -13,8 +13,17 @@ class UsersMongoAtlasRepository{
         return this.instance
     }
 
-    async getUserByCondition(condition){
-        return await UserModel.findOne(condition);
+    async save(data){
+        const userStage = new UserModel(data);
+        return await userStage.save();
+    }
+
+    async getUserByUserName(username){
+        return await UserModel.findOne({ username });
+    }
+
+    async getUserById( _id ){
+        return await UserModel.findOne({ _id });
     }
 
     async createUser(userData){

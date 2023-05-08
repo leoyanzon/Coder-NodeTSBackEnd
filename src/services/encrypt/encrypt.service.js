@@ -14,7 +14,6 @@ class EncryptService {
                 const hashedPassword = await bcrypt.hash(password, saltRounds);
                 return hashedPassword
             }
-            logger.info("argon encoded")
             const hashedPassword = await argon2.hash(password);
             return hashedPassword
         } catch(err) {
@@ -27,7 +26,6 @@ class EncryptService {
             if (method == 'bcrypt'){
                 return await bcrypt.compare(plainPassword, passwordHash)
             }
-            logger.info("argon decoded")
             return await argon2.verify(passwordHash, plainPassword)
         } catch(err) {
             return undefined
