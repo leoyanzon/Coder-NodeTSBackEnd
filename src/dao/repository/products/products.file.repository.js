@@ -13,7 +13,7 @@ class ProductsFileRepository {
     static getInstance(_nombreArchivo){
         if (!this.instance){
             this.instance = new ProductsFileRepository(_nombreArchivo);
-            logger.info(`Products repository created: File ${this.instance.ruta}`);
+            logger.info(`Products Repository: File ${this.instance.ruta} created`);
         }
         
         return this.instance

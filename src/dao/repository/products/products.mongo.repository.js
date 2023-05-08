@@ -10,7 +10,7 @@ class ProductsMongoRepository{
     static getInstance(){
         if (!this.instance){
             this.instance = new ProductsMongoRepository();
-            logger.info('Products repository created: Local Mongo db');
+            logger.info('Products Repository: Local Mongo instance created');
         }
         return this.instance
     }

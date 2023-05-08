@@ -33,7 +33,7 @@ const sendEmail = async (msg, destination) => {
             message: result
         };
     } catch (err) {
-        logger.error(err.message);
+        logger.error(`NodeMailer error: ${err.message}`);
         return{
             success: false,
             message: err.message

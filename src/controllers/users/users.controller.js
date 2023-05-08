@@ -6,8 +6,6 @@ const httpStatus = require('http-status');
 const EncryptService = require('../../services/encrypt/encrypt.service');
 const encryptService = new EncryptService();
 
-const UserDTO = require('../../dao/dto/user.dto');
-
 class UsersController{
     constructor(){
         this.userFactory = UsersFactory.getInstance();
@@ -95,8 +93,9 @@ class UsersController{
 
     save = async(userData) =>{
         try {
-            const userDTO = await UserDTO.build(userData);
-            const newUser = {...userDTO};
+            const hashedPassword = await encryptService.hashPassword('argon2', userData.password);
+            userData.password = hashedPassword;
+            const newUser = {...userData};
 
             const data = await this.userFactory.save(newUser);
             if (!data) {

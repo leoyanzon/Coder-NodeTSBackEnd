@@ -8,22 +8,23 @@ const cookieParser = require('cookie-parser');
 const passportService = require('../services/passport/passport.service');
 
 const config = require('../config/config');
+const { logger } = require('../services/logger/index');
 
 const getSessionStorage = () => {
     if (config.server.SESSION_STORAGE == 'MONGO_DB') {
+        logger.info('Session Storage: Mongo Local instance created')
         return MongoStore.create(getStoreConfig(`${config.db.MONGO_URI}/sessions`))
     }
     if (config.server.SESSION_STORAGE == 'MONGO_ATLAS') {
+        logger.info('Session Storage: Mongo Atlas instance created')
         return MongoStore.create(getStoreConfig(`${config.db.MONGO_ATLAS_URL}/sessions`))
     }
+    //Else SESSION_STORAGE == FILE OR MEM
+    logger.info('Session Storage: Session file created')
     return new FileStore({path: '../session', ttl:300, retries: 0})
 }
 
 const sessionLoader = async ( app ) => {
-
-    if (config.server.SESSION_STORAGE == 'MONGO_DB'){
-
-    }
     app.use(session({
         store: getSessionStorage(),
         secret: config.cookies.COOKIES_SECRET,

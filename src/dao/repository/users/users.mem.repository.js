@@ -2,6 +2,8 @@ const { logger } = require('../../../services/logger');
 const { v4: uuidv4 } = require('uuid');
 const { use } = require('chai');
 
+const UserDTO = require('../../dto/user.dto');
+
 class UsersMemRepository{
     constructor(){
         this.users = [];
@@ -10,13 +12,14 @@ class UsersMemRepository{
     static getInstance(){
         if (!this.instance){
             this.instance = new UsersMemRepository();
-            logger.info('Users repository created: Memory');
+            logger.info('Users Repository: Memory created');
         }
         return this.instance
     }
     async getAll(){
         try{
-            return this.users;
+            const userDTO = await new UserDTO(this.users);
+            return userDTO;
         } catch (err){
             console.error("no existe el archivo:", err.message)
         }
@@ -33,8 +36,9 @@ class UsersMemRepository{
     }
     async getUserByUserName(username){
         try{
-            const [ query ] = this.users.filter(it => it.username === username)
-            return query;
+            const [ query ] = this.users.filter(it => it.username === username);
+            const userDTO = await new UserDTO(query);
+            return userDTO;
         } catch(err) {
             console.log("Error en la busqueda", err.message);
         }
@@ -42,7 +46,8 @@ class UsersMemRepository{
     async getUserById( _id ){
         try{
             const [ query ] = this.users.filter(it => it._id === _id)
-            return query;
+            const userDTO = await new UserDTO(query);
+            return userDTO;
         } catch(err) {
             logger.error("Error en la busqueda", err.message);
         }

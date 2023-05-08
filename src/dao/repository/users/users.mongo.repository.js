@@ -1,6 +1,8 @@
 const UserModel = require('../../models/user.model');
 const MongooseConnect = require('../../../services/mongo/connect')
 
+const UserDTO = require('../../dto/user.dto');
+
 class UsersMongoRepository{
     constructor() {
         MongooseConnect.getInstance();
@@ -8,7 +10,8 @@ class UsersMongoRepository{
 
     static getInstance(){
         if (!this.instance){
-            this.instance = new UsersMongoRepository()
+            this.instance = new UsersMongoRepository();
+            logger.info('Users Repository: Local Mongo instance created');
         }
         return this.instance
     }
@@ -19,11 +22,15 @@ class UsersMongoRepository{
     }
 
     async getUserByUserName(username){
-        return await UserModel.findOne({ username });
+        const query = await UserModel.findOne({ username });
+        const userDTO = await new UserDTO(query);
+        return userDTO;
     }
 
     async getUserById( _id ){
-        return await UserModel.findOne({ _id });
+        const query = await UserModel.findOne({ _id });
+        const userDTO = await new UserDTO(query);
+        return userDTO;
     }
 }
 

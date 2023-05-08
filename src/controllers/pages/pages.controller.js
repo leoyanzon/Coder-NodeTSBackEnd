@@ -1,4 +1,9 @@
 //const PagesApi = require('../../api/pages/pages.api);
+const { ProductsFactory } = require('../../dao/factory');
+const productFactory = ProductsFactory.getInstance();
+
+const UsersController = require('../../controllers/users/users.controller');
+const usersController = UsersController.getInstance();
 
 class PagesController {
     constructor(){
@@ -30,7 +35,13 @@ class PagesController {
     }
 
     home = async(req, res) => {
-        res.render('home');
+        const userData = await usersController.getUserById(req.session.passport.user);
+        console.info(userData)
+        const message = {
+            user: userData.message.username,
+            products: productFactory.getAll(),
+        }
+        res.render('home', {message: message});
     }
 }
 

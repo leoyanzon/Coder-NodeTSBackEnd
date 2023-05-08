@@ -10,7 +10,7 @@ class ProductsMemRepository{
     static getInstance(){
         if (!this.instance){
             this.instance = new ProductsMemRepository();
-            logger.info('Products repository created: Memory');
+            logger.info('Products Repository: Memory created');
         }
         return this.instance;
     }

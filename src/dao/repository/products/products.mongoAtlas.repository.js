@@ -10,7 +10,7 @@ class ProductsMongoAtlasRepository{
     static getInstance(){
         if (!this.instance){
             this.instance = new ProductsMongoAtlasRepository();
-            logger.info('Products repository created: Mongo Atlas db');
+            logger.info('Products Repository: Mongo Atlas instance created');
         }
         return this.instance
     }

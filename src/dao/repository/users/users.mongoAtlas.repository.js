@@ -1,6 +1,8 @@
 const UserModel = require('../../models/user.model');
 const MongooseConnect = require('../../../services/mongo/connect')
 
+const UserDTO = require('../../dto/user.dto');
+
 class UsersMongoAtlasRepository{
     constructor(){
         MongooseConnect.getInstance();
@@ -8,7 +10,8 @@ class UsersMongoAtlasRepository{
 
     static getInstance(){
         if (!this.instance){
-            this.instance = new UsersMongoAtlasRepository()
+            this.instance = new UsersMongoAtlasRepository();
+            logger.info('Users Repository: Mongo Atlas instance created');
         }
         return this.instance
     }
@@ -19,16 +22,15 @@ class UsersMongoAtlasRepository{
     }
 
     async getUserByUserName(username){
-        return await UserModel.findOne({ username });
+        const query = await UserModel.findOne({ username });
+        const userDTO = await new UserDTO(query);
+        return userDTO;
     }
 
     async getUserById( _id ){
-        return await UserModel.findOne({ _id });
-    }
-
-    async createUser(userData){
-        const userStage = new UserModel(userData);
-        return await userStage.save();
+        const query = await UserModel.findOne({ _id });
+        const userDTO = await new UserDTO(query);
+        return userDTO;
     }
 }
 

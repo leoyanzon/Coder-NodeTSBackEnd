@@ -1,6 +1,8 @@
 const { logger } = require('../../../services/logger');
 const { v4: uuidv4 } = require('uuid');
 
+const UserDTO = require('../../dto/user.dto');
+
 const fs = require('fs');
 
 class UsersFileRepository {
@@ -12,7 +14,7 @@ class UsersFileRepository {
     static getInstance(_nombreArchivo){
         if (!this.instance){
             this.instance = new UsersFileRepository(_nombreArchivo);
-            logger.info(`Users repository created: File ${this.instance.ruta}`);
+            logger.info(`Users Repository: File ${this.instance.ruta} created`);
         }
         
         return this.instance
@@ -31,10 +33,11 @@ class UsersFileRepository {
             if (contenido == ""){
                 let data = []
                 return data;
-            } else {
-                let data = JSON.parse(contenido);
-                return data;
             }
+            const data = JSON.parse(contenido);
+            const userDTO = await new UserDTO(data);
+            return userDTO;
+
         } catch (err){
             console.error("no existe el archivo:", err.message)
         }
@@ -57,8 +60,9 @@ class UsersFileRepository {
     async getUserByUserName( username ){
         try{
             const objetosExistentes = await this.getAll();
-            const [ query ] = objetosExistentes.filter(it => it.username === username)
-            return query;
+            const [ query ] = objetosExistentes.filter(it => it.username === username);
+            const userDTO = await new UserDTO(query);
+            return userDTO;
         } catch(err) {
             logger.error("Error en la busqueda", err.message);
         }
@@ -67,7 +71,8 @@ class UsersFileRepository {
         try{
             const objetosExistentes = await this.getAll();
             const [ query ] = objetosExistentes.filter(it => it._id === _id)
-            return query;
+            const userDTO = await new UserDTO(query);
+            return userDTO;
         } catch(err) {
             logger.error("Error en la busqueda", err.message);
         }
