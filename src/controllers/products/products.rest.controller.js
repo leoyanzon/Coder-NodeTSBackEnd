@@ -3,14 +3,24 @@ const { logger } = require('../../services/logger/index');
 
 const httpStatus = require('http-status');
 
+const productMockGenerator = require('../../tests/products/products.mocks');
+
 class ProductsRestController{
     constructor(){
         this.productFactory = ProductsFactory.getInstance();
+        
+        // Create Mock of 10 products
+        this.productFactory.getAll().then((data)=> {
+            if (data.length < 1){
+                productMockGenerator(10);
+            }}
+        );
     }
 
     static getInstance(){
         if (!this.instance){
-            this.instance = new ProductsRestController()
+            this.instance = new ProductsRestController();
+
         }
         return this.instance
     }

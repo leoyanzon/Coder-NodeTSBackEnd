@@ -7,24 +7,39 @@ const fs = require('fs');
 
 class UsersFileRepository {
     constructor(_nombreArchivo){
-        this.ruta = `./temp/${_nombreArchivo}.txt`
+        
+        this.ruta = `./${_nombreArchivo}.txt`;
+        this.foldername = 'temp';
+        //this.createDirectory();
         this.createFile();
     }
 
     static getInstance(_nombreArchivo){
         if (!this.instance){
             this.instance = new UsersFileRepository(_nombreArchivo);
-            logger.info(`Users Repository: File ${this.instance.ruta} created`);
+            logger.info(`Users Repository: File ${this.instance.ruta} used`);
         }
-        
         return this.instance
     }
 
     async createFile(){
         try{
-            await fs.promises.writeFile(this.ruta, "");
+            const exists = fs.existsSync(this.ruta);
+            if (!exists) {
+                await fs.promises.writeFile(this.ruta, "");
+                logger.info(`Users Repository: File ${this.ruta} created`)
+            }
         } catch (err) {
-            console.log("Error al crear archivo", err.message);
+            logger.error("Users Repository: Error creating file", err.message);
+        }
+    }
+    
+    async createDirectory(){
+        try{
+            fs.mkdirSync(path.join(__dirname, this.folderName), { recursive: true });
+            logger.info(`Users Repository: Folder ${this.folderName} created`)
+        } catch(err) {
+            logger.error(`Users Repository: Error creating directory ${err.message}`)
         }
     }
     async getAll(){
@@ -35,11 +50,10 @@ class UsersFileRepository {
                 return data;
             }
             const data = JSON.parse(contenido);
-            const userDTO = await new UserDTO(data);
-            return userDTO;
+            return data;
 
         } catch (err){
-            console.error("no existe el archivo:", err.message)
+            logger.error(`Users Repository: getAll() error ${err.message}`);
         }
     }
     async save(userData){
@@ -54,17 +68,25 @@ class UsersFileRepository {
             await fs.promises.writeFile(this.ruta, data)
             return newUser
         } catch (err){
-            console.error("Error al guardar objeto:", err);
+            logger.error(`Users Repository: save() error ${err.message}`);
         }
     }
     async getUserByUserName( username ){
         try{
             const objetosExistentes = await this.getAll();
             const [ query ] = objetosExistentes.filter(it => it.username === username);
-            const userDTO = await new UserDTO(query);
-            return userDTO;
+            return query;
         } catch(err) {
-            logger.error("Error en la busqueda", err.message);
+            logger.error(`Users Repository: getUserByUserName() error ${err.message}`);
+        }
+    }
+    async getPasswordByUserName( username ){
+        try{
+            const objetosExistentes = await this.getAll();
+            const [ query ] = objetosExistentes.filter(it => it.username === username);
+            return query.password;
+        } catch(err) {
+            logger.error(`Users Repository: getPasswordByUserName() error ${err.message}`);
         }
     }
     async getUserById( _id ){
@@ -74,7 +96,7 @@ class UsersFileRepository {
             const userDTO = await new UserDTO(query);
             return userDTO;
         } catch(err) {
-            logger.error("Error en la busqueda", err.message);
+            logger.error(`Users Repository: getUserById() error ${err.message}`);
         }
     }
     async deleteById(_id){
@@ -84,7 +106,7 @@ class UsersFileRepository {
             await fs.promises.writeFile(this.ruta, data);
             return _id;
         } catch(err) {
-            console.log("Error en el proceso de eliminacion", err.message);
+            logger.error(`Users Repository: deleteById() error ${err.message}`);
         }
     }
     async deleteAll(){
@@ -92,7 +114,7 @@ class UsersFileRepository {
             await fs.promises.writeFile(this.ruta, "");
             return true
         } catch(err) {
-            console.log("Error en la eliminacion", err.message);
+            logger.error(`Users Repository: deleteAll() error ${err.message}`);
         }
     }
 }

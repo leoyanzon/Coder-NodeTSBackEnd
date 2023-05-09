@@ -1,6 +1,5 @@
 const { logger } = require('../../../services/logger');
 const { v4: uuidv4 } = require('uuid');
-const { use } = require('chai');
 
 const UserDTO = require('../../dto/user.dto');
 
@@ -18,10 +17,9 @@ class UsersMemRepository{
     }
     async getAll(){
         try{
-            const userDTO = await new UserDTO(this.users);
-            return userDTO;
+            return this.users;
         } catch (err){
-            console.error("no existe el archivo:", err.message)
+            logger.error(`Users Repository: getAll() error ${err.message}`)
         }
     }
     async save(userData){
@@ -31,16 +29,23 @@ class UsersMemRepository{
             this.users.push(newUser);
             return newUser
         } catch (err){
-            console.error("Error al guardar objeto:", err);
+            logger.error(`Users Repository: save() error ${err.message}`);
         }
     }
-    async getUserByUserName(username){
+    async getUserByUserName( username ){
         try{
             const [ query ] = this.users.filter(it => it.username === username);
-            const userDTO = await new UserDTO(query);
-            return userDTO;
+            return query;
         } catch(err) {
-            console.log("Error en la busqueda", err.message);
+            logger.error(`Users Repository: getUserByUserName() error ${err.message}`);
+        }
+    }
+    async getPasswordByUserName( username ){
+        try{
+            const [ query ] = this.users.filter(it => it.username === username);
+            return query.password;
+        } catch(err) {
+            logger.error(`Users Repository: getPasswordByUserName() error ${err.message}`);
         }
     }
     async getUserById( _id ){
@@ -49,7 +54,7 @@ class UsersMemRepository{
             const userDTO = await new UserDTO(query);
             return userDTO;
         } catch(err) {
-            logger.error("Error en la busqueda", err.message);
+            logger.error(`Users Repository: getUserById() error ${err.message}`);
         }
     }
     async deleteById(_id){
@@ -57,7 +62,7 @@ class UsersMemRepository{
             this.users = this.users.filter(it => it._id != _id);
             return _id;
         } catch(err) {
-            console.log("Error en el proceso de eliminacion", err.message);
+            logger.error(`Users Repository deleteById() error ${err.message}`);
         }
     }
     async deleteAll(){
@@ -65,7 +70,7 @@ class UsersMemRepository{
             this.users = [];
             return true
         } catch(err) {
-            console.log("Error en la eliminacion", err.message);
+            logger.error(`Users Repository: deleteAll() error ${err.message}`);
         }
     }
 

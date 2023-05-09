@@ -6,24 +6,28 @@ const fs = require('fs');
 
 class ProductsFileRepository {
     constructor(_nombreArchivo){
-        this.ruta = `./temp/${_nombreArchivo}.txt`
+        this.ruta = `./${_nombreArchivo}.txt`
         this.createFile();
     }
 
     static getInstance(_nombreArchivo){
         if (!this.instance){
             this.instance = new ProductsFileRepository(_nombreArchivo);
-            logger.info(`Products Repository: File ${this.instance.ruta} created`);
+            logger.info(`Products Repository: File ${this.instance.ruta} used`);
         }
-        
+
         return this.instance
     }
 
     async createFile(){
         try{
-            await fs.promises.writeFile(this.ruta, "");
+            const exists = fs.existsSync(this.ruta);
+            if (!exists) {
+                await fs.promises.writeFile(this.ruta, "");
+                logger.info(`Products Repository: File ${this.ruta} created`)
+            }
         } catch (err) {
-            console.log("Error al crear archivo", err.message);
+            logger.error(`Products Repository: Error creating file:${err.message}`)
         }
     }
     async getAll(){
@@ -37,7 +41,7 @@ class ProductsFileRepository {
                 return data;
             }
         } catch (err){
-            console.error("no existe el archivo:", err.message)
+            logger.error(`Products Repository: getAll() error:${err.message}`);
         }
     }
     async save(productData){
@@ -52,7 +56,7 @@ class ProductsFileRepository {
             await fs.promises.writeFile(this.ruta, data)
             return _id
         } catch (err){
-            console.error("Error al guardar objeto:", err);
+            logger.error(`Products Repository: save() error:${err.message}`);
         }
     }
     async getById(_id){
@@ -61,7 +65,7 @@ class ProductsFileRepository {
             const [ query ] = objetosExistentes.filter(it => it._id === _id)
             return query;
         } catch(err) {
-            console.log("Error en la busqueda", err.message);
+            logger.error(`Products Repository: getById() error ${err.message}`);
         }
     }
     async deleteById(_id){
@@ -71,7 +75,7 @@ class ProductsFileRepository {
             await fs.promises.writeFile(this.ruta, data);
             return _id;
         } catch(err) {
-            console.log("Error en el proceso de eliminacion", err.message);
+            logger.error(`Products Repository: deleteById() error ${err.message}`);
         }
     }
     async deleteAll(){
@@ -79,7 +83,7 @@ class ProductsFileRepository {
             await fs.promises.writeFile(this.ruta, "");
             return true
         } catch(err) {
-            console.log("Error en la eliminacion", err.message);
+            logger.error(`Products Repository: deleteAll() error ${err.message}`);
         }
     }
 }

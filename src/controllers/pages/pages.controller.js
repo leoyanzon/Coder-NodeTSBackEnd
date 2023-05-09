@@ -14,14 +14,38 @@ class PagesController {
         if (req.isAuthenticated()){
             return res.redirect('/')
         }
-        res.render('signin');
+        const navBar = [
+            { title: "Home", link: "/"},
+            { title: "Register", link: "/signup"}
+        ];
+        const main = {
+            user: "",
+            products: "",
+        }
+        const message = {
+            navBar: navBar,
+            main: main,
+        }
+        res.render('signin', { message: message});
     }
 
     signUp = async(req, res) => {
         if (req.isAuthenticated()){
             return res.redirect('/')
         }
-        res.render('signup');
+        const navBar = [
+            { title: "Home", link: "/"},
+            { title: "Signin", link: "/signin"}
+        ];
+        const main = {
+            user: "",
+            products: "",
+        }
+        const message = {
+            navBar: navBar,
+            main: main,
+        }
+        res.render('signup', { message: message});
     }
 
     error = async(_req, res) => {
@@ -30,17 +54,37 @@ class PagesController {
 
     signOut = async(req, res) => {
         req.logout(()=>{
-            res.redirect('/signin')
+            const navBar = [
+                { title: "Home", link: "/"},
+                { title: "Register", link: "/signup"}
+            ];
+            const main = {
+                user: "",
+                products: "",
+            }
+            const message = {
+                navBar: navBar,
+                main: main,
+            }
+            res.redirect('/signin', { message: message})
         })
     }
 
     home = async(req, res) => {
         const userData = await usersController.getUserById(req.session.passport.user);
-        console.info(userData)
-        const message = {
+        const navBar = [
+            { title: "Home", link: "/"},
+            { title: "Logout", link: "/signout"}
+        ];
+        const main = {
             user: userData.message.username,
-            products: productFactory.getAll(),
+            products: await productFactory.getAll(),
         }
+        const message = {
+            navBar: navBar,
+            main: main,
+        }
+
         res.render('home', {message: message});
     }
 }

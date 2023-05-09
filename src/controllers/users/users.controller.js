@@ -17,7 +17,6 @@ class UsersController{
         }
         return this.instance
     }
-
     getAll = async(_req, res) =>{
         try {
             const data = await this.userFactory.getAll();
@@ -63,17 +62,16 @@ class UsersController{
             });
         }
     }
-
-    userCheck = async( username, password ) => {
+    passwordCheck = async( username, password ) => {
         try{
-            const data = await this.userFactory.getUserByUserName(username);
+            const data = await this.userFactory.getPasswordByUserName(username);
             if (!data){
                 return {
                     success: false,
                     message: `User not found`
                 }
             }
-            const passwordChecked = await encryptService.checkPassword('argon2', password, data.password);
+            const passwordChecked = await encryptService.checkPassword('argon2', password, data);
             if (!passwordChecked) return {
                 success: false,
                 message: 'Wrong password'
@@ -90,7 +88,6 @@ class UsersController{
             });
         }
     }
-
     save = async(userData) =>{
         try {
             const hashedPassword = await encryptService.hashPassword('argon2', userData.password);
@@ -126,6 +123,28 @@ class UsersController{
                 return {
                     success: false,
                     message: `User id ${_id} not found`
+                }
+            }     
+            return {
+                success: true,
+                message: data,
+            }
+        } catch(err){
+            logger.error(err);
+            return({
+                success: false,
+                message: err
+            });
+        }
+    }
+
+    getUserByUserName = async( username ) => {
+        try{
+            const data = await this.userFactory.getUserByUserName( username );
+            if (!data){
+                return {
+                    success: false,
+                    message: `Username ${username} not found`
                 }
             }     
             return {

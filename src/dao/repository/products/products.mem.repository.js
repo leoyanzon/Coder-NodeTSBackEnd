@@ -18,7 +18,7 @@ class ProductsMemRepository{
         try{
             return this.products;
         } catch (err){
-            console.error("no existe el archivo:", err.message)
+            logger.error(`Products Repository: getAll() error ${err.message}`)
         }
     }
     async save(productData){
@@ -29,7 +29,7 @@ class ProductsMemRepository{
             this.products.push({...productDTO, _id:_id});
             return _id
         } catch (err){
-            console.error("Error al guardar objeto:", err);
+            logger.error(`Products Repository: save() error ${err.message}`);
         }
     }
     async getById(_id){
@@ -37,7 +37,7 @@ class ProductsMemRepository{
             const [ query ] = this.products.filter(it => it._id === _id)
             return query;
         } catch(err) {
-            console.log("Error en la busqueda", err.message);
+            logger.error(`Products Repository: getById() error ${err.message}`);
         }
     }
     async deleteById(_id){
@@ -45,7 +45,7 @@ class ProductsMemRepository{
             this.products = this.products.filter(it => it._id != _id);
             return _id;
         } catch(err) {
-            console.log("Error en el proceso de eliminacion", err.message);
+            logger.error(`Products Repository deleteById() error ${err.message}`);
         }
     }
     async deleteAll(){
@@ -53,7 +53,7 @@ class ProductsMemRepository{
             this.products = [];
             return true
         } catch(err) {
-            console.log("Error en la eliminacion", err.message);
+            logger.error(`Products Repository: deleteAll() error ${err.message}`);
         }
     }
 }

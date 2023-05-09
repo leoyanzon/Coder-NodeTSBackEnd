@@ -1,6 +1,18 @@
 const authMiddleware = (req, res, next) => {
     if(!req.isAuthenticated()){
-        return res.render('signin')
+        const navBar = [
+            { title: "Home", link: "/"},
+            { title: "Register", link: "/signup"}
+        ];
+        const main = {
+            user: "",
+            products: "",
+        }
+        const message = {
+            navBar: navBar,
+            main: main,
+        }
+        return res.render('signin', {message: message});
     }
     next();
 }

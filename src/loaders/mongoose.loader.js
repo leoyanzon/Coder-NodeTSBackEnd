@@ -4,7 +4,6 @@ const config = require('../config/config');
 const mongooseLoader = async( app ) => {
 
     const getDataStorage = () => {
-        console.info(config)
         if (config.db.DATA_STORAGE == 'MONGO_DB') {
             return `${config.db.MONGO_URI}/${config.db.DB_NAME}`
         }

@@ -12,18 +12,29 @@ const { logger } = require('../logger/index');
 
 passport.use('signin', new LocalStrategy(async(username, password, done) => {
     try{
-        const data = await usersController.userCheck( username, password );
+        const checkUser = await usersController.userExists( username );
+        if(!checkUser.success){
+            logger.error(checkUser.message)
+            return done(null, false);
+        }
+
+        const checkPassword = await usersController.passwordCheck( username, password );
+        if(!checkPassword.success){
+            logger.error(checkPassword.message)
+            return done(null, false);
+        }
+
+        const data = await usersController.getUserByUserName(username);
         if(!data.success){
             logger.error(data.message)
             return done(null, false);
         }
-        logger.info('User logged in successfully');
+        logger.info(`Passport: user ${username} logged successfully`);
         return done(null,data.message);
     } catch(err) {
-        logger.error("error ocurrido")
+        logger.error(`Passport error: ${err}`)
         return done(null, false);
     }
-    
 }));
 
 passport.use('signup', new LocalStrategy({
@@ -32,17 +43,17 @@ passport.use('signup', new LocalStrategy({
     try{
         const data = await usersController.userExists( username );
         if(data.success){
-            logger.info('encontrado')
+            logger.info(`Passport: user ${username} already exists`)
             return done(null, false);
         }
 
         const stageUser = await usersController.save(req.body);
         if(!stageUser.success){
-            logger.error('Error creating user')
+            logger.error(`Passport error: ${err}`)
             return done(null, false);
         }
         const newUser = stageUser.message;
-        logger.info('New user created successfully');
+        logger.info(`Passport: new user created successfully`);
 
         const whatsapp = await sendWhatsappAsync(`User ${newUser.username} created successfully`);
         if (whatsapp.success) logger.info(`Whatsapp message sent with sid:${whatsapp.message}`);

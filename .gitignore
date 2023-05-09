@@ -7,3 +7,4 @@ production.env
 **.env
 /.vscode
 /temp
+**.txt
