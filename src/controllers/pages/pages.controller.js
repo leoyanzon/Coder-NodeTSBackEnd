@@ -53,28 +53,26 @@ class PagesController {
     }
 
     signOut = async(req, res) => {
-        req.logout(()=>{
-            const navBar = [
-                { title: "Home", link: "/"},
-                { title: "Register", link: "/signup"}
-            ];
-            const main = {
-                user: "",
-                products: "",
-            }
-            const message = {
-                navBar: navBar,
-                main: main,
-            }
-            res.redirect('/signin', { message: message})
-        })
+        const navBar = [
+            { title: "Home", link: "/"},
+            { title: "Register", link: "/signup"}
+        ];
+        const main = {
+            user: "",
+            products: "",
+        }
+        const message = {
+            navBar: navBar,
+            main: main,
+        }
+        res.redirect('/signin', { message: message})
     }
 
     home = async(req, res) => {
         const userData = await usersController.getUserById(req.session.passport.user);
         const navBar = [
             { title: "Home", link: "/"},
-            { title: "Logout", link: "/signout"}
+            { title: "Logout", link: "/api/auth/signout"}
         ];
         const main = {
             user: userData.message.username,

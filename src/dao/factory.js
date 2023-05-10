@@ -8,6 +8,8 @@ const UsersFileRepository = require('./repository/users/users.file.repository');
 const UsersMongoAtlasRepository = require('./repository/users/users.mongoAtlas.repository');
 const UsersMongoRepository = require('./repository/users/users.mongo.repository');
 
+const CartMemRepository = require('./repository/cart/cart.mem.repository');
+
 const config = require('../config/config');
 
 class UsersFactory{
@@ -28,4 +30,10 @@ class ProductsFactory{
     }
 }
 
-module.exports = { UsersFactory, ProductsFactory };
+class CartFactory{
+    static getInstance(){
+        return CartMemRepository.getInstance();
+    }
+}
+
+module.exports = { UsersFactory, ProductsFactory, CartFactory };

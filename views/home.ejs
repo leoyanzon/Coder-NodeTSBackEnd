@@ -11,22 +11,19 @@
   <main>
 
     <div class="d-flex flex-column justify-content-center align-items-center">
-      <h1>Bienvenido <%= message.main.user  %>!!</h1>
-      <p> Hola!!. Usted ha ingresado a su sesión.</p> 
+      <h1 class="text-capitalize">Bienvenid@ <%= message.main.user  %>!</h1>
+      <p> Que alegría volver a verl@.</p> 
       <form method="POST" action="/uploads" enctype="multipart/form-data" class="w-50">
           <label>Subir foto de perfil</label>
           <input type="file" name="profile-file" required/>
       
           <button type="submit" class="btn btn-primary">Upload</button>
       </form>
-      <form action="/api/auth/signout" method="GET" class="w-50">
-          <button type="submit" class="btn btn-primary">Logout</button>
-      </form>
     </div> 
 
-    <div class="p-5 w-100">
-      <div class="row">
-            <div class="col-4">
+    <div class="p-5 w-100 d-flex flex-column justify-content-center align-items-center">
+      <div class="row w-75">
+            <div class="col-6">
               <div class="list-group" id="list-tab" role="tablist">
                 <% if (typeof message.main.products != undefined && message.main.products.length > 0) { %>
                   <% message.main.products.forEach(function(item) { %>
@@ -35,11 +32,22 @@
                   <% }; %>
               </div>
             </div>
-            <div class="col-8">
-              <div class="tab-content" id="nav-tabContent">
+            <div class="col-6">
+              <div class="tab-content d-flex flex-column p-2" id="nav-tabContent">
                 <% if (typeof message.main.products != undefined && message.main.products.length > 0) { %>
                   <% message.main.products.forEach(function(item) { %>
-                    <a class="tab-pane fade" id=<%= `list-${item.name}` %> role="tabpanel" aria-labelledby=<%= `list-${item.name}-list` %> ><%= item.description %></a>
+                    <div class="tab-pane fade bg-light text-dark text-decoration-none " id=<%= `list-${item.name}` %> role="tabpanel" aria-labelledby=<%= `list-${item.name}-list` %> >
+                      Description: <%= item.description %>
+                      <br>
+                      Price: <%= item.price %>
+                      <br>
+                      Stock: <%= item.stock %>
+                      <br>
+                      <form action=<%= `/api/cart/${item._id}` %> method="POST" class="w-50">
+                        <button type="submit" class="btn btn-primary mt-2">Add to cart</button>
+                      </form>
+                      
+                    </div>
                   <% }); %>
                   <% }; %>
               </div>

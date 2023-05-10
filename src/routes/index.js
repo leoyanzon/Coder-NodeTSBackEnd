@@ -3,10 +3,13 @@ const router = express.Router();
 
 const config = require('../config/config');
 
+const infoRouter = require('./info/info.routes');
+const sessionRouter = require('./session/session.routes');
+
 const PagesRouter = require('./pages/pages.routes');
 const ProductsRouter = require('./products/products.routes');
-const sessionRouter = require('./session/session.routes');
-const infoRouter = require('./info/info.routes');
+const CartRouter = require('./cart/cart.routes');
+
 const multerRouter = require('./multer/multer.routes')
 
 router.get("/health", async(req, res)=>{
@@ -19,10 +22,15 @@ router.get("/health", async(req, res)=>{
 })
 router.use('/info', infoRouter);
 
-router.use('/', (new PagesRouter).start() );
+
 router.use('/api/auth', sessionRouter );
 router.use('/uploads', multerRouter);
-router.use('/products', (new ProductsRouter).start());
+
+router.use('/', (new PagesRouter).start() );
+
+//See API Json
+router.use('/api/products', (new ProductsRouter).start());
+router.use('/api/cart', (new CartRouter).start())
 
 
 class Router{

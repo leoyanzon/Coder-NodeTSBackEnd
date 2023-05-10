@@ -1,3 +1,5 @@
+const { check } = require('express-validator');
+
 const validationMiddleware = (req, res, next)=> {
     const {
         fullName,
@@ -8,23 +10,15 @@ const validationMiddleware = (req, res, next)=> {
         password
     } = req.body;
 
-    const success = true;
+    const chequeo1 = check("username").isEmpty().isLength({min:3});
+    console.info("chequeo1",chequeo1)
+    const chequeo2 = check("password").isLength({min:8, max:15}).withMessage("Your password must be between 8-15 letters");
+    console.info("chequeo2",chequeo2);
+    return [
+        chequeo1,
+        chequeo2,
+    ]
 
-    if (!success){
-        const navBar = [
-            { title: "Home", link: "/"},
-            { title: "Register", link: "/signup"}
-        ];
-        const main = {
-            user: "",
-            products: "",
-        }
-        const message = {
-            navBar: navBar,
-            main: main,
-        }
-        return res.render('error', {message: message});
-    }
     next();
 }
 
