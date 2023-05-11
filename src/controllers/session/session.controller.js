@@ -43,6 +43,7 @@ class SessionController{
         const userData = await usersController.getUserById(req.session.passport.user);
         const navBar = [
             { title: "Home", link: "/"},
+            { title: "Cart", link: "/cart"},
             { title: "Logout", link: "/api/auth/signout"}
         ];
         const main = {

@@ -4,9 +4,13 @@ const { v4: uuidv4 } = require('uuid');
 
 const fs = require('fs');
 
+const createFolder = require('../../../utils/folders.utils');
+
 class ProductsFileRepository {
     constructor(_nombreArchivo){
-        this.ruta = `./${_nombreArchivo}.txt`
+        this.folderName = 'public/db/';
+        this.fileName = `${_nombreArchivo}.txt`;
+        this.ruta = this.folderName + this.fileName;
         this.createFile();
     }
 
@@ -20,6 +24,7 @@ class ProductsFileRepository {
     }
 
     async createFile(){
+        await createFolder(this.folderName, this.fileName);
         try{
             const exists = fs.existsSync(this.ruta);
             if (!exists) {

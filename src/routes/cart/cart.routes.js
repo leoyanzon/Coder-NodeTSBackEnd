@@ -8,7 +8,8 @@ class CartRouter {
 
     start() {
         router.get('/', this.cartController.getAll);
-        router.post('/:_id', this.cartController.save);
+        router.post('/:productId', this.cartController.addProduct);
+        router.post('/buyCart/:cartId', this.cartController.buyCart);
         return router
     }
 }

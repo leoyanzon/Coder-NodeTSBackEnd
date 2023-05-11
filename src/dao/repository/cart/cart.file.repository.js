@@ -1,12 +1,16 @@
-const ProductDTO = require('../../dto/product.dto');
+const path = require('path');
 const { logger } = require('../../../services/logger');
 const { v4: uuidv4 } = require('uuid');
 
 const fs = require('fs');
+const CartDTO = require('../../dto/cart.dto');
+const createFolder = require('../../../utils/folders.utils');
 
 class CartFileRepository {
     constructor(_nombreArchivo){
-        this.ruta = `./${_nombreArchivo}.txt`
+        this.folderName = 'public/db/';
+        this.fileName = `${_nombreArchivo}.txt`;
+        this.ruta = this.folderName + this.fileName;
         this.createFile();
     }
 
@@ -20,6 +24,7 @@ class CartFileRepository {
     }
 
     async createFile(){
+        await createFolder(this.folderName, this.fileName);
         try{
             const exists = fs.existsSync(this.ruta);
             if (!exists) {
@@ -44,14 +49,13 @@ class CartFileRepository {
             logger.error(`Cart Repository: getAll() error:${err.message}`);
         }
     }
-    async save(productData){
+    async save(cartData){
         try{
             const objetosExistentes = await this.getAll();
             const _id = uuidv4();
-            const productDTO = await new ProductDTO(productData);
+            const cartDTO = await new CartDTO(cartData);
 
-            objetosExistentes.push({...productDTO, _id:_id});
-
+            objetosExistentes.push({...cartDTO, _id:_id});
             const data = JSON.stringify(objetosExistentes);
             await fs.promises.writeFile(this.ruta, data)
             return _id
@@ -59,6 +63,38 @@ class CartFileRepository {
             logger.error(`Cart Repository: save() error:${err.message}`);
         }
     }
+
+    async update(cartData){
+        try{
+            const objetosExistentes = await this.getAll();
+            
+            const newObject = objetosExistentes.map(item => {
+                if (item._id == cartData._id){
+                    item = cartData;
+                }
+                return item
+            })
+
+            const data = JSON.stringify(newObject);
+            await fs.promises.writeFile(this.ruta, data)
+            return true
+        } catch (err){
+            logger.error(`Cart Repository: update() error:${err.message}`);
+            return false
+        }
+    }
+
+    async getLastCart(userId){
+        try{
+            const objetosExistentes = await this.getAll();
+            const query = objetosExistentes.filter(it => (it.userId === userId && it.completed == false));
+            if (query.length > 0) return query[ query.length - 1 ];
+            return undefined;
+        } catch(err) {
+            logger.error(`Cart Repository: getById() error ${err.message}`);
+        }
+    }
+
     async getById(_id){
         try{
             const objetosExistentes = await this.getAll();

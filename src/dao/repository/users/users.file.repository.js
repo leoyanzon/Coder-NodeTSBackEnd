@@ -4,13 +4,13 @@ const { v4: uuidv4 } = require('uuid');
 const UserDTO = require('../../dto/user.dto');
 
 const fs = require('fs');
+const createFolder = require('../../../utils/folders.utils');
 
 class UsersFileRepository {
     constructor(_nombreArchivo){
-        
-        this.ruta = `./${_nombreArchivo}.txt`;
-        this.foldername = 'temp';
-        //this.createDirectory();
+        this.folderName = 'public/db/';
+        this.fileName = `${_nombreArchivo}.txt`;
+        this.ruta = this.folderName + this.fileName;
         this.createFile();
     }
 
@@ -23,6 +23,7 @@ class UsersFileRepository {
     }
 
     async createFile(){
+        await createFolder(this.folderName, this.fileName);
         try{
             const exists = fs.existsSync(this.ruta);
             if (!exists) {
@@ -34,14 +35,6 @@ class UsersFileRepository {
         }
     }
     
-    async createDirectory(){
-        try{
-            fs.mkdirSync(path.join(__dirname, this.folderName), { recursive: true });
-            logger.info(`Users Repository: Folder ${this.folderName} created`)
-        } catch(err) {
-            logger.error(`Users Repository: Error creating directory ${err.message}`)
-        }
-    }
     async getAll(){
         try{
             const contenido = await fs.promises.readFile(this.ruta, 'utf-8');

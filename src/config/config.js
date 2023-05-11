@@ -16,8 +16,8 @@ const config = {
         COOKIES_SECRET: process.env.COOKIES_SECRET || 'undefined',
     },
     db: {
-        DB_NAME: process.env.DB_NAME || 'undefined',
-        DATA_STORAGE: process.env.DATA_STORAGE || 'MEM',
+        DB_NAME: process.env.DB_NAME || 'Ecommerce',
+        DATA_STORAGE: process.env.DATA_STORAGE || 'FILE',
         MONGO_URI: process.env.MONGO_URI || 'undefined',
         MONGO_ATLAS_URL: process.env.MONGO_ATLAS_URL || 'undefined',
     },

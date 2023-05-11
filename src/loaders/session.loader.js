@@ -1,4 +1,5 @@
 const session = require('express-session');
+
 const FileStore = require('session-file-store')(session);
 const MongoStore = require('connect-mongo');
 const { getStoreConfig } = require('../config/mongo.config'); 
@@ -9,8 +10,9 @@ const passportService = require('../services/passport/passport.service');
 
 const config = require('../config/config');
 const { logger } = require('../services/logger/index');
+const createFolder = require('../utils/folders.utils');
 
-const getSessionStorage = () => {
+const getSessionStorage = async () => {
     if (config.server.SESSION_STORAGE == 'MONGO_DB') {
         logger.info('Session Storage: Mongo Local instance created')
         return MongoStore.create(getStoreConfig(`${config.db.MONGO_URI}/sessions`))
@@ -20,13 +22,15 @@ const getSessionStorage = () => {
         return MongoStore.create(getStoreConfig(`${config.db.MONGO_ATLAS_URL}/sessions`))
     }
     //Else SESSION_STORAGE == FILE OR MEM
-    logger.info('Session Storage: Session file created')
-    return new FileStore({path: '../session', ttl:300, retries: 0})
+    await createFolder('public/db/');
+    logger.info('Session Storage: Session file created');
+    return new FileStore({path: './session', ttl:300, retries: 0})
 }
 
 const sessionLoader = async ( app ) => {
+
     app.use(session({
-        store: getSessionStorage(),
+        store: await getSessionStorage(),
         secret: config.cookies.COOKIES_SECRET,
         resave: true,
         saveUninitialized: true,
