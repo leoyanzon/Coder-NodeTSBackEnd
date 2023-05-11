@@ -1,21 +1,25 @@
 const router = require('express').Router();
-const validationMiddleware = require('../../middlewares/validation.middleware');
-const {check} = require('express-validator');
 
 const passport = require('passport');
 
-router.post('/signin', passport.authenticate('signin', {failureRedirect: '/error'}), async( _req, res) => {
-    res.redirect('/');
+const SessionController = require('../../controllers/session/session.controller');
+const sessionController = SessionController.getInstance();
+
+router.post('/signin', 
+    passport.authenticate('signin', {failureRedirect: '/error'}), 
+    async(req, res) => {
+        sessionController.home(req,res);
 })
 
-router.post('/signup', passport.authenticate('signup', {failureRedirect: '/error'}), async( req, res) => {
-    res.redirect('/');
+router.post('/signup', 
+    passport.authenticate('signup', {failureRedirect: '/error'}),
+    async( req, res) => {
+        sessionController.home(req,res);
 })
 
-router.get('/signout', (req, res) => {
-    req.logout(()=> {
-        res.redirect('/signin');
-    })
+router.get('/signout', 
+    (req, res) => {
+        sessionController.signOut(req,res);
 })
 
 module.exports = router;

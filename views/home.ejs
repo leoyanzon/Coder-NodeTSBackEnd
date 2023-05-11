@@ -11,7 +11,7 @@
   <main>
 
     <div class="d-flex flex-column justify-content-center align-items-center">
-      <h1 class="text-capitalize">Bienvenid@ <%= message.main.user  %>!</h1>
+      <h1 class="text-capitalize">Bienvenid@!</h1>
       <p> Que alegría volver a verl@.</p> 
       <form method="POST" action="/uploads" enctype="multipart/form-data" class="w-50">
           <label>Subir foto de perfil</label>
@@ -27,7 +27,7 @@
               <div class="list-group" id="list-tab" role="tablist">
                 <% if (typeof message.main.products != undefined && message.main.products.length > 0) { %>
                   <% message.main.products.forEach(function(item) { %>
-                    <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href=<%= `#list-${item.name}` %> role="tab" aria-controls=<%= item.name %>><%= item.name %></a>
+                    <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href=<%= `#list-${item._id}` %> role="tab" aria-controls=<%= item.name %>><%= item.name %></a>
                   <% }); %>
                   <% }; %>
               </div>
@@ -36,12 +36,14 @@
               <div class="tab-content d-flex flex-column p-2" id="nav-tabContent">
                 <% if (typeof message.main.products != undefined && message.main.products.length > 0) { %>
                   <% message.main.products.forEach(function(item) { %>
-                    <div class="tab-pane fade bg-light text-dark text-decoration-none " id=<%= `list-${item.name}` %> role="tabpanel" aria-labelledby=<%= `list-${item.name}-list` %> >
+                    <div class="tab-pane fade bg-light text-dark text-decoration-none " id=<%= `list-${item._id}` %> role="tabpanel" aria-labelledby=<%= `list-${item.name}-list` %> >
                       Description: <%= item.description %>
                       <br>
                       Price: <%= item.price %>
                       <br>
                       Stock: <%= item.stock %>
+                      <br>
+                      Id: <%= item._id %>
                       <br>
                       <form action=<%= `/api/cart/${item._id}` %> method="POST" class="w-50">
                         <button type="submit" class="btn btn-primary mt-2">Add to cart</button>

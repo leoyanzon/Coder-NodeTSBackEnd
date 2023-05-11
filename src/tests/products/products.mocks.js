@@ -10,7 +10,7 @@ const productMockGenerator = async ( qty ) => {
     try{
         for (let i = 0; i < qty; i++ ){
             let randomProduct = generator.get();
-            const test = await request.post('/products').set('Accept', 'application/json').send(randomProduct);
+            const test = await request.post('/api/products').set('Accept', 'application/json').send(randomProduct);
         }
         logger.info(`Mock: ${qty} products created`)
     } catch (err){

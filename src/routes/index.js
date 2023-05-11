@@ -11,32 +11,40 @@ const ProductsRouter = require('./products/products.routes');
 const CartRouter = require('./cart/cart.routes');
 
 const multerRouter = require('./multer/multer.routes')
-
-router.get("/health", async(req, res)=>{
-
-    res.status(200).json({
-        success: true,
-        health:'up',
-        environment: config.server.ENVIRONMENT || "not found"
-    })
-})
-router.use('/info', infoRouter);
-
-
-router.use('/api/auth', sessionRouter );
-router.use('/uploads', multerRouter);
-
-router.use('/', (new PagesRouter).start() );
-
-//See API Json
-router.use('/api/products', (new ProductsRouter).start());
-router.use('/api/cart', (new CartRouter).start())
-
-
 class Router{
     constructor(){
+        //General info Routers
+        router.use('/info', infoRouter);
+        router.get("/health", async(req, res)=>{
+            res.status(200).json({
+                success: true,
+                health:'up',
+                environment: config.server.ENVIRONMENT || "not found"
+            })
+        })
+
+        //Autentication router
+        router.use('/api/auth', sessionRouter );
+
+        //Client HTML Router
+        router.use('/', (new PagesRouter).start() );
+
+        //API Routers
+        router.use('/api/products', (new ProductsRouter).start());
+        router.use('/api/cart', (new CartRouter).start())
+
+        //Services Router
+        router.use('/uploads', multerRouter);
         return router
     }
+
+    static getInstance(){
+        if (!this.instance){
+            this.instance = new Router();
+        }
+        return this.instance
+    }
+
 }
 
 module.exports = Router;

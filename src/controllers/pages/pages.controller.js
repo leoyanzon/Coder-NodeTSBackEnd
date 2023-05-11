@@ -1,13 +1,24 @@
 //const PagesApi = require('../../api/pages/pages.api);
+const UsersController = require('../../controllers/users/users.controller');
+const usersController = UsersController.getInstance();
+
 const { ProductsFactory } = require('../../dao/factory');
 const productFactory = ProductsFactory.getInstance();
 
-const UsersController = require('../../controllers/users/users.controller');
-const usersController = UsersController.getInstance();
+const CartController = require('../cart/cart.controller');
+const cartController = CartController.getInstance();
 
 class PagesController {
     constructor(){
         //this.pagesApi = new PagesApi();
+    }
+
+    static getInstance(){
+        if (!this.instance){
+            this.instance = new PagesController();
+
+        }
+        return this.instance
     }
 
     signIn = async(req, res) => {
@@ -20,6 +31,7 @@ class PagesController {
         ];
         const main = {
             user: "",
+            isAuthenticated: req.isAuthenticated(),
             products: "",
         }
         const message = {
@@ -39,6 +51,7 @@ class PagesController {
         ];
         const main = {
             user: "",
+            isAuthenticated: req.isAuthenticated(),
             products: "",
         }
         const message = {
@@ -59,6 +72,7 @@ class PagesController {
         ];
         const main = {
             user: "",
+            isAuthenticated: req.isAuthenticated(),
             products: "",
         }
         const message = {
@@ -76,6 +90,7 @@ class PagesController {
         ];
         const main = {
             user: userData.message.username,
+            isAuthenticated: req.isAuthenticated(),
             products: await productFactory.getAll(),
         }
         const message = {
@@ -85,6 +100,7 @@ class PagesController {
 
         res.render('home', {message: message});
     }
+
 }
 
 module.exports = PagesController;

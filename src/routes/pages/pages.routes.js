@@ -4,7 +4,7 @@ const authMiddleware = require('../../middlewares/auth.middleware');
 const PagesController = require('../../controllers/pages/pages.controller');
 class PagesRouter {
     constructor(){
-        this.pagesController = new PagesController();
+        this.pagesController = PagesController.getInstance();
     }
 
     start() {

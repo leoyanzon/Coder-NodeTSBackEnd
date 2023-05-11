@@ -12,6 +12,12 @@
         </li>
       <% }); %>
       <% }; %>
+
+      <% if (typeof message.main.isAuthenticated != undefined && message.main.isAuthenticated) { %>
+        <li class="nav-item px-1">
+          <a class="nav-link text-capitalize font-weight-bold"><%= message.main.user %></a>
+      </li>
+      <% }; %>
     </ul>
   </div>
     

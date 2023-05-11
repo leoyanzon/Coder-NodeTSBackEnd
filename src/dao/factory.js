@@ -9,6 +9,7 @@ const UsersMongoAtlasRepository = require('./repository/users/users.mongoAtlas.r
 const UsersMongoRepository = require('./repository/users/users.mongo.repository');
 
 const CartMemRepository = require('./repository/cart/cart.mem.repository');
+const CartFileRepository = require('./repository/cart/cart.file.repository');
 
 const config = require('../config/config');
 
@@ -32,6 +33,7 @@ class ProductsFactory{
 
 class CartFactory{
     static getInstance(){
+        if(config.db.DATA_STORAGE == 'FILE') return CartFileRepository.getInstance('Cart');
         return CartMemRepository.getInstance();
     }
 }
