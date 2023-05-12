@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const config = require('../config/config');
+const config = require('../loaders/config.loader')();
 
 const infoRouter = require('./info/info.routes');
 const sessionRouter = require('./session/session.routes');

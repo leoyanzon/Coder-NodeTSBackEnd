@@ -6,11 +6,11 @@ const { getStoreConfig } = require('../config/mongo.config');
 
 const cookieParser = require('cookie-parser');
 
-const passportService = require('../services/passport/passport.service');
+const passportService = require('../utils/passport/passport.service');
 
-const config = require('../config/config');
-const { logger } = require('../services/logger/index');
-const createFolder = require('../utils/folders.utils');
+const config = require('../loaders/config.loader')();
+const { logger } = require('../utils/logger/index');
+const createFolder = require('../utils/fs/folders.utils');
 
 const getSessionStorage = async () => {
     if (config.server.SESSION_STORAGE == 'MONGO_DB') {

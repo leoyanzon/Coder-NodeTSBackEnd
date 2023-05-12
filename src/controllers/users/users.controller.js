@@ -1,9 +1,9 @@
 const { UsersFactory } = require('../../dao/factory');
-const { logger } = require('../../services/logger/index'); 
+const { logger } = require('../../utils/logger/index'); 
 
 const httpStatus = require('http-status');
 
-const EncryptService = require('../../services/encrypt/encrypt.service');
+const EncryptService = require('../../utils/encrypt/encrypt.service');
 const encryptService = new EncryptService();
 
 class UsersController{

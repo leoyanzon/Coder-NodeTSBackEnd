@@ -1,7 +1,7 @@
-const { loggerHttp } = require('../services/logger/index');
+const { loggerHttp } = require('../utils/logger/index');
 const morgan = require('morgan');
 
-const loggerLoader = async( app ) => {
+const loggerLoader = ( app ) => {
 
     //app.use(loggerHttp);
     //app.use(morgan('dev'));

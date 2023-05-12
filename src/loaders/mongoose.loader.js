@@ -1,5 +1,5 @@
 const MongooseConnect = require('../services/mongo/connect');
-const config = require('../config/config');
+const config = require('../loaders/config.loader')();
 
 const mongooseLoader = async( app ) => {
 

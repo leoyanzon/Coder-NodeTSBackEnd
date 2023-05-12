@@ -1,4 +1,4 @@
-const {logger} = require('../services/logger/index');
+const {logger} = require('../logger/index');
 const fs = require('fs');
 const path = require('path');
 

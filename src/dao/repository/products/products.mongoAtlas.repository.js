@@ -1,6 +1,6 @@
 const ProductsModel = require('../../models/products.model');
 const MongooseConnect = require('../../../services/mongo/connect');
-const { logger } = require('../../../services/logger');
+const { logger } = require('../../../utils/logger');
 
 class ProductsMongoAtlasRepository{
     constructor(){

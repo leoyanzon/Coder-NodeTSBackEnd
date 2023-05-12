@@ -21,7 +21,7 @@ const schema = createSchema({
       username: String!
       address: String!
       age: Int!
-      phone: String!
+      email: String!
       avatar: String!
       cart: [Product!]!
       password: String!

@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 
 const { logger } = require('../logger/index');
 
-const config = require('../../config/config');
+const config = require('../../loaders/config.loader')();
 
 const sendEmail = async (msg, destination) => {
 

@@ -1,10 +1,10 @@
 const supertest = require('supertest');
-const config = require('../../config/config');
+const config = require('../../loaders/config.loader')();
 const request = supertest(`http://localhost:${config.server.SERVER_PORT}`);
 
 const generator = require('./productGenerator');
 
-const { logger } = require('../../services/logger/index');
+const { logger } = require('../../utils/logger/index');
 
 const productMockGenerator = async ( qty ) => {
     try{

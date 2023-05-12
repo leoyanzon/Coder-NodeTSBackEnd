@@ -1,5 +1,5 @@
 const ProductDTO = require('../../dto/product.dto');
-const { logger } = require('../../../services/logger');
+const { logger } = require('../../../utils/logger');
 const { v4: uuidv4 } = require('uuid');
 
 class CartMemRepository{

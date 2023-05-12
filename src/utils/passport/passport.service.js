@@ -5,10 +5,10 @@ const LocalStrategy = require('passport-local').Strategy;
 const UsersController = require('../../controllers/users/users.controller');
 const usersController = UsersController.getInstance();
 
-const sendEmail = require('../nodeMailer/nodeMailer.service');
-const sendWhatsappAsync = require('../twilio/whatsapp.services');
+const sendEmail = require('../../utils/nodeMailer/nodeMailer.service');
+const sendWhatsappAsync = require('../../utils/twilio/whatsapp.services');
 
-const { logger } = require('../logger/index');
+const { logger } = require('../../utils/logger/index');
 
 passport.use('signin', new LocalStrategy(async(username, password, done) => {
     try{

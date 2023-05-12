@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const config = require('../../config/config');
+const config = require('../../loaders/config.loader')();
 const { getMongoConfig } = require('../../config/mongo.config');
 
-const { logger } = require('../logger/index');
+const { logger } = require('../../utils/logger/index');
 class MongooseConnect{
 
     constructor(){

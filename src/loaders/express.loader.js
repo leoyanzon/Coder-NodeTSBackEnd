@@ -2,9 +2,9 @@ const express = require('express');
 const compression = require('compression');
 const cors = require('cors');
 
-const config = require('../config/config');
+const config = require('../loaders/config.loader')();
 
-const expressLoader = async ( app ) => {
+const expressLoader = ( app ) => {
     app.use(compression());
     app.use(express.json());
     app.use(express.urlencoded({extended:true}));

@@ -2,7 +2,7 @@ const pino = require('pino');
 const pinoHttp = require('pino-http');
 const pretty = require('pino-pretty');
 
-const config = require('../../config/config');
+const config = require('../../loaders/config.loader')();
 
 const levels = {
   emerg: 80,

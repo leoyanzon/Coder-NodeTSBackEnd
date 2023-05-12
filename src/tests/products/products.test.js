@@ -1,4 +1,4 @@
-const config = require('../../config/config');
+const config = require('../../loaders/config.loader')();
 const expect = require('chai').expect;
 const generator = require('./productGenerator');
 

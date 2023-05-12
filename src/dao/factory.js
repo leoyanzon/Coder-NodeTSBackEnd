@@ -11,7 +11,7 @@ const UsersMongoRepository = require('./repository/users/users.mongo.repository'
 const CartMemRepository = require('./repository/cart/cart.mem.repository');
 const CartFileRepository = require('./repository/cart/cart.file.repository');
 
-const config = require('../config/config');
+const config = require('../loaders/config.loader')();
 
 class UsersFactory{
     static getInstance(){

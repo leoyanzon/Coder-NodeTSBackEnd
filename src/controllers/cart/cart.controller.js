@@ -1,5 +1,5 @@
 const { CartFactory } = require('../../dao/factory');
-const { logger } = require('../../services/logger/index');
+const { logger } = require('../../utils/logger/index');
 
 const UsersController = require('../../controllers/users/users.controller');
 const usersController = UsersController.getInstance();
@@ -9,8 +9,8 @@ const productFactory = ProductsFactory.getInstance();
 
 const httpStatus = require('http-status');
 
-const sendEmail = require('../../services/nodeMailer/nodeMailer.service');
-const sendWhatsappAsync = require('../../services/twilio/whatsapp.services');
+const sendEmail = require('../../utils/nodeMailer/nodeMailer.service');
+const sendWhatsappAsync = require('../../utils/twilio/whatsapp.services');
 
 class CartController{
     constructor(){

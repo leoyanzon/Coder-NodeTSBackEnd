@@ -1,7 +1,7 @@
 const auth = require('basic-auth');
 const twilio = require('twilio');
 
-const config = require('../../config/config');
+const config = require('../../loaders/config.loader')();
 
 const { logger } = require('../logger/index');
 

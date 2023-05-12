@@ -1,5 +1,5 @@
 const { ProductsFactory } = require('../../dao/factory');
-const { logger } = require('../../services/logger/index');
+const { logger } = require('../../utils/logger/index');
 
 class ProductsGraphQlController{
     constructor(){
