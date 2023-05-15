@@ -1,19 +1,19 @@
 const CartsModel = require('../../models/cart.model');
 const MongooseConnect = require('../../../services/mongo/connect');
-const { logger } = require('../../../utils/logger');
-
 const CartDTO = require('../../dto/cart.dto');
+
+const { logger } = require('../../../utils/logger');
 
 const AppError = require('../../../middlewares/error.middleware');
 
-class CartsMongoAtlasRepository{
+class CartMongoAtlasRepository{
     constructor() {
         MongooseConnect.getInstance();
     }
 
     static getInstance(){
         if (!this.instance){
-            this.instance = new CartsMongoAtlasRepository();
+            this.instance = new CartMongoAtlasRepository();
             logger.info('Carts Repository: Mongo Atlas instance created');
         }
         return this.instance
@@ -21,7 +21,7 @@ class CartsMongoAtlasRepository{
 
     async getAll(){
         try{
-            const query = await CartsModel.findOne({});
+            const query = await CartsModel.find({});
             const cartDTO = await new CartDTO(query);
             return cartDTO;
         } catch (err){
@@ -39,15 +39,15 @@ class CartsMongoAtlasRepository{
         
     }
 
-    async getByCondition( _ , condition ){
+    async getByCondition( fieldName = '_id' , fieldValue ){
         try{
-            const query = await CartsModel.findOne({ condition });
-            const CartDTO = await new CartDTO(query);
-            return CartDTO;
+            const query = await CartsModel.findOne({ [fieldName]: fieldValue });
+            const cartDTO = await new CartDTO(query);
+            return cartDTO;
         } catch (err) {
             throw new AppError(err.message, 'Mongo data process', 'Carts Repository','getByCondition(fieldName, fieldValue) error', 500 );
         }
     }
 }
 
-module.exports = CartsMongoRepository;
+module.exports = CartMongoAtlasRepository;

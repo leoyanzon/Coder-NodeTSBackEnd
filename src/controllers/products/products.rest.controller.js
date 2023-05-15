@@ -11,7 +11,8 @@ class ProductsRestController{
         
         // Create Mock of 10 products
         this.productServices.getAll().then((data)=> {
-            if (data.length < 1){
+            console.info(data)
+            if (!data){
                 productMockGenerator(10);
             }}
         );

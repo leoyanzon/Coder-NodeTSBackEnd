@@ -1,8 +1,8 @@
 const UserModel = require('../../models/user.model');
 const MongooseConnect = require('../../../services/mongo/connect')
 
-const UserDTO = require('../../dto/user.dto');
 const AppError = require('../../../middlewares/error.middleware');
+const { logger } = require('../../../utils/logger/index')
 
 class UserMongoRepository{
     constructor() {
@@ -36,9 +36,9 @@ class UserMongoRepository{
         
     }
 
-    async getByCondition( _ , condition ){
+    async getByCondition( fieldName = '_id' , fieldValue ){
         try{
-            const query = await UserModel.findOne({ condition });
+            const query = await UserModel.findOne({ [fieldName]: fieldValue });
             return query
         } catch (err) {
             throw new AppError(err.message, 'Mongo data process', 'Users Repository','getByCondition(fieldName, fieldValue) error', 500 );

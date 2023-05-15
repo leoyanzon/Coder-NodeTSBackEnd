@@ -10,6 +10,8 @@ const UserMongoRepository = require('./repository/user/user.mongo.repository');
 
 const CartMemRepository = require('./repository/cart/cart.mem.repository');
 const CartFileRepository = require('./repository/cart/cart.file.repository');
+const CartMongoAtlasRepository = require('./repository/cart/cart.mongoAtlas.repository');
+const CartMongoRepository = require('./repository/cart/cart.mongo.repository');
 
 const config = require('../loaders/config.loader')();
 
@@ -33,8 +35,10 @@ class ProductFactory{
 
 class CartFactory{
     static getInstance(){
+        if(config.db.DATA_STORAGE == 'MEM') return CartMemRepository.getInstance('Cart');
         if(config.db.DATA_STORAGE == 'FILE') return CartFileRepository.getInstance('Cart');
-        return CartMemRepository.getInstance();
+        if(config.db.DATA_STORAGE == 'MONGO_ATLAS') return CartMongoAtlasRepository.getInstance();
+        return CartMongoRepository.getInstance();
     }
 }
 
