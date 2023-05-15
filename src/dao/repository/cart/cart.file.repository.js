@@ -1,14 +1,15 @@
-const path = require('path');
 const { logger } = require('../../../utils/logger');
 const { v4: uuidv4 } = require('uuid');
 
-const fs = require('fs');
 const CartDTO = require('../../dto/cart.dto');
+
+const fs = require('fs');
 const createFolder = require('../../../utils/fs/folders.utils');
 
+const AppError = require('../../../middlewares/error.middleware');
 class CartFileRepository {
     constructor(_nombreArchivo){
-        this.folderName = 'public/db/';
+        this.folderName = 'tmp/db/';
         this.fileName = `${_nombreArchivo}.txt`;
         this.ruta = this.folderName + this.fileName;
         this.createFile();
@@ -41,26 +42,27 @@ class CartFileRepository {
             if (contenido == ""){
                 let data = []
                 return data;
-            } else {
-                let data = JSON.parse(contenido);
-                return data;
-            }
+            } 
+            const data = JSON.parse(contenido);
+            return data;
         } catch (err){
-            logger.error(`Cart Repository: getAll() error:${err.message}`);
+            throw new AppError(err.message, 'File data process', 'Carts Repository','getAll() error', 500 );
         }
     }
-    async save(cartData){
+    async append(cartData){
         try{
             const objetosExistentes = await this.getAll();
             const _id = uuidv4();
-            const cartDTO = await new CartDTO(cartData);
+            
+            const cartDTO = new CartDTO(cartData);
+            const newCart = {...cartDTO, _id:_id};
+            objetosExistentes.push(newCart);
 
-            objetosExistentes.push({...cartDTO, _id:_id});
             const data = JSON.stringify(objetosExistentes);
             await fs.promises.writeFile(this.ruta, data)
-            return _id
+            return newCart
         } catch (err){
-            logger.error(`Cart Repository: save() error:${err.message}`);
+            throw new AppError(err.message, 'File data process', 'Carts Repository','append() error', 500 );
         }
     }
 
@@ -68,19 +70,17 @@ class CartFileRepository {
         try{
             const objetosExistentes = await this.getAll();
             
-            const newObject = objetosExistentes.map(item => {
+            const updatedCart = objetosExistentes.map(item => {
                 if (item._id == cartData._id){
                     item = cartData;
                 }
                 return item
             })
-
-            const data = JSON.stringify(newObject);
+            const data = JSON.stringify(updatedCart);
             await fs.promises.writeFile(this.ruta, data)
             return true
         } catch (err){
-            logger.error(`Cart Repository: update() error:${err.message}`);
-            return false
+            throw new AppError(err.message, 'File data process', 'Carts Repository','update(cartData) error', 500 );
         }
     }
 
@@ -88,30 +88,40 @@ class CartFileRepository {
         try{
             const objetosExistentes = await this.getAll();
             const query = objetosExistentes.filter(it => (it.userId === userId && it.completed == false));
-            if (query.length > 0) return query[ query.length - 1 ];
-            return undefined;
+            if ( !query.length ) {
+                return false;
+            }
+            return query[ query.length - 1 ];
         } catch(err) {
-            logger.error(`Cart Repository: getById() error ${err.message}`);
+            throw new AppError(err.message, 'File data process', 'Carts Repository','getLastCart(userId) error', 500 );
         }
     }
 
-    async getById(_id){
+    async getByCondition( fieldName = "_id", fieldValue ){
         try{
             const objetosExistentes = await this.getAll();
-            const [ query ] = objetosExistentes.filter(it => it._id === _id)
-            return query;
+            const [ query ] = objetosExistentes.filter(it => it[fieldName] === fieldValue);
+            if ( query == null ) {
+                return false
+            }
+            const cartDTO = new CartDTO(query);
+            return cartDTO;
         } catch(err) {
-            logger.error(`Cart Repository: getById() error ${err.message}`);
+            throw new AppError(err.message, 'File data process', 'Carts Repository','getByCondition(fieldName, fieldValue) error', 500 );
         }
     }
-    async deleteById(_id){
+    async deleteByCondition( fieldName = "_id", fieldValue ){
         try{
             const objetosExistentes = await this.getAll();
-            const data = JSON.stringify(objetosExistentes.filter(it => it._id != _id));
+            const filteredObject = objetosExistentes.filter(it => it[fieldName] != fieldValue);
+            if ( objetosExistentes === filteredObject ) {
+                return false
+            }
+            const data = JSON.stringify(filteredObject);
             await fs.promises.writeFile(this.ruta, data);
-            return _id;
+            return true;
         } catch(err) {
-            logger.error(`Cart Repository: deleteById() error ${err.message}`);
+            throw new AppError(err.message, 'File data process', 'Carts Repository','deleteByCondition(fieldName, fieldValue) error', 500 );
         }
     }
     async deleteAll(){
@@ -119,7 +129,7 @@ class CartFileRepository {
             await fs.promises.writeFile(this.ruta, "");
             return true
         } catch(err) {
-            logger.error(`Cart Repository: deleteAll() error ${err.message}`);
+            throw new AppError(err.message, 'File data process', 'Carts Repository','deleteAll error', 500 );
         }
     }
 }

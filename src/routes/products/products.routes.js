@@ -9,7 +9,7 @@ class ProductsRouter {
     start() {
         router.get('/', this.productsRestController.getAll);
         router.get('/:id', this.productsRestController.getById);
-        router.post('/', this.productsRestController.save);
+        router.post('/', this.productsRestController.append);
         router.delete('/:id', this.productsRestController.deleteById);
         router.delete('/', this.productsRestController.deleteAll);
 

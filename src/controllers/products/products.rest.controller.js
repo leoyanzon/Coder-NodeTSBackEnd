@@ -1,4 +1,4 @@
-const { ProductsFactory } = require('../../dao/factory');
+const ProductServices = require('../../services/product/product.services');
 const { logger } = require('../../utils/logger/index');
 
 const httpStatus = require('http-status');
@@ -7,10 +7,10 @@ const productMockGenerator = require('../../tests/products/products.mocks');
 
 class ProductsRestController{
     constructor(){
-        this.productFactory = ProductsFactory.getInstance();
+        this.productServices = new ProductServices();
         
         // Create Mock of 10 products
-        this.productFactory.getAll().then((data)=> {
+        this.productServices.getAll().then((data)=> {
             if (data.length < 1){
                 productMockGenerator(10);
             }}
@@ -27,7 +27,7 @@ class ProductsRestController{
 
     getAll = async(_req, res) =>{
         try {
-            const data = await this.productFactory.getAll();
+            const data = await this.productServices.getAll();
             
             if (!data) {
                 return res.status(500).json({
@@ -53,7 +53,7 @@ class ProductsRestController{
     getById = async(req, res) =>{
         try {
             const id = req.params.id;
-            const data = await this.productFactory.getById(id);
+            const data = await this.productServices.getById(id);
             
             if (!data) {
                 return res.status(500).json({
@@ -76,9 +76,9 @@ class ProductsRestController{
         }
     }
 
-    save = async(req, res) =>{
+    append = async(req, res) =>{
         try {
-            const data = await this.productFactory.save(req.body);
+            const data = await this.productServices.append(req.body);
             if (!data) {
                 return res.status(500).json({
                     success: false,
@@ -101,7 +101,7 @@ class ProductsRestController{
     deleteById = async(req, res) =>{
         try {
             const id = req.params.id;
-            const data = await this.productFactory.deleteById(id);
+            const data = await this.productServices.deleteById(id);
             if (!data) {
                 return res.status(500).json({
                     success: false,
@@ -123,7 +123,7 @@ class ProductsRestController{
 
     deleteAll = async(_req, res) =>{
         try {
-            const data = await this.productFactory.deleteAll();
+            const data = await this.productServices.deleteAll();
             if (!data) {
                 return res.status(500).json({
                     success: false,

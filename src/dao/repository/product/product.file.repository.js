@@ -6,9 +6,11 @@ const fs = require('fs');
 
 const createFolder = require('../../../utils/fs/folders.utils');
 
-class ProductsFileRepository {
+const AppError = require('../../../middlewares/error.middleware');
+
+class ProductFileRepository {
     constructor(_nombreArchivo){
-        this.folderName = 'public/db/';
+        this.folderName = 'tmp/db/';
         this.fileName = `${_nombreArchivo}.txt`;
         this.ruta = this.folderName + this.fileName;
         this.createFile();
@@ -16,7 +18,7 @@ class ProductsFileRepository {
 
     static getInstance(_nombreArchivo){
         if (!this.instance){
-            this.instance = new ProductsFileRepository(_nombreArchivo);
+            this.instance = new ProductFileRepository(_nombreArchivo);
             logger.info(`Products Repository: File ${this.instance.ruta} used`);
         }
 
@@ -35,52 +37,62 @@ class ProductsFileRepository {
             logger.error(`Products Repository: Error creating file:${err.message}`)
         }
     }
+
     async getAll(){
         try{
             const contenido = await fs.promises.readFile(this.ruta, 'utf-8');
             if (contenido == ""){
                 let data = []
                 return data;
-            } else {
-                let data = JSON.parse(contenido);
-                return data;
             }
+            const data = JSON.parse(contenido);
+            return data;
         } catch (err){
-            logger.error(`Products Repository: getAll() error:${err.message}`);
+            throw new AppError(err.message, 'File data process', 'Products Repository','getAll() error', 500 );
         }
     }
-    async save(productData){
+    async append(productData){
         try{
             const objetosExistentes = await this.getAll();
             const _id = uuidv4();
-            const productDTO = await new ProductDTO(productData);
 
-            objetosExistentes.push({...productDTO, _id:_id});
+            const productDTO = new ProductDTO(productData);
+            const newProduct = {...productDTO, _id:_id}
+            objetosExistentes.push(newProduct);
 
             const data = JSON.stringify(objetosExistentes);
             await fs.promises.writeFile(this.ruta, data)
-            return _id
+            return newProduct
         } catch (err){
-            logger.error(`Products Repository: save() error:${err.message}`);
+            throw new AppError(err.message, 'File data process', 'Products Repository','append() error', 500 );
         }
     }
-    async getById(_id){
+    async getByCondition( fieldName = "_id", fieldValue ){
         try{
             const objetosExistentes = await this.getAll();
-            const [ query ] = objetosExistentes.filter(it => it._id === _id)
-            return query;
+            const [ query ] = objetosExistentes.filter(it => it[fieldName] === fieldValue);
+            if ( query == null ) {
+                return false
+            }
+            const productDTO = new ProductDTO(query);
+            return productDTO;
         } catch(err) {
-            logger.error(`Products Repository: getById() error ${err.message}`);
+            throw new AppError(err.message, 'File data process', 'Products Repository','getByCondition(fieldName, fieldValue) error', 500 );
         }
     }
-    async deleteById(_id){
+    async deleteByCondition( fieldName = "_id", fieldValue ){
         try{
             const objetosExistentes = await this.getAll();
-            const data = JSON.stringify(objetosExistentes.filter(it => it._id != _id));
+            const filteredObject = objetosExistentes.filter(it => it[fieldName] != fieldValue);
+
+            if ( objetosExistentes === filteredObject ) {
+                return false
+            }
+            const data = JSON.stringify(filteredObject);
             await fs.promises.writeFile(this.ruta, data);
-            return _id;
+            return true;
         } catch(err) {
-            logger.error(`Products Repository: deleteById() error ${err.message}`);
+            throw new AppError(err.message, 'File data process', 'Products Repository','deleteByCondition(fieldName, fieldValue) error', 500 );
         }
     }
     async deleteAll(){
@@ -88,9 +100,9 @@ class ProductsFileRepository {
             await fs.promises.writeFile(this.ruta, "");
             return true
         } catch(err) {
-            logger.error(`Products Repository: deleteAll() error ${err.message}`);
+            throw new AppError(err.message, 'File data process', 'Products Repository','deleteAll error', 500 );
         }
     }
 }
 
-module.exports = ProductsFileRepository;
+module.exports = ProductFileRepository;

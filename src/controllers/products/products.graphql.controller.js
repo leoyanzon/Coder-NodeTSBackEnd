@@ -1,9 +1,9 @@
-const { ProductsFactory } = require('../../dao/factory');
+const ProductServices = require('../../services/product/product.services');
 const { logger } = require('../../utils/logger/index');
 
 class ProductsGraphQlController{
     constructor(){
-        this.productFactory = ProductsFactory.getInstance();
+        this.productServices = new ProductServices();;
     }
 
     static getInstance(){
@@ -15,7 +15,7 @@ class ProductsGraphQlController{
 
     getAll = async (_req, _res) =>{
         try{
-            const query = await this.productFactory.getAll();
+            const query = await this.productServices.getAll();
             return query
         } catch(err){
             return err
@@ -24,16 +24,16 @@ class ProductsGraphQlController{
 
     getById = async(id) =>{
         try {
-            const query = await this.productFactory.getById(id);
+            const query = await this.productServices.getById(id);
             return query
         } catch(err){
             return err
         }
     }
 
-    save = async(req, res) =>{
+    append = async(req, res) =>{
         try {
-            const mutation = await this.productFactory.save(req.body);
+            const mutation = await this.productServices.append(req.body);
             return true
         } catch(err){
             return false
@@ -43,7 +43,7 @@ class ProductsGraphQlController{
     deleteById = async(req, res) =>{
         try {
             const id = parseInt(req.params.id);
-            const data = await this.productFactory.deleteById(id);
+            const data = await this.productServices.deleteById(id);
             if (!data) {
                 return res.status(500).json({
                     success: false,
@@ -65,7 +65,7 @@ class ProductsGraphQlController{
 
     deleteAll = async(_req, res) =>{
         try {
-            const data = await this.productFactory.deleteAll();
+            const data = await this.productServices.deleteAll();
             if (!data) {
                 return res.status(500).json({
                     success: false,

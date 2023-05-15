@@ -6,9 +6,11 @@ const UserDTO = require('../../dto/user.dto');
 const fs = require('fs');
 const createFolder = require('../../../utils/fs/folders.utils');
 
-class UsersFileRepository {
+const AppError = require('../../../middlewares/error.middleware');
+
+class UserFileRepository {
     constructor(_nombreArchivo){
-        this.folderName = 'public/db/';
+        this.folderName = 'tmp/db/';
         this.fileName = `${_nombreArchivo}.txt`;
         this.ruta = this.folderName + this.fileName;
         this.createFile();
@@ -16,7 +18,7 @@ class UsersFileRepository {
 
     static getInstance(_nombreArchivo){
         if (!this.instance){
-            this.instance = new UsersFileRepository(_nombreArchivo);
+            this.instance = new UserFileRepository(_nombreArchivo);
             logger.info(`Users Repository: File ${this.instance.ruta} used`);
         }
         return this.instance
@@ -44,12 +46,12 @@ class UsersFileRepository {
             }
             const data = JSON.parse(contenido);
             return data;
-
         } catch (err){
-            logger.error(`Users Repository: getAll() error ${err.message}`);
+            throw new AppError(err.message, 'File data process', 'Users Repository','getAll() error', 500 );
         }
     }
-    async save(userData){
+
+    async append(userData){
         try{
             const objetosExistentes = await this.getAll();
             const _id = uuidv4();
@@ -61,55 +63,59 @@ class UsersFileRepository {
             await fs.promises.writeFile(this.ruta, data)
             return newUser
         } catch (err){
-            logger.error(`Users Repository: save() error ${err.message}`);
+            throw new AppError(err.message, 'File data process', 'Users Repository','append(userData) error', 500 );
         }
     }
-    async getUserByUserName( username ){
+    async getByCondition( fieldName = "_id", fieldValue ){
         try{
             const objetosExistentes = await this.getAll();
-            const [ query ] = objetosExistentes.filter(it => it.username === username);
+            const [ query ] = objetosExistentes.filter(it => it[fieldName] === fieldValue);
+            if ( query == null ) {
+                return false
+            }
             return query;
         } catch(err) {
-            logger.error(`Users Repository: getUserByUserName() error ${err.message}`);
+            throw new AppError(err.message, 'File data process', 'Users Repository','getByCondition(fieldName, fieldValue) error', 500 );
         }
     }
+
     async getPasswordByUserName( username ){
         try{
             const objetosExistentes = await this.getAll();
             const [ query ] = objetosExistentes.filter(it => it.username === username);
+            if ( query == null ) {
+                return false
+            }
             return query.password;
         } catch(err) {
-            logger.error(`Users Repository: getPasswordByUserName() error ${err.message}`);
+            throw new AppError(err.message, 'File data process', 'Users Repository','getPasswordByUserName(username) error', 500 );
         }
     }
-    async getUserById( _id ){
+
+    async deleteByCondition( fieldName = "_id", fieldValue ){
         try{
-            const objetosExistentes = await this.getAll();
-            const [ query ] = objetosExistentes.filter(it => it._id === _id)
-            const userDTO = await new UserDTO(query);
-            return userDTO;
-        } catch(err) {
-            logger.error(`Users Repository: getUserById() error ${err.message}`);
-        }
-    }
-    async deleteById(_id){
-        try{
-            const objetosExistentes = await this.getAll();
-            const data = JSON.stringify(objetosExistentes.filter(it => it._id != _id));
+            const objetosExistentes = await this.getAll();           
+            const filteredObject = objetosExistentes.filter(it => it[fieldName] != fieldValue);
+            
+            if ( objetosExistentes === filteredObject ) {
+                return false
+            }
+            const data = JSON.stringify(filteredObject);
             await fs.promises.writeFile(this.ruta, data);
-            return _id;
+            return true;
         } catch(err) {
-            logger.error(`Users Repository: deleteById() error ${err.message}`);
+            throw new AppError(err.message, 'File data process', 'Users Repository','deleteByCondition(fieldName, fieldValue) error', 500 );
         }
     }
+
     async deleteAll(){
         try{
             await fs.promises.writeFile(this.ruta, "");
             return true
         } catch(err) {
-            logger.error(`Users Repository: deleteAll() error ${err.message}`);
+            throw new AppError(err.message, 'File data process', 'Users Repository','deleteAll error', 500 );
         }
     }
 }
 
-module.exports = UsersFileRepository;
+module.exports = UserFileRepository;

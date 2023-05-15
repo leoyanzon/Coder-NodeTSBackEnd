@@ -1,9 +1,8 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
-//tengo que remplazar Usermodel por UsersFactory
-const UsersController = require('../../controllers/users/users.controller');
-const usersController = UsersController.getInstance();
+const UserServices = require('../../services/user/user.services');
+const userServices = new UserServices();
 
 const sendEmail = require('../../utils/nodeMailer/nodeMailer.service');
 const sendWhatsappAsync = require('../../utils/twilio/whatsapp.services');
@@ -12,25 +11,23 @@ const { logger } = require('../../utils/logger/index');
 
 passport.use('signin', new LocalStrategy(async(username, password, done) => {
     try{
-        const checkUser = await usersController.userExists( username );
-        if(!checkUser.success){
-            logger.error(checkUser.message)
+        const checkUser = await userServices.userExists( username );
+        if(!checkUser){
+            logger.error('Passport: User not found')
             return done(null, false);
         }
-
-        const checkPassword = await usersController.passwordCheck( username, password );
-        if(!checkPassword.success){
-            logger.error(checkPassword.message)
+        const checkPassword = await userServices.passwordCheck( username, password );
+        if(!checkPassword){
+            logger.error('Passport: User or password wrong')
             return done(null, false);
         }
-
-        const data = await usersController.getUserByUserName(username);
-        if(!data.success){
-            logger.error(data.message)
+        const data = await userServices.getByUserName( username );
+        if(!data){
+            logger.error('Passport: User not found')
             return done(null, false);
         }
         logger.info(`Passport: user ${username} logged successfully`);
-        return done(null,data.message);
+        return done(null,data);
     } catch(err) {
         logger.error(`Passport error: ${err}`)
         return done(null, false);
@@ -41,18 +38,16 @@ passport.use('signup', new LocalStrategy({
     passReqToCallback: true
 }, async (req, username, _password, done) => {
     try{
-        const data = await usersController.userExists( username );
-        if(data.success){
+        const data = await userServices.userExists( username );
+        if(data){
             logger.info(`Passport: user ${username} already exists`)
             return done(null, false);
         }
-
-        const stageUser = await usersController.save(req.body);
-        if(!stageUser.success){
+        const newUser = await userServices.append(req.body);
+        if(!newUser){
             logger.error(`Passport error: ${err}`)
             return done(null, false);
         }
-        const newUser = stageUser.message;
         logger.info(`Passport: new user created successfully`);
 
         const whatsapp = await sendWhatsappAsync(`User ${newUser.username} created successfully`);
@@ -71,8 +66,8 @@ passport.serializeUser((user, done) => {
 })
 
 passport.deserializeUser(async (_id, done) => {
-    const userData = await usersController.getUserById(_id);
-    done(null, userData.message);
+    const userData = await userServices.getById( _id );
+    done(null, userData);
 })
 
 module.exports = passport;

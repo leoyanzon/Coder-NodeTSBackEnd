@@ -1,9 +1,9 @@
 const { createSchema } = require('graphql-yoga');
 const ProductsGraphQlController = require('../../controllers/products/products.graphql.controller')
-const { UsersFactory } = require('../../dao/factory');
+const { UserFactory } = require('../../dao/factory');
 
 const productGraphQlController = ProductsGraphQlController.getInstance();
-const userFactory = UsersFactory.getInstance();
+const userFactory = UserFactory.getInstance();
 
 const schema = createSchema({
   typeDefs: /* GraphQL */ `
@@ -66,7 +66,7 @@ const schema = createSchema({
     },
     Mutation: {
       addProduct(title) {
-        const product = productGraphQlController.save(title)
+        const product = productGraphQlController.append(title)
         return product
       }
     }

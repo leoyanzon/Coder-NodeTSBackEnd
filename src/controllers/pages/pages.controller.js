@@ -1,9 +1,9 @@
 //const PagesApi = require('../../api/pages/pages.api);
-const UsersController = require('../../controllers/users/users.controller');
-const usersController = UsersController.getInstance();
+const UserServices = require('../../services/user/user.services');
+const userServices = new UserServices();
 
-const { ProductsFactory } = require('../../dao/factory');
-const productFactory = ProductsFactory.getInstance();
+const ProductServices = require('../../services/product/product.services');
+const productServices = new ProductServices();
 
 const { CartFactory } = require('../../dao/factory');
 const cartFactory = CartFactory.getInstance();
@@ -86,34 +86,33 @@ class PagesController {
     }
 
     home = async(req, res) => {
-        const userData = await usersController.getUserById(req.session.passport.user);
+        const userData = await userServices.getById(req.session.passport.user);
         const navBar = [
             { title: "Home", link: "/"},
             { title: "Cart", link: "/cart"},
             { title: "Logout", link: "/api/auth/signout"}
         ];
         const main = {
-            user: userData.message.username,
+            user: userData.username,
             isAuthenticated: req.isAuthenticated(),
-            products: await productFactory.getAll(),
+            products: await productServices.getAll(),
         }
         const message = {
             navBar: navBar,
             main: main,
         }
-
         res.render('home', {message: message});
     }
 
     cart = async(req, res) => {
-        const userData = await usersController.getUserById(req.session.passport.user);
+        const userData = await userServices.getById(req.session.passport.user);
         const navBar = [
             { title: "Home", link: "/"},
             { title: "Cart", link: "/cart"},
             { title: "Logout", link: "/api/auth/signout"}
         ];
         const main = {
-            user: userData.message.username,
+            user: userData.username,
             isAuthenticated: req.isAuthenticated(),
             cart: await cartFactory.getLastCart(req.session.passport.user),
         }

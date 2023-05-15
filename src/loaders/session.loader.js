@@ -22,9 +22,9 @@ const getSessionStorage = async () => {
         return MongoStore.create(getStoreConfig(`${config.db.MONGO_ATLAS_URL}/sessions`))
     }
     //Else SESSION_STORAGE == FILE OR MEM
-    await createFolder('public/db/');
+    await createFolder('tmp/db/');
     logger.info('Session Storage: Session file created');
-    return new FileStore({path: './session', ttl:300, retries: 0})
+    return new FileStore({path: 'tmp/db/session', ttl:300, retries: 0})
 }
 
 const sessionLoader = async ( app ) => {

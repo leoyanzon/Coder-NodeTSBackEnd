@@ -19,6 +19,9 @@
     "testUsers": "mocha src/tests/users/users.test.js",
     "testProducts": "mocha src/tests/products/products.test.js"
   },
+  "nodemonConfig": {
+    "ignore":["tmp/**"]
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

@@ -13,7 +13,7 @@ const expressLoader = ( app ) => {
         
     app.set('view engine', 'ejs');
     app.set('views', './views');
-    app.use('/uploads', express.static('public/images'));
+    app.use('/uploads', express.static('tmp/images'));
 
     return app;
 }

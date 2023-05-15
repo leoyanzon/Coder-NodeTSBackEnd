@@ -1,11 +1,11 @@
-const { CartFactory } = require('../../dao/factory');
+const CartServices = require('../../services/cart/cart.services');
 const { logger } = require('../../utils/logger/index');
 
-const UsersController = require('../../controllers/users/users.controller');
-const usersController = UsersController.getInstance();
+const UserServices = require('../../services/user/user.services');
+const userServices = new UserServices();
 
-const { ProductsFactory } = require('../../dao/factory');
-const productFactory = ProductsFactory.getInstance();
+const ProductServices = require('../../services/product/product.services');
+const productServices = new ProductServices();
 
 const httpStatus = require('http-status');
 
@@ -14,7 +14,7 @@ const sendWhatsappAsync = require('../../utils/twilio/whatsapp.services');
 
 class CartController{
     constructor(){
-        this.cartFactory = CartFactory.getInstance();
+        this.cartServices = new CartServices();
     }
 
     static getInstance(){
@@ -27,7 +27,7 @@ class CartController{
 
     getAll = async(_req, res) =>{
         try {
-            const data = await this.cartFactory.getAll();
+            const data = await this.cartServices.getAll();
             
             if (!data) {
                 return res.status(500).json({
@@ -59,7 +59,7 @@ class CartController{
                 completed: false,
             }
 
-            const cartId = await this.cartFactory.save(newCart);
+            const cartId = await this.cartServices.append(newCart);
             if (!cartId) {
                 return res.status(500).json({
                     success: false,
@@ -80,14 +80,8 @@ class CartController{
         try {
             const { productId } = req.params;
             const userId = req.session.passport.user;
-            const productSelected = await productFactory.getById(productId);
-            let cartSelected = await this.cartFactory.getLastCart(userId);
-            if (typeof cartSelected == 'undefined' || cartSelected.completed){
-                const cartId = await this.createCart(req, res);
-                cartSelected = await this.cartFactory.getLastCart(userId);
-            }
-            cartSelected.products.push(productSelected);
-            const data = await this.cartFactory.update(cartSelected);
+            const productToAppend = await productServices.getById(productId);
+            const data = await this.cartServices.append(userId, productToAppend );
             if (!data) {
                 return res.status(500).json({
                     success: false,
@@ -106,9 +100,7 @@ class CartController{
 
     buyCart = async(req, res) =>{
         const { cartId } = req.params;
-        let cartSelected = await this.cartFactory.getById(cartId);
-        cartSelected.completed = true;
-        const data = await this.cartFactory.update(cartSelected);
+        const data = await this.cartServices.buyCart(cartId);
             if (!data) {
                 return res.status(500).json({
                     success: false,
@@ -126,7 +118,7 @@ class CartController{
     getById = async(req, res) =>{
         try {
             const id = req.params.id;
-            const data = await this.cartFactory.getById(id);
+            const data = await this.cartServices.getById(id);
             
             if (!data) {
                 return res.status(500).json({
@@ -149,11 +141,11 @@ class CartController{
         }
     }
 
-    save = async(req, res) =>{
+    append = async(req, res) =>{
         try {
             const { _id } = req.params;
-            const productSelected = await productFactory.getById(_id);
-            const data = await this.cartFactory.save(productSelected);
+            const productSelected = await productServices.getById(_id);
+            const data = await this.cartServices.append(productSelected);
             if (!data) {
                 return res.status(500).json({
                     success: false,
@@ -173,7 +165,7 @@ class CartController{
     deleteById = async(req, res) =>{
         try {
             const id = req.params.id;
-            const data = await this.cartFactory.deleteById(id);
+            const data = await this.cartServices.deleteById(id);
             if (!data) {
                 return res.status(500).json({
                     success: false,
@@ -195,7 +187,7 @@ class CartController{
 
     deleteAll = async(_req, res) =>{
         try {
-            const data = await this.cartFactory.deleteAll();
+            const data = await this.cartServices.deleteAll();
             if (!data) {
                 return res.status(500).json({
                     success: false,
@@ -216,16 +208,16 @@ class CartController{
     }
 
     cart = async(req, res) => {
-        const userData = await usersController.getUserById(req.session.passport.user);
+        const userData = await userServices.getById(req.session.passport.user);
         const navBar = [
             { title: "Home", link: "/"},
             { title: "Cart", link: "/cart"},
             { title: "Logout", link: "/api/auth/signout"}
         ];
         const main = {
-            user: userData.message.username,
+            user: userData.username,
             isAuthenticated: req.isAuthenticated(),
-            cart: await this.cartFactory.getLastCart(req.session.passport.user),
+            cart: await this.cartServices.getLastCart(req.session.passport.user),
         }
         const message = {
             navBar: navBar,

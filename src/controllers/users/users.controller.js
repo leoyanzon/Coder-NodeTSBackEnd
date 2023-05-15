@@ -1,4 +1,4 @@
-const { UsersFactory } = require('../../dao/factory');
+const { UserFactory } = require('../../dao/factory');
 const { logger } = require('../../utils/logger/index'); 
 
 const httpStatus = require('http-status');
@@ -6,14 +6,14 @@ const httpStatus = require('http-status');
 const EncryptService = require('../../utils/encrypt/encrypt.service');
 const encryptService = new EncryptService();
 
-class UsersController{
+class UserController{
     constructor(){
-        this.userFactory = UsersFactory.getInstance();
+        this.userFactory = UserFactory.getInstance();
     }
 
     static getInstance(){
         if (!this.instance){
-            this.instance = new UsersController()
+            this.instance = new UserController()
         }
         return this.instance
     }
@@ -41,84 +41,10 @@ class UsersController{
             });
         }
     }
-    userExists = async( username ) => {
-        try{
-            const data = await this.userFactory.getUserByUserName(username);
-            if (!data){
-                return {
-                    success: false,
-                    message: `User ${username} not found`
-                }
-            }     
-            return {
-                success: true,
-                message: `User ${username} found`,
-            }
-        } catch(err){
-            logger.error(err);
-            return({
-                success: false,
-                message: err
-            });
-        }
-    }
-    passwordCheck = async( username, password ) => {
-        try{
-            const data = await this.userFactory.getPasswordByUserName(username);
-            if (!data){
-                return {
-                    success: false,
-                    message: `User not found`
-                }
-            }
-            const passwordChecked = await encryptService.checkPassword('argon2', password, data);
-            if (!passwordChecked) return {
-                success: false,
-                message: 'Wrong password'
-            }
-            return {
-                success: true,
-                message: data,
-            }
-        } catch(err){
-            logger.error(err);
-            return({
-                success: false,
-                message: err
-            });
-        }
-    }
-    save = async(userData) =>{
-        try {
-            const hashedPassword = await encryptService.hashPassword('argon2', userData.password);
-            userData.password = hashedPassword;
-            const newUser = {...userData};
 
-            const data = await this.userFactory.save(newUser);
-            if (!data) {
-                return {
-                    success: false,
-                    message: `${httpStatus[500]}`
-                }
-            }
-            return {
-                success: true,
-                message: data
-            };
-        } catch(err){
-            logger.error(err);
-            return ({
-                success: false,
-                message: err
-            });
-        }
-        //logger.info("req",req);
-        
-    }
-
-    getUserById = async( _id ) => {
+    getById = async( _id ) => {
         try{
-            const data = await this.userFactory.getUserById(_id);
+            const data = await this.userFactory.getByCondition('_id', _id);
             if (!data){
                 return {
                     success: false,
@@ -140,7 +66,7 @@ class UsersController{
 
     getUserByUserName = async( username ) => {
         try{
-            const data = await this.userFactory.getUserByUserName( username );
+            const data = await this.userFactory.getByCondition( 'username', username );
             if (!data){
                 return {
                     success: false,
@@ -206,4 +132,4 @@ class UsersController{
     }
 }
 
-module.exports = UsersController;
+module.exports = UserController;
