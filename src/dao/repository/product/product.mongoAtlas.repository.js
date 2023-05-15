@@ -1,5 +1,5 @@
 const ProductsModel = require('../../models/products.model');
-const MongooseConnect = require('../../../services/mongo/connect');
+const MongooseConnect = require('../../../utils/mongo/connect');
 const ProductDTO = require('../../dto/product.dto');
 
 const { logger } = require('../../../utils/logger');

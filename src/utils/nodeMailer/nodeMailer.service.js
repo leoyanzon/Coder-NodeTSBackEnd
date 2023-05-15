@@ -28,6 +28,7 @@ const sendEmail = async (msg, destination) => {
         }
 
         const result = await transporter.sendMail(emailOptions);
+        logger.info(`Email message sent:${result}`);
         return {
             success: true,
             message: result

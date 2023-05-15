@@ -14,7 +14,7 @@ passport.use('signin', new LocalStrategy(async(username, password, done) => {
         const checkUser = await userServices.userExists( username );
         if(!checkUser){
             logger.error('Passport: User not found')
-            return done(null, false);
+            return done(null, false, {message: 'User not found'});
         }
         const checkPassword = await userServices.passwordCheck( username, password );
         if(!checkPassword){
@@ -24,13 +24,13 @@ passport.use('signin', new LocalStrategy(async(username, password, done) => {
         const data = await userServices.getByUserName( username );
         if(!data){
             logger.error('Passport: User not found')
-            return done(null, false);
+            return done(null, false, {message: 'User not found'});
         }
         logger.info(`Passport: user ${username} logged successfully`);
         return done(null,data);
     } catch(err) {
         logger.error(`Passport error: ${err}`)
-        return done(null, false);
+        return done(null, false, {message: 'Unknown error'});
     }
 }));
 
@@ -41,12 +41,12 @@ passport.use('signup', new LocalStrategy({
         const data = await userServices.userExists( username );
         if(data){
             logger.info(`Passport: user ${username} already exists`)
-            return done(null, false);
+            return done(null, false, {message: 'User not found'});
         }
         const newUser = await userServices.append(req.body);
         if(!newUser){
             logger.error(`Passport error: ${err}`)
-            return done(null, false);
+            return done(null, false, {message: 'Error appending new user'});
         }
         logger.info(`Passport: new user created successfully`);
 
@@ -57,7 +57,7 @@ passport.use('signup', new LocalStrategy({
 
         done(null, newUser);
     } catch(err) {
-        done(null, err);
+        done(null, err, {message: 'Passport error found'});
     } 
 }))
 

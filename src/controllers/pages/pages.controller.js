@@ -1,15 +1,17 @@
-//const PagesApi = require('../../api/pages/pages.api);
 const UserServices = require('../../services/user/user.services');
 const userServices = new UserServices();
 
 const ProductServices = require('../../services/product/product.services');
 const productServices = new ProductServices();
 
-const { CartFactory } = require('../../dao/factory');
-const cartFactory = CartFactory.getInstance();
+const CartServices = require('../../services/cart/cart.services');
+const cartServices = new CartServices();
 
-const CartController = require('../cart/cart.controller');
-const cartController = CartController.getInstance();
+const createMessage = require('../../utils/pages/pages.utils');
+
+const AppError = require('../../middlewares/error.middleware');
+
+const { logger } = require('../../utils/logger/index');
 
 class PagesController {
     constructor(){
@@ -25,102 +27,79 @@ class PagesController {
     }
 
     signIn = async(req, res) => {
-        if (req.isAuthenticated()){
-            return res.redirect('/')
+        try{
+            const authenticated = req.isAuthenticated();
+            if (authenticated){
+                return res.redirect('/')
+            }
+            const message = createMessage('signIn', req);
+            res.render('signin', { message: message});
+        } catch(err) {
+            logger.error(err);
+            const message = createMessage('error', req)
+            res.render('error', { message: message })
         }
-        const navBar = [
-            { title: "Home", link: "/"},
-            { title: "Register", link: "/signup"}
-        ];
-        const main = {
-            user: "",
-            isAuthenticated: req.isAuthenticated(),
-            products: "",
-        }
-        const message = {
-            navBar: navBar,
-            main: main,
-        }
-        res.render('signin', { message: message});
     }
 
     signUp = async(req, res) => {
-        if (req.isAuthenticated()){
-            return res.redirect('/')
+        try{
+            const authenticated = req.isAuthenticated();
+            if (authenticated){
+                return res.redirect('/')
+            }
+            const message = createMessage('signUp', req);
+            res.render('signup', { message: message });
+        } catch(err) {
+            logger.error(err);
+            const message = createMessage('error', req);
+            res.render('error', { message: message });
         }
-        const navBar = [
-            { title: "Home", link: "/"},
-            { title: "Signin", link: "/signin"}
-        ];
-        const main = {
-            user: "",
-            isAuthenticated: req.isAuthenticated(),
-            products: "",
-        }
-        const message = {
-            navBar: navBar,
-            main: main,
-        }
-        res.render('signup', { message: message});
-    }
-
-    error = async(_req, res) => {
-        res.render('error');
+        
     }
 
     signOut = async(req, res) => {
-        const navBar = [
-            { title: "Home", link: "/"},
-            { title: "Register", link: "/signup"}
-        ];
-        const main = {
-            user: "",
-            isAuthenticated: req.isAuthenticated(),
-            products: "",
-        }
-        const message = {
-            navBar: navBar,
-            main: main,
-        }
+        const message = createMessage('signin', req);
         res.redirect('/signin', { message: message})
-    }
+        }        
 
     home = async(req, res) => {
-        const userData = await userServices.getById(req.session.passport.user);
-        const navBar = [
-            { title: "Home", link: "/"},
-            { title: "Cart", link: "/cart"},
-            { title: "Logout", link: "/api/auth/signout"}
-        ];
-        const main = {
-            user: userData.username,
-            isAuthenticated: req.isAuthenticated(),
-            products: await productServices.getAll(),
+        try{
+            const userData = await userServices.getById(req.session.passport.user);
+            const products = await productServices.getAll();
+            const message = createMessage('home', req, products);
+            res.render('home', {message: message});
+        } catch(err) {
+            logger.error(err);
+            const message = createMessage('error', req);
+            res.render('error', { message: message });
         }
-        const message = {
-            navBar: navBar,
-            main: main,
-        }
-        res.render('home', {message: message});
     }
 
     cart = async(req, res) => {
-        const userData = await userServices.getById(req.session.passport.user);
-        const navBar = [
-            { title: "Home", link: "/"},
-            { title: "Cart", link: "/cart"},
-            { title: "Logout", link: "/api/auth/signout"}
-        ];
-        const main = {
-            user: userData.username,
-            isAuthenticated: req.isAuthenticated(),
-            cart: await cartFactory.getLastCart(req.session.passport.user),
+        try{
+            const cart = await cartServices.getLastCart(req.session.passport.user);
+            const message = createMessage('cart', req, _ , cart)
+            res.render('cart', {message: message});
+        } catch(err) {
+            logger.error(err);
+            const message = createMessage('error', req, _ , _ , err);
+            res.render('error', { message: message });
         }
-        const message = {
-            navBar: navBar,
-            main: main,
+    }
+
+    error = async(req, res) => {
+        try{
+            const error = req.flash('error');
+            console.info(error);
+            const message = createMessage('error', req)
+                        
+            res.render('error', {message: message});
+        } catch(err) {
+            logger.error(err);
+            const message = createMessage('error', req);
+            res.render('error', { message: message });
         }
-        res.render('cart', {message: message});
+        
     }
 
 }

@@ -36,7 +36,6 @@ class ProductsRestController{
                     message: `${httpStatus[500]}`
                 })
             }
-            
             return res.status(200).json({
                 success: true,
                 message:data

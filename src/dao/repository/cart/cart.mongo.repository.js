@@ -1,5 +1,5 @@
 const CartsModel = require('../../models/cart.model');
-const MongooseConnect = require('../../../services/mongo/connect');
+const MongooseConnect = require('../../../utils/mongo/connect');
 const CartDTO = require('../../dto/cart.dto');
 
 const { logger } = require('../../../utils/logger');
@@ -38,13 +38,17 @@ class CartMongoRepository{
         
     }
 
-    async getByCondition( fieldName = '_id' , fieldValue ){
+    async update(cartData){
         try{
-            const query = await CartsModel.findOne({ [fieldName]: fieldValue });
-            const cartDTO = await new CartDTO(query);
-            return cartDTO;
-        } catch (err) {
-            throw new AppError(err.message, 'Mongo data process', 'Carts Repository','getByCondition(fieldName, fieldValue) error', 500 );
+            const filter = { _id: cartData._id };
+            const updatedCart = await CartsModel.findOneAndUpdate(filter, cartData, { new: true })
+            
+            if(!updatedCart){
+                return false
+            }
+            return this.update
+        } catch (err){
+            throw new AppError(err.message, 'Mongo data process', 'Carts Repository','update(cartData) error', 500 );
         }
     }
 
@@ -57,6 +61,43 @@ class CartMongoRepository{
             throw new AppError(err.message, 'Mongo data process', 'Carts Repository','getByCondition(fieldName, fieldValue) error', 500 );
         }
     }
+
+    async getByCondition( fieldName = '_id' , fieldValue ){
+        try{
+            const query = await CartsModel.findOne({ [fieldName]: fieldValue });
+            const cartDTO = await new CartDTO(query);
+            return cartDTO;
+        } catch (err) {
+            throw new AppError(err.message, 'Mongo data process', 'Carts Repository','getByCondition(fieldName, fieldValue) error', 500 );
+        }
+    }
+
+    async deleteByCondition( fieldName = "_id", fieldValue ){
+        try{
+            const filter = { [fieldName]: fieldValue };
+            const deletedCart = await CartsModel.findOneAndDelete(filter);
+            
+            if(!deletedCart){
+                return false
+            }
+            return deletedCart
+        } catch (err){
+            throw new AppError(err.message, 'Mongo data process', 'Carts Repository','deleteByCondition(fieldName,fieldValue) error', 500 );
+        }
+    }
+
+    async deleteAll(){
+        try{
+            const deletedCart = await CartsModel.deleteMany();
+            
+            if(!deletedCart.deletedCount === 0){
+                return false
+            }
+            return deletedCart
+        } catch(err) {
+            throw new AppError(err.message, 'Mongo data process', 'Carts Repository','deleteAll() error', 500 );
+        }
+    }   
 }
 
 module.exports = CartMongoRepository;

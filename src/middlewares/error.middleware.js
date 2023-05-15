@@ -1,3 +1,4 @@
+const httpStatus = require('http-status');
 
 class AppError extends Error{
     constructor(message, type, context, data, statusCode){
@@ -8,9 +9,11 @@ class AppError extends Error{
         this.details = {
             data : data,
             statusCode : statusCode,
+            codeMessage: `${httpStatus[statusCode]}`,
             timestamp : new Date()
 
         }
+    console.info(this)
     }
 }
 

@@ -1,5 +1,5 @@
 const UserModel = require('../../models/user.model');
-const MongooseConnect = require('../../../services/mongo/connect')
+const MongooseConnect = require('../../../utils/mongo/connect')
 
 const AppError = require('../../../middlewares/error.middleware');
 const { logger } = require('../../../utils/logger/index')

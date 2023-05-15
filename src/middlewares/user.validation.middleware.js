@@ -11,14 +11,14 @@ const userValidationChain = [
       .withMessage("User name is required")
       .isString()
       .withMessage("User name should be string")
-      .isLength({min: 0, max: 10})
+      .isLength({min: 4, max: 10})
       .withMessage("User name should be between 2 and 10 letters"),
     body("address")
       .optional(),
     body("age")
       .optional()
-      .isString()
-      .withMessage("phone number should be string")
+      .isNumeric()
+      .withMessage("age number should be a number")
       .custom((value) => {
         if (value < 0 || value > 100) {
           return Promise.reject("Age should be between 0 and 100 years");

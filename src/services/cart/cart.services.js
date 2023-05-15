@@ -1,5 +1,8 @@
 const { CartFactory } = require('../../dao/factory');
 
+const sendEmail = require('../../utils/nodeMailer/nodeMailer.service');
+const sendWhatsappAsync = require('../../utils/twilio/whatsapp.services');
+
 const AppError = require('../../middlewares/error.middleware');
 
 class CartServices {
@@ -43,7 +46,7 @@ class CartServices {
         }
     }
 
-    async getById( cartId ){
+    getById = async ( cartId ) => {
         try {
             const data = await this.cartFactory.getByCondition('_id', cartId);
             return data;
@@ -52,7 +55,7 @@ class CartServices {
         }
     }
 
-    async getLastCart(userId){
+    getLastCart = async (userId) => {
         try {
             const data = await this.cartFactory.getLastCart(userId);
             return data;
@@ -66,6 +69,10 @@ class CartServices {
             let cartSelected = await this.cartFactory.getByCondition('_id', cartId);
             cartSelected.completed = true;
             const data = await this.cartFactory.update(cartSelected);
+            if (data){
+                await sendWhatsappAsync(`Cart ${cartId} booked successfully`);
+                await sendEmail(`Cart ${cartId} booked successfully`, 'leoyanzon@gmail.com');
+            }
             return data
         } catch(err){
             throw new AppError(err.message, 'Data process', 'Carts Services','buyCart(cartId) error', 500 );
