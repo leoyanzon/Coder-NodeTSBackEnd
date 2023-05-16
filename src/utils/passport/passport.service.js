@@ -27,7 +27,7 @@ passport.use('signin', new LocalStrategy(async(username, password, done) => {
             return done(null, false, {message: 'User not found'});
         }
         logger.info(`Passport: user ${username} logged successfully`);
-        return done(null,data);
+        return done(null,data, {message: 'Login successfull'});
     } catch(err) {
         logger.error(`Passport error: ${err}`)
         return done(null, false, {message: 'Unknown error'});

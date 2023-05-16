@@ -1,5 +1,10 @@
 const { body , validationResult} = require('express-validator');
 
+const AppError = require('./error.middleware');
+
+const PagesController = require('../controllers/pages/pages.controller');
+const pagesController = PagesController.getInstance();
+
 const userValidationChain = [
     body("fullName")
       .exists({ checkFalsy: true })
@@ -37,9 +42,15 @@ const userValidationChain = [
 ];
 
 const userValidationMiddleware = async (req, res, next) => {
-    const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+    const validationErrors = validationResult(req);
+        if (!validationErrors.isEmpty()) {
+          let error;
+          const validationArray = validationErrors.array();
+          console.info(validationArray);
+          validationArray.forEach(element => {
+            error = new AppError(element.path, 'Session signup', 'User validation middleware', element.msg, 500);
+          });
+          return PagesController.error(error, req, res);
     }
     next();
 

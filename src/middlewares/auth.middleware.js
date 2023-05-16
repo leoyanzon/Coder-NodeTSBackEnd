@@ -1,4 +1,5 @@
 const authMiddleware = (req, res, next) => {
+    console.info('authmiddleware', req.isAuthenticated());
     if(!req.isAuthenticated()){
         const navBar = [
             { title: "Home", link: "/"},

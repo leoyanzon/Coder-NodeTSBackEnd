@@ -58,43 +58,49 @@ class PagesController {
     }
 
     signOut = async(req, res) => {
-        const message = createMessage('signin', req);
-        res.redirect('/signin', { message: message})
-        }        
+        try{
+            req.logout(()=>{});
+            const message = createMessage('signin', req);
+            res.render('signin', { message: message }); 
+        } catch(err) {
+            logger.error(err);
+            const message = createMessage('error', req);
+            res.render('error', { message: message });
+        }      
+    }
 
     home = async(req, res) => {
         try{
-            const userData = await userServices.getById(req.session.passport.user);
             const products = await productServices.getAll();
             const message = createMessage('home', req, products);
             res.render('home', {message: message});
         } catch(err) {
             logger.error(err);
-            const message = createMessage('error', req);
+            const message = createMessage('error', req, [], [], err);
             res.render('error', { message: message });
         }
     }
 
     cart = async(req, res) => {
         try{
-            const cart = await cartServices.getLastCart(req.session.passport.user);
-            const message = createMessage('cart', req, _ , cart)
+            const userId = req.session.passport.user;
+            const cart = await cartServices.getLastCart(userId);
+            const message = createMessage('cart', req, [] , cart)
             res.render('cart', {message: message});
         } catch(err) {
             logger.error(err);
-            const message = createMessage('error', req, _ , _ , err);
+            const message = createMessage('error', req, [], [], err);
             res.render('error', { message: message });
         }
     }
 
-    error = async(req, res) => {
+    error = async(err, req, res) => {
         try{
-            const message = createMessage('error', req)
-                        
+            const message = createMessage('error', req, [], [], err);
             res.render('error', {message: message});
         } catch(err) {
             logger.error(err);
-            const message = createMessage('error', req);
+            const message = createMessage('error', req, [], [], err);
             res.render('error', { message: message });
         }   
     }

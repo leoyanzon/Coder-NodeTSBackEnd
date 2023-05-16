@@ -16,7 +16,7 @@ class AppError extends Error{
             codeMessage: `${httpStatus[statusCode]}`,
             timestamp : new Date()
         })
-    logger.warn(this)
+        logger.error(this.message);
     }
 }
 
