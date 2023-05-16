@@ -1,6 +1,6 @@
 const createMessage = ( page , req , products = [], cart = [], err = "") => {
     const navBar = [{ title: "Home", link: "/"}];
-    const authenticated = req.isAuthenticated;
+    const authenticated = (typeof req.isAuthenticated == 'boolean') ? req.isAuthenticated : false;
     const username = ( req.session?.passport?.user ) ? req.session.passport.user : null;
     let main = {
         user: username,

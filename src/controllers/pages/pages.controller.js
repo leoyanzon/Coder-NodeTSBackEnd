@@ -89,8 +89,6 @@ class PagesController {
 
     error = async(req, res) => {
         try{
-            const error = req.flash('error');
-            console.info(error);
             const message = createMessage('error', req)
                         
             res.render('error', {message: message});
@@ -98,10 +96,8 @@ class PagesController {
             logger.error(err);
             const message = createMessage('error', req);
             res.render('error', { message: message });
-        }
-        
+        }   
     }
-
 }
 
 module.exports = PagesController;

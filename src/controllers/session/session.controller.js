@@ -1,8 +1,11 @@
-const UserServices = require('../../services/user/user.services');
-const userServices = new UserServices();
-
 const ProductServices = require('../../services/product/product.services');
 const productServices = new ProductServices();
+
+const createMessage = require('../../utils/pages/pages.utils');
+
+const AppError = require('../../middlewares/error.middleware');
+
+const { logger } = require('../../utils/logger/index');
 
 class SessionController{
     constructor(){}
@@ -15,77 +18,33 @@ class SessionController{
     }
 
     signOut = async(req, res) => {
-        try{
-            req.logout(()=>{});
-            const navBar = [
-                { title: "Home", link: "/"},
-                { title: "Register", link: "/signup"}
-            ];
-            const main = {
-                user: "",
-                isAuthenticated: req.isAuthenticated(),
-                products: "",
-            }
-            const message = {
-                navBar: navBar,
-                main: main,
-            }
-            res.render('signin', { message: message})
-        } catch(err){
-            res.render('error', err);
-        }
+        const message = createMessage('signin', req);
+        res.redirect('/signin', { message: message});  
     }
 
     home = async(req, res) => {
         try{
-            const userData = await userServices.getById(req.session.passport.user);
-            const navBar = [
-                { title: "Home", link: "/"},
-                { title: "Cart", link: "/cart"},
-                { title: "Logout", link: "/api/auth/signout"}
-            ];
-            const main = {
-                user: userData.username,
-                isAuthenticated: req.isAuthenticated(),
-                products: await productServices.getAll(),
-            }
-            const message = {
-                navBar: navBar,
-                main: main,
-            }
+            const products = await productServices.getAll();
+            const message = createMessage('home', req, products);
             res.render('home', {message: message});
         } catch(err) {
-            res.render('error', err);
+            logger.error(err);
+            const message = createMessage('error', req);
+            res.render('error', { message: message });
         }
-        
     }
 
-    error = async(req, res) => {
+    error = async(err, req, res) => {
         try{
-            const error = req.flash('error');
-            const userData = await userServices.getById(req.session.passport.user);
-            const navBar = [
-                { title: "Home", link: "/"},
-                { title: "Cart", link: "/cart"},
-                { title: "Logout", link: "/api/auth/signout"}
-            ];
-            const main = {
-                user: userData.username,
-                isAuthenticated: req.isAuthenticated(),
-                products: await productServices.getAll(),
-            }
-            const message = {
-                navBar: navBar,
-                main: main,
-                errors: error
-            }
+            const message = createMessage('error', req, [] , [] , err);
+            console.info(err); 
             res.render('error', {message: message});
         } catch(err) {
-            res.render('error', err);
-        }
-        
+            logger.error(err);
+            const message = createMessage('error', req);
+            res.render('error', { message: message });
+        }   
     }
-
 }
 
 module.exports = SessionController;

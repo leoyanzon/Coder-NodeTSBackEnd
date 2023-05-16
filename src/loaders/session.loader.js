@@ -4,7 +4,6 @@ const FileStore = require('session-file-store')(session);
 const MongoStore = require('connect-mongo');
 const { getStoreConfig } = require('../config/mongo.config'); 
 
-const flash = require('connect-flash');
 const cookieParser = require('cookie-parser');
 
 const passportService = require('../utils/passport/passport.service');
@@ -41,7 +40,6 @@ const sessionLoader = async ( app ) => {
         }
     }));
 
-    app.use(flash());
     app.use(cookieParser(config.cookies.COOKIES_SECRET));
     app.use(passportService.initialize());
     app.use(passportService.session());

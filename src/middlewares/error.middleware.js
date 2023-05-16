@@ -1,19 +1,22 @@
 const httpStatus = require('http-status');
 
+const { logger } = require('../utils/logger/index');
+
 class AppError extends Error{
     constructor(message, type, context, data, statusCode){
         super(message);
-        this.name = this.constructor.name;
-        this.type = type;
-        this.context = context;
-        this.details = {
+        this.errorList = []
+        this.errorList.push({
+            name : this.constructor.name,
+            message: message,
+            type : type,
+            context : context,
             data : data,
             statusCode : statusCode,
             codeMessage: `${httpStatus[statusCode]}`,
             timestamp : new Date()
-
-        }
-    console.info(this)
+        })
+    logger.warn(this)
     }
 }
 

@@ -34,7 +34,7 @@
       </div> 
   
       <div class="p-5 w-100 d-flex flex-column justify-content-center align-items-center">
-        <div class="row w-75">
+        <div class="row w-100">
           <% if ( typeof message.errors == 'object') { %>
           <table class="table">
             <thead class="thead-dark">
@@ -48,23 +48,21 @@
               </tr>
             </thead>
             <tbody>
+              <% message.errors.errorList.forEach(function(item, index) { %>
                   <tr>
-                    <th scope="row">1</th>
-                    <td><%= message.errors.name %></td>
-                    <td><%= message.errors.type %></td>
-                    <td><%= message.errors.context %></td>
-                    <td><%= message.errors.details.data %></td>
-                    <td><%= message.errors.details.timestamp %></td>
+                    <th scope="row"><%= index %></th>
+                    <td><%= item.name %></td>
+                    <td><%= item.type %></td>
+                    <td><%= item.context %></td>
+                    <td><%= item.data %></td>
+                    <td><%= item.timestamp %></td>
                   </tr>
-              
+              <% }); %>
             </tbody>
           </table>
           <% }; %>
           </div>
       </div>
-      <form action="/signin"> 
-        <button type="submit" class="btn btn-primary">Ir a Login</button>
-    </form>
     </div>
     
     
