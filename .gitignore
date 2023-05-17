@@ -1,6 +1,5 @@
 /session
 /node_modules
-/public
 /tmp
 .env
 development.env

@@ -16,6 +16,7 @@ const sendWhatsapp = async (msg = 'No message', to = 'whatsapp:+5493874137312', 
                 body: msg,
                 to,
             });
+        logger.info(`Whatsapp message sent with sid:${ message.sid }`);
         return {
             success: true,
             message: message.sid

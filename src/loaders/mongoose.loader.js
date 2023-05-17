@@ -1,4 +1,4 @@
-const MongooseConnect = require('../services/mongo/connect');
+const MongooseConnect = require('../utils/mongo/connect');
 const config = require('../loaders/config.loader')();
 
 const mongooseLoader = async( app ) => {

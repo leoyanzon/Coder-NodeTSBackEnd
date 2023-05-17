@@ -9,9 +9,6 @@ const productServices = new ProductServices();
 
 const httpStatus = require('http-status');
 
-const sendEmail = require('../../utils/nodeMailer/nodeMailer.service');
-const sendWhatsappAsync = require('../../utils/twilio/whatsapp.services');
-
 class CartController{
     constructor(){
         this.cartServices = new CartServices();
@@ -107,10 +104,7 @@ class CartController{
                     message: `${httpStatus[500]}`
                 })
             }
-            const whatsapp = await sendWhatsappAsync(`Cart ${cartId} booked successfully`);
-            if (whatsapp.success) logger.info(`Whatsapp message sent with sid:${whatsapp.message}`);
-            const email = await sendEmail(`Cart ${cartId} booked successfully`, 'leoyanzon@gmail.com');
-            if (email.success) logger.info(`Email message sent:${email.message}`)
+            
             this.cart(req, res);
 
     }

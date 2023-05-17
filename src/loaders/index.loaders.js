@@ -24,10 +24,7 @@ const indexLoader = async (app) => {
     
     await routerLoader( app ); 
     logger.info('Loaders: Router Initialized');
-    
-    //await mongooseLoader( app );
-    //logger.info('Loaders: Mongoose Connections Initialized');
-    
+
     await graphqlLoader( app );
     logger.info('Loaders: GraphQL Initialized');
 }

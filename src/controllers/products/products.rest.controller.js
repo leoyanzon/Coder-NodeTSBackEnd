@@ -11,7 +11,6 @@ class ProductsRestController{
         
         // Create Mock of 10 products
         this.productServices.getAll().then((data)=> {
-            console.info(data)
             if (!data){
                 productMockGenerator(10);
             }}
@@ -36,7 +35,6 @@ class ProductsRestController{
                     message: `${httpStatus[500]}`
                 })
             }
-            
             return res.status(200).json({
                 success: true,
                 message:data

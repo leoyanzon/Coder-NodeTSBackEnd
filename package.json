@@ -20,7 +20,9 @@
     "testProducts": "mocha src/tests/products/products.test.js"
   },
   "nodemonConfig": {
-    "ignore":["tmp/**"]
+    "ignore": [
+      "tmp/**"
+    ]
   },
   "keywords": [],
   "author": "",
@@ -39,6 +41,7 @@
     "bcrypt": "^5.1.0",
     "chai": "^4.3.7",
     "compression": "^1.7.4",
+    "connect-flash": "^0.1.1",
     "connect-mongo": "^4.6.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",
