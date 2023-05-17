@@ -1,13 +1,18 @@
-const createMessage = ( page , req , products = [], cart = [], err = "") => {
+const UserServices = require('../../services/user/user.services');
+const userServices = new UserServices();
+
+const createMessage = async ( page , req , { products = null, cart = null, err = null } = {}) => {
     const navBar = [{ title: "Home", link: "/"}];
-    const authenticated = (typeof req.isAuthenticated == 'boolean') ? req.isAuthenticated : false;
-    const username = ( req.session?.passport?.user ) ? req.session.passport.user : null;
-    let main = {
+    const authenticated = req.isAuthenticated();
+    const userId = authenticated ? req.session.passport.user : null;
+    const username = authenticated ? (await userServices.getById(userId)).username : null;
+    
+    const main = {
         user: username,
         isAuthenticated : authenticated,
-        products : products,
-        cart: cart
     };
+    if (products !== null) main.products = products;
+    if (cart !== null) main.cart = cart;
 
     if (page === 'signIn'){
         navBar.push({ title: "Register", link: "/signup"});
@@ -28,14 +33,13 @@ const createMessage = ( page , req , products = [], cart = [], err = "") => {
     }
     if (page === 'error' && !authenticated){
         navBar.push({ title: "Signin", link: "/signin"});
+        navBar.push({ title: "Register", link: "/signup"});
     }
-
-    const error = err 
 
     const message = {
         navBar: navBar,
         main: main,
-        errors: error
+        errors: err
     }
     return message
 }

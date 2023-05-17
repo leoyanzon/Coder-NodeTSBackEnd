@@ -9,64 +9,64 @@ const { userValidationChain, userValidationMiddleware } = require('../../middlew
 
 const AppError = require('../../middlewares/error.middleware');
 
-router.post('/signup', 
+const { logger } = require('../../utils/logger/index');
+
+router.post('/signup',
     userValidationChain,
     async (req, res, next) => await userValidationMiddleware(req, res, next),
-    passport.authenticate('signup', {
-        successRedirect: '/',
-        failureRedirect: '/error',
-        failureFlash: true
-    }), 
-    async(err, req, res) => {
-        pagesController.home(err, req,res);
+    async (req, res, next) => {
+    await passport.authenticate('signup', async function(err,user,info){
+        if (err) {
+            const error = new AppError(err.message, 'Session register', 'Session Router / Passport', info.message, 500);
+            return await pagesController.error(error, req, res); 
+        }
+        if (!user) {
+            const error = new AppError('Error registering user' , 'Session register', 'Session Router / Passport', info.message , 500);
+            return await pagesController.error(error, req, res);
+        };
+        req.logIn(user, async function(err){ 
+            if (err) {
+                const error = new AppError(err.message , 'Session register', 'Session Router / Passport', info.message , 500);
+                return await pagesController.error(error, req, res);
+            }})
+        next();
+    })(req, res, next)},
+    async (req, res, next) => {
+        return await pagesController.home(req, res);
 });
 
 router.post('/signin', async (req, res, next) => {
     await passport.authenticate('signin', async function(err,user,info){
         if (err) {
-            const error = new AppError(err.message, 'Session signin', 'Session Router', info, 500);
+            const error = new AppError(err.message, 'Session signin', 'Session Router / Passport', info.message, 500);
             return await pagesController.error(error, req, res); 
         }
         if (!user) {
-            const err = new AppError(info , 'Session login', 'Session Router / Passport', 'User not found', 500);
-            return await pagesController.error(err, req, res);
+            const error = new AppError('User not found' , 'Session login', 'Session Router / Passport', info.message , 500);
+            return await pagesController.error(error, req, res);
         };
-        console.info('isauth antes', req.isAuthenticated());
-        req.logIn(user, function(err){ if (err) console.info('errrorrrrr')})
-        console.info('isauth despues', req.isAuthenticated());
+        req.logIn(user, async function(err){ 
+            if (err) {
+                const error = new AppError(err.message , 'Session login', 'Session Router / Passport', info.message , 500);
+                return await pagesController.error(error, req, res);
+            }})
         next();
-        
     })(req, res, next)},
     async (req, res, next) => {
-        console.info('last middleware in router', req.isAuthenticated());
         return await pagesController.home(req, res);
-    });
-
-router.post('/signin2', function(req, res, next) {
-    passport.authenticate('signin', function(err, user, info) {
-        if (err) {
-            const error = new AppError(err.message, 'Session signin', 'Session Router', info, 500);
-            return pagesController.error(error, req, res); 
-        }
-        if (!user) {
-            const err = new AppError('User not found', 'Session signin', 'Session Router', info, 500);
-            return pagesController.error(err, req, res);
-        };
-        console.info('auth', req.isAuthenticated());
-        next();
-    })(err, req, res, next);
-}, async (req, res) => {
-    console.info('auth', req.isAuthenticated());
-    await pagesController.home(req, res);});
+});
 
 router.get('/signout', 
-    (req, res) => {
-        return pagesController.signOut(req,res);
+    async (req, res) => {
+        req.logout(async ()=>{
+            logger.info('Passport: user logged out successfully');
+            return await pagesController.signOut(req , res);
+        });
 });
 
 router.post('/error',
     async(err, req, res) => {
-        return pagesController.error(err, req, res);
+        return await pagesController.error(err, req, res);
 });
 
 module.exports = router;

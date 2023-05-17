@@ -30,8 +30,8 @@ class CartMongoRepository{
 
     async append(data){
         try{
-            const CartStage = new CartsModel(data);
-            return await CartStage.save();
+            const cartStage = new CartsModel(data);
+            return await cartStage.save();
         } catch(err) {
             throw new AppError(err.message, 'Mongo data process', 'Carts Repository','append() error', 500 );
         }
@@ -55,8 +55,10 @@ class CartMongoRepository{
     async getLastCart( userId ){
         try{
             const query = await CartsModel.findOne({ ["userId"]: userId, ["completed"]:false });
-            const cartDTO = await new CartDTO(query);
-            return cartDTO;
+            if (!query){
+                return false
+            } 
+            return query
         } catch (err) {
             throw new AppError(err.message, 'Mongo data process', 'Carts Repository','getByCondition(fieldName, fieldValue) error', 500 );
         }

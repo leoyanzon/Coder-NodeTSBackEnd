@@ -88,7 +88,7 @@ class CartFileRepository {
         try{
             const objetosExistentes = await this.getAll();
             const query = objetosExistentes.filter(it => (it.userId === userId && it.completed == false));
-            if ( !query.length ) {
+            if ( !query?.length ) {
                 return false;
             }
             return query[ query.length - 1 ];

@@ -23,7 +23,7 @@ const userValidationChain = [
     body("age")
       .optional()
       .isNumeric()
-      .withMessage("age number should be a number")
+      .withMessage("Age number should be a number")
       .custom((value) => {
         if (value < 0 || value > 100) {
           return Promise.reject("Age should be between 0 and 100 years");
@@ -44,13 +44,14 @@ const userValidationChain = [
 const userValidationMiddleware = async (req, res, next) => {
     const validationErrors = validationResult(req);
         if (!validationErrors.isEmpty()) {
-          let error;
+          //let error;
           const validationArray = validationErrors.array();
-          console.info(validationArray);
-          validationArray.forEach(element => {
-            error = new AppError(element.path, 'Session signup', 'User validation middleware', element.msg, 500);
-          });
-          return PagesController.error(error, req, res);
+          const validationMessages = (validationArray.map(it => it.msg)).join(' - ');
+          //validationArray.forEach(element => {
+          //  error = new AppError(element.path, 'Session signup', 'User validation middleware', element.msg, 500);
+          //});
+          const error = new AppError('AppError', 'Session signup', 'User validation middleware', validationMessages , 500);
+          return pagesController.error(error, req, res);
     }
     next();
 

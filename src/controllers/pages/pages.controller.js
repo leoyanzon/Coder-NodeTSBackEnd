@@ -32,11 +32,11 @@ class PagesController {
             if (authenticated){
                 return res.redirect('/')
             }
-            const message = createMessage('signIn', req);
+            const message = await createMessage('signIn', req);
             res.render('signin', { message: message});
         } catch(err) {
             logger.error(err);
-            const message = createMessage('error', req)
+            const message = await createMessage('error', req)
             res.render('error', { message: message })
         }
     }
@@ -47,11 +47,11 @@ class PagesController {
             if (authenticated){
                 return res.redirect('/')
             }
-            const message = createMessage('signUp', req);
+            const message = await createMessage('signUp', req);
             res.render('signup', { message: message });
         } catch(err) {
             logger.error(err);
-            const message = createMessage('error', req);
+            const message = await createMessage('error', req);
             res.render('error', { message: message });
         }
         
@@ -60,11 +60,11 @@ class PagesController {
     signOut = async(req, res) => {
         try{
             req.logout(()=>{});
-            const message = createMessage('signin', req);
+            const message = await createMessage('signin', req);
             res.render('signin', { message: message }); 
         } catch(err) {
             logger.error(err);
-            const message = createMessage('error', req);
+            const message = await createMessage('error', req);
             res.render('error', { message: message });
         }      
     }
@@ -72,11 +72,11 @@ class PagesController {
     home = async(req, res) => {
         try{
             const products = await productServices.getAll();
-            const message = createMessage('home', req, products);
+            const message = await createMessage('home', req, { products });
             res.render('home', {message: message});
         } catch(err) {
             logger.error(err);
-            const message = createMessage('error', req, [], [], err);
+            const message = await createMessage('error', req, { err });
             res.render('error', { message: message });
         }
     }
@@ -85,22 +85,22 @@ class PagesController {
         try{
             const userId = req.session.passport.user;
             const cart = await cartServices.getLastCart(userId);
-            const message = createMessage('cart', req, [] , cart)
+            const message = await createMessage('cart', req, { cart })
             res.render('cart', {message: message});
         } catch(err) {
             logger.error(err);
-            const message = createMessage('error', req, [], [], err);
+            const message = await createMessage('error', req, { err });
             res.render('error', { message: message });
         }
     }
 
     error = async(err, req, res) => {
         try{
-            const message = createMessage('error', req, [], [], err);
+            const message = await createMessage('error', req, { err });
             res.render('error', {message: message});
         } catch(err) {
             logger.error(err);
-            const message = createMessage('error', req, [], [], err);
+            const message = await createMessage('error', req, { err });
             res.render('error', { message: message });
         }   
     }

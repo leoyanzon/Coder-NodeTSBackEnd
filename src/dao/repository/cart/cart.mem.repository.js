@@ -50,7 +50,7 @@ class CartMemRepository{
     async getLastCart(userId){
         try{
             const query = this.cart.filter(it => (it.userId === userId && it.completed == false));
-            if ( !query.length ){
+            if ( !query?.length ){
                 return false
             } 
             return query[ query.length - 1 ];

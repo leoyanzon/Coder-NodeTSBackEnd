@@ -1,44 +1,41 @@
 const ProductMemRepository = require('./repository/product/product.mem.repository');
 const ProductFileRepository = require('./repository/product/product.file.repository');
 const ProductMongoRepository = require('./repository/product/product.mongo.repository');
-const ProductMongoAtlasRepository = require('./repository/product/product.mongoAtlas.repository');
 
 const UserMemRepository = require('./repository/user/user.mem.repository');
 const UserFileRepository = require('./repository/user/user.file.repository');
-const UserMongoAtlasRepository = require('./repository/user/user.mongoAtlas.repository');
 const UserMongoRepository = require('./repository/user/user.mongo.repository');
 
 const CartMemRepository = require('./repository/cart/cart.mem.repository');
 const CartFileRepository = require('./repository/cart/cart.file.repository');
-const CartMongoAtlasRepository = require('./repository/cart/cart.mongoAtlas.repository');
 const CartMongoRepository = require('./repository/cart/cart.mongo.repository');
 
 const config = require('../loaders/config.loader')();
 
 class UserFactory{
     static getInstance(){
-        if(config.db.DATA_STORAGE == 'MEM') return UserMemRepository.getInstance();
-        if(config.db.DATA_STORAGE == 'FILE') return UserFileRepository.getInstance('Users');
-        if(config.db.DATA_STORAGE == 'MONGO_ATLAS') return UserMongoAtlasRepository.getInstance();
-        return UserMongoRepository.getInstance();
+        const db = config.db.DATA_STORAGE;
+        if( db === 'MONGO_ATLAS' || db === 'MONGO_DB' ) return UserMongoRepository.getInstance();
+        if( db === 'FILE' ) return UserFileRepository.getInstance('Users');
+        return UserMemRepository.getInstance();
     }
 }
 
 class ProductFactory{
     static getInstance(){
-        if(config.db.DATA_STORAGE == 'MEM') return ProductMemRepository.getInstance();
-        if(config.db.DATA_STORAGE == 'FILE') return ProductFileRepository.getInstance('Products');
-        if(config.db.DATA_STORAGE == 'MONGO_ATLAS') return ProductMongoAtlasRepository.getInstance();
-        return ProductMongoRepository.getInstance();
+        const db = config.db.DATA_STORAGE;
+        if( db === 'MONGO_ATLAS' || db === 'MONGO_DB' ) return ProductMongoRepository.getInstance();
+        if( db === 'FILE' ) return ProductFileRepository.getInstance('Products');
+        return ProductMemRepository.getInstance();
     }
 }
 
 class CartFactory{
     static getInstance(){
-        if(config.db.DATA_STORAGE == 'MEM') return CartMemRepository.getInstance('Cart');
-        if(config.db.DATA_STORAGE == 'FILE') return CartFileRepository.getInstance('Cart');
-        if(config.db.DATA_STORAGE == 'MONGO_ATLAS') return CartMongoAtlasRepository.getInstance();
-        return CartMongoRepository.getInstance();
+        const db = config.db.DATA_STORAGE;
+        if( db === 'MONGO_ATLAS' || db === 'MONGO_DB' ) return CartMongoRepository.getInstance('Cart');
+        if( db === 'FILE') return CartFileRepository.getInstance('Cart');
+        return CartMemRepository.getInstance();
     }
 }
 
