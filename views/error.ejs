@@ -25,8 +25,8 @@
     <p class="errorDescription">Siempre es tiempo de tomar un cafe.</p>
     <p class="errorDescription">Nosotros deberiamos estar bien cuando termines.</p>
 
-    <div class="d-flex flex-column align-items-center">
-      <div class="d-flex flex-column justify-content-center align-items-center pt-5">
+    <div class="d-flex flex-column align-items-center w-100">
+      <div class="d-flex flex-column justify-content-center align-items-center w-100 pt-5">
         <% if (typeof message.errors == 'object') { %>
           <%} else { %>
           <p>No log found</p>
@@ -36,7 +36,7 @@
       <div class="p-5 w-100 d-flex flex-column justify-content-center align-items-center">
         <div class="row w-100">
           <% if ( typeof message.errors == 'object') { %>
-          <table class="table">
+          <table class="table w-100">
             <thead class="thead-dark">
               <tr>
                 <th scope="col">#</th>

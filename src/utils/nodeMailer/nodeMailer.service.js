@@ -5,7 +5,7 @@ const { logger } = require('../logger/index');
 const config = require('../../loaders/config.loader')();
 
 const sendEmail = async (msg, destination) => {
-
+    
     const emailSender = config.email.EMAIL_USER + '@gmail.com'
     const transportOptions = {
         service: 'gmail',

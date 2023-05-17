@@ -32,11 +32,11 @@ class PagesController {
             if (authenticated){
                 return res.redirect('/')
             }
-            const message = await createMessage('signIn', req);
+            const message = createMessage('signIn', req);
             res.render('signin', { message: message});
         } catch(err) {
-            logger.error(err);
-            const message = await createMessage('error', req)
+            const error = new AppError( 'signIn(req, res) error' , 'Sign in page', 'Pages Controller', err.message , 500);
+            const message = createMessage('error', req, { err: error })
             res.render('error', { message: message })
         }
     }
@@ -47,36 +47,38 @@ class PagesController {
             if (authenticated){
                 return res.redirect('/')
             }
-            const message = await createMessage('signUp', req);
+            const message = createMessage('signUp', req);
             res.render('signup', { message: message });
         } catch(err) {
-            logger.error(err);
-            const message = await createMessage('error', req);
-            res.render('error', { message: message });
+            const error = new AppError( 'signUp(req, res) error' , 'Sign up page', 'Pages Controller', err.message , 500);
+            const message = createMessage('error', req, { err: error })
+            res.render('error', { message: message })
         }
         
     }
 
     signOut = async(req, res) => {
         try{
-            const message = await createMessage('signIn', req);
+            const message = createMessage('signIn', req);
             res.render('signin', { message: message }); 
         } catch(err) {
-            logger.error(err);
-            const message = await createMessage('error', req);
-            res.render('error', { message: message });
+            const error = new AppError( 'signOut(req, res) error' , 'Sign out page', 'Pages Controller', err.message , 500);
+            const message = createMessage('error', req, { err: error })
+            res.render('error', { message: message })
         }      
     }
 
     home = async(req, res) => {
         try{
             const products = await productServices.getAll();
-            const message = await createMessage('home', req, { products });
+            const userId = req.session.passport.user;
+            const user = await userServices.getById(userId);
+            const message = createMessage('home', req, { user, products });
             res.render('home', {message: message});
         } catch(err) {
-            logger.error(err);
-            const message = await createMessage('error', req, { err });
-            res.render('error', { message: message });
+            const error = new AppError( 'home(req, res) error' , 'Home page', 'Pages Controller', err.message , 500);
+            const message = createMessage('error', req, { err: error })
+            res.render('error', { message: message })
         }
     }
 
@@ -84,23 +86,26 @@ class PagesController {
         try{
             const userId = req.session.passport.user;
             const cart = await cartServices.getLastCart(userId);
-            const message = await createMessage('cart', req, { cart })
+            const user = await userServices.getById(userId); 
+            const message = createMessage('cart', req, { user,  cart })
             res.render('cart', {message: message});
         } catch(err) {
-            logger.error(err);
-            const message = await createMessage('error', req, { err });
-            res.render('error', { message: message });
+            const error = new AppError( 'cart(req, res) error' , 'Cart page', 'Pages Controller', err.message , 500);
+            const message = createMessage('error', req, { err: error })
+            res.render('error', { message: message })
         }
     }
 
     error = async(err, req, res) => {
         try{
-            const message = await createMessage('error', req, { err });
+            const userId = req.session?.passport?.user ? req.session.passport.user : null;
+            const user = await userServices.getById(userId);
+            const message = createMessage('error', req, { user, err });
             res.render('error', {message: message});
         } catch(err) {
-            logger.error(err);
-            const message = await createMessage('error', req, { err });
-            res.render('error', { message: message });
+            const error = new AppError( 'error(req, res) error' , 'Error page', 'Pages Controller', err.message , 500);
+            const message = createMessage('error', req, { err: error })
+            res.render('error', { message: message })
         }   
     }
 }

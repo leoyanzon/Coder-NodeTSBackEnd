@@ -15,11 +15,13 @@ const signInPassportMiddleware = async (req, res, next) => {
             const error = new AppError('User not found' , 'Session login', 'Session Router / Passport', info.message , 500);
             return await pagesController.error(error, req, res);
         };
+        console.info('user en sing middleware', user)
         req.logIn(user, async function(err){ 
             if (err) {
                 const error = new AppError(err.message , 'Session login', 'Session Router / Passport', info.message , 500);
                 return await pagesController.error(error, req, res);
             }})
+        console.info('singing passport middleware',req.session)
         next();
     })(req, res, next)
 }

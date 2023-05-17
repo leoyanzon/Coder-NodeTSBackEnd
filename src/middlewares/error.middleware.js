@@ -14,7 +14,7 @@ class AppError extends Error{
             data : data,
             statusCode : statusCode,
             codeMessage: `${httpStatus[statusCode]}`,
-            timestamp : new Date()
+            timestamp : new Date().toISOString()
         })
         logger.error(this.message);
     }

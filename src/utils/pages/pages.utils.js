@@ -1,11 +1,10 @@
 const UserServices = require('../../services/user/user.services');
 const userServices = new UserServices();
 
-const createMessage = async ( page , req , { products = null, cart = null, err = null } = {}) => {
+const createMessage = ( page , req , { user = null, products = null, cart = null, err = null } = {}) => {
     const navBar = [{ title: "Home", link: "/"}];
     const authenticated = req.isAuthenticated();
-    const userId = authenticated ? req.session.passport.user : null;
-    const username = authenticated ? (await userServices.getById(userId)).username : null;
+    const username = user? user.username : null;
     
     const main = {
         user: username,
