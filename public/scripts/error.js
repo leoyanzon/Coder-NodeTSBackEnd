@@ -14,10 +14,11 @@ WebFontConfig = {
   
   var FiveOhFive = document.getElementById("five");
   var FiveOhFiveContext = FiveOhFive.getContext("2d");
+  var code = String(document.getElementById("errorCode").textContent);
   FiveOhFiveFont(FiveOhFiveContext, FiveOhFive); FiveOhFiveContext.globalCompositeOperation = 'destination-out';
   
   function FiveOhFiveFont(ctx, canvas) {
-    FiveOhFiveContext.fillText("500", 275, 100);
+    FiveOhFiveContext.fillText(code, 275, 100);
     var grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
     grad.addColorStop(0, '#fff');
     ctx.rect(0, 0, canvas.width, canvas.height);

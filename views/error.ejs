@@ -24,7 +24,7 @@
     <p class="errorTitle">Error :(</p>
     <p class="errorDescription">Siempre es tiempo de tomar un cafe.</p>
     <p class="errorDescription">Nosotros deberiamos estar bien cuando termines.</p>
-
+    
     <div class="d-flex flex-column align-items-center w-100">
       <div class="d-flex flex-column justify-content-center align-items-center w-100 pt-5">
         <% if (typeof message.errors == 'object') { %>
@@ -36,26 +36,28 @@
       <div class="p-5 w-100 d-flex flex-column justify-content-center align-items-center">
         <div class="row w-100">
           <% if ( typeof message.errors == 'object') { %>
-          <table class="table w-100">
+            
+            <table class="table w-100">
             <thead class="thead-dark">
               <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Type</th>
-                <th scope="col">Context</th>
-                <th scope="col">Data</th>
-                <th scope="col">Timestamp</th>
+                <th style="width:5%" scope="col">#</th>
+                <th style="width:45%" scope="col">Message</th>
+                <th style="width:10%" scope="col">Type</th>
+                <th style="width:10%" scope="col">Context</th>
+                <th style="width:15%" scope="col">HTML Error</th>
+                <th style="width:15%" scope="col">Timestamp</th>
               </tr>
             </thead>
             <tbody>
               <% message.errors.errorList.forEach(function(item, index) { %>
                   <tr>
                     <th scope="row"><%= index %></th>
-                    <td><%= item.name %></td>
+                    <td><%= item.message %></td>
                     <td><%= item.type %></td>
                     <td><%= item.context %></td>
-                    <td><%= item.data %></td>
+                    <td><%= item.statusCode %> - <%= item.codeMessage %></td>
                     <td><%= item.timestamp %></td>
+                    <div id="errorCode" style="display: none;"><%= item.statusCode %></div>
                   </tr>
               <% }); %>
             </tbody>

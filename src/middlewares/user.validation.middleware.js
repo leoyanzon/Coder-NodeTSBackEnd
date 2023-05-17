@@ -44,17 +44,13 @@ const userValidationChain = [
 const userValidationMiddleware = async (req, res, next) => {
     const validationErrors = validationResult(req);
         if (!validationErrors.isEmpty()) {
-          //let error;
           const validationArray = validationErrors.array();
           const validationMessages = (validationArray.map(it => it.msg)).join(' - ');
-          //validationArray.forEach(element => {
-          //  error = new AppError(element.path, 'Session signup', 'User validation middleware', element.msg, 500);
-          //});
           const error = new AppError('AppError', 'Session signup', 'User validation middleware', validationMessages , 500);
-          return pagesController.error(error, req, res);
+          req.err = error;
+          return pagesController.error( req, res);
     }
     next();
-
 };
 
 module.exports = { userValidationChain,

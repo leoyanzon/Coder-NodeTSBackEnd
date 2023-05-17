@@ -8,7 +8,6 @@ const productMockGenerator = require('../../tests/products/products.mocks');
 class ProductsRestController{
     constructor(){
         this.productServices = new ProductServices();
-        logger.info('Creating 10 random Products:')
         // Create Mock of 10 products
         this.productServices.getAll().then((data)=> {
             if (!data?.length){

@@ -1,8 +1,6 @@
 const { logger } = require('../../../utils/logger');
 const { v4: uuidv4 } = require('uuid');
 
-const UserDTO = require('../../dto/user.dto');
-
 const fs = require('fs');
 const createFolder = require('../../../utils/fs/folders.utils');
 

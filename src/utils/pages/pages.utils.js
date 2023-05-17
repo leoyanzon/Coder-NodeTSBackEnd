@@ -1,9 +1,6 @@
-const UserServices = require('../../services/user/user.services');
-const userServices = new UserServices();
-
 const createMessage = ( page , req , { user = null, products = null, cart = null, err = null } = {}) => {
     const navBar = [{ title: "Home", link: "/"}];
-    const authenticated = req.isAuthenticated();
+    const authenticated = (typeof req.isAuthenticated == 'function') ? req.isAuthenticated() : false ;
     const username = user? user.username : null;
     
     const main = {

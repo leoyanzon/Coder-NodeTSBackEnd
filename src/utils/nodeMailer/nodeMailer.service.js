@@ -4,7 +4,7 @@ const { logger } = require('../logger/index');
 
 const config = require('../../loaders/config.loader')();
 
-const sendEmail = async (msg, destination) => {
+const sendEmail = async (subject="", msg, destination) => {
     
     const emailSender = config.email.EMAIL_USER + '@gmail.com'
     const transportOptions = {
@@ -21,7 +21,7 @@ const sendEmail = async (msg, destination) => {
         const emailOptions = {
             from: emailSender,
             to: destination,
-            subject: 'New account created!',
+            subject: subject,
             html: `<h1>Congratulations for your new account!</h1>
                    <p>${msg}</p>` 
                   

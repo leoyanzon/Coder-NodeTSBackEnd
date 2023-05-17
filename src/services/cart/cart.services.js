@@ -71,7 +71,7 @@ class CartServices {
             const data = await this.cartFactory.update(cartSelected);
             if (data){
                 await sendWhatsappAsync(`Cart ${cartId} booked successfully`);
-                await sendEmail(`Cart ${cartId} booked successfully`, 'leoyanzon@gmail.com');
+                await sendEmail(`Cart ${cartId} booked successfully`,`Congratulations! Cart: ${data} booked successfully`, 'leoyanzon@gmail.com');
             }
             return data
         } catch(err){

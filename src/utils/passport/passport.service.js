@@ -40,7 +40,7 @@ passport.use('signup', new LocalStrategy({
     try{
         const data = await userServices.userExists( username );
         if(data){
-            logger.info(`Passport: user ${username} already exists`)
+            logger.info(`Passport: user ${username} already exists`);
             return done(null, false, {message: `Passport: user ${username} already exists`});
         }
         const newUser = await userServices.append(req.body);
@@ -51,7 +51,7 @@ passport.use('signup', new LocalStrategy({
         logger.info(`Passport: new user created successfully`);
 
         await sendWhatsappAsync(`User ${newUser.username} created successfully`);
-        await sendEmail(`User ${newUser.username} created successfully`, 'leoyanzon@gmail.com');
+        await sendEmail(`Your user ${newUser.username} has created`, `User ${newUser.username} created successfully`, 'leoyanzon@gmail.com');
         
         done(null, newUser, {message: 'User created successfull'});
     } catch(err) {

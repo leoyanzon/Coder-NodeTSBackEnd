@@ -3,8 +3,6 @@ const saltRounds = 10;
 
 const argon2 = require('argon2');
 
-const { logger } = require('../../utils/logger/index');
-
 class EncryptService {
     constructor() {}
 

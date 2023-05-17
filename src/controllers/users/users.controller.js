@@ -3,9 +3,6 @@ const { logger } = require('../../utils/logger/index');
 
 const httpStatus = require('http-status');
 
-const EncryptService = require('../../utils/encrypt/encrypt.service');
-const encryptService = new EncryptService();
-
 class UserController{
     constructor(){
         this.userFactory = UserFactory.getInstance();

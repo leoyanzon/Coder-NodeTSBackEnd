@@ -20,7 +20,4 @@ const createFolder = async(folderName) => {
     }
 }
 
-const createFile = async(folderName, fileName) => {
-    
-}
 module.exports = createFolder;

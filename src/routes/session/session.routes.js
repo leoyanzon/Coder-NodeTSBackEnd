@@ -7,37 +7,18 @@ const pagesController = PagesController.getInstance();
 
 const { userValidationChain, userValidationMiddleware } = require('../../middlewares/user.validation.middleware');
 
-const AppError = require('../../middlewares/error.middleware');
-
 const { logger } = require('../../utils/logger/index');
 
-const signInPassportMiddleware = require('../../middlewares/signin.passport.middleware');
-const signUpPassportMiddleware = require('../../middlewares/signup.passport.middleware');
-
-/*router.post('/signin', 
-    async (req, res, next) => await signInPassportMiddleware(req, res, next),
-    async (req, res ) => {
-        return await pagesController.home(req, res);
-});*/
-
-router.post('/signin',
-    passport.authenticate('signin', {failureRedirect: '/error'}), 
+router.post('/signin', 
+passport.authenticate('signin', {failureRedirect: '/error?code=401'}), 
     async(req, res) => {
         await pagesController.home(req,res);
 });
 
-/*router.post('/signup', 
-    userValidationChain,
-    async (req, res, next) => await userValidationMiddleware(req, res, next),
-    async (req, res, next) => await signUpPassportMiddleware(req, res, next),
-    async (req, res ) => {
-        return await pagesController.home(req, res);
-});*/
-
 router.post('/signup', 
     userValidationChain,
     async (req, res, next) => await userValidationMiddleware(req, res, next),
-    passport.authenticate('signup', {failureRedirect: '/error'}), 
+    passport.authenticate('signup', {failureRedirect: '/error?code=500'}), 
     async(req, res) => {
         await pagesController.home(req,res);
 });
@@ -53,8 +34,8 @@ router.get('/signout',
 });
 
 router.post('/error',
-    async(err, req, res) => {
-        return await pagesController.error(err, req, res);
+    async( req, res) => {
+        return await pagesController.error( req, res);
 });
 
 module.exports = router;

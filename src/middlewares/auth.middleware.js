@@ -1,18 +1,9 @@
+const PagesController = require('../controllers/pages/pages.controller');
+const pagesController = PagesController.getInstance();
+
 const authMiddleware = (req, res, next) => {
     if(!req.isAuthenticated()){
-        const navBar = [
-            { title: "Home", link: "/"},
-            { title: "Register", link: "/signup"}
-        ];
-        const main = {
-            user: "",
-            products: "",
-        }
-        const message = {
-            navBar: navBar,
-            main: main,
-        }
-        return res.render('signin', {message: message});
+        return pagesController.signIn(req, res);
     }
     next();
 }

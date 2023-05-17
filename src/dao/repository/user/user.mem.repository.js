@@ -1,8 +1,6 @@
 const { logger } = require('../../../utils/logger');
 const { v4: uuidv4 } = require('uuid');
 
-const UserDTO = require('../../dto/user.dto');
-
 const AppError = require('../../../middlewares/error.middleware');
 
 class UserMemRepository{

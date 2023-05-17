@@ -11,8 +11,6 @@ const createMessage = require('../../utils/pages/pages.utils');
 
 const AppError = require('../../middlewares/error.middleware');
 
-const { logger } = require('../../utils/logger/index');
-
 class PagesController {
     constructor(){
         //this.pagesApi = new PagesApi();
@@ -96,16 +94,24 @@ class PagesController {
         }
     }
 
-    error = async(err, req, res) => {
+    error = async( req, res) => {
         try{
             const userId = req.session?.passport?.user ? req.session.passport.user : null;
             const user = await userServices.getById(userId);
-            const message = createMessage('error', req, { user, err });
+            const { code } = req.query;
+            let error;
+            if (req.err) error = req.err
+            if (code) {
+                error = new AppError( 'error(req, res)' , 'Error page', 'Pages Controller', 'HTML query error', code);
+            } else {
+                error = new AppError( 'error(req, res)' , 'Error page', 'Pages Controller', 'Unknown', 500);
+            }
+            const message = createMessage('error', req, { user, err: error });
             res.render('error', {message: message});
         } catch(err) {
-            const error = new AppError( 'error(req, res) error' , 'Error page', 'Pages Controller', err.message , 500);
+            const error = new AppError( 'error(req, res) error' , 'Error page', 'Pages Controller', 500);
             const message = createMessage('error', req, { err: error })
-            res.render('error', { message: message })
+            res.render('error', {message: message});
         }   
     }
 }

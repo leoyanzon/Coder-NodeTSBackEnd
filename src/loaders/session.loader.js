@@ -10,7 +10,6 @@ const passportService = require('../utils/passport/passport.service');
 
 const config = require('../loaders/config.loader')();
 const { logger } = require('../utils/logger/index');
-const createFolder = require('../utils/fs/folders.utils');
 
 const getSessionStorage = async () => {
     if (config.server.SESSION_STORAGE == 'MONGO_DB') {
@@ -22,7 +21,6 @@ const getSessionStorage = async () => {
         return MongoStore.create(getStoreConfig(`${config.db.MONGO_ATLAS_URL}/sessions`))
     }
     //Else SESSION_STORAGE == FILE OR MEM
-    //await createFolder('tmp/db/');
     logger.info('Session Storage: Session file created');
     return new FileStore({path: 'tmp/db/session', ttl:300, retries: 0})
 }
