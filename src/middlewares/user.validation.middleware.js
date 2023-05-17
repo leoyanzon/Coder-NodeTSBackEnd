@@ -16,8 +16,8 @@ const userValidationChain = [
       .withMessage("User name is required")
       .isString()
       .withMessage("User name should be string")
-      .isLength({min: 4, max: 10})
-      .withMessage("User name should be between 2 and 10 letters"),
+      .isLength({min: 4, max: 16})
+      .withMessage("User name should be between 2 and 16 letters"),
     body("address")
       .optional(),
     body("age")

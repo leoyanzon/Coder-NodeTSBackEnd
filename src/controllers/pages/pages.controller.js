@@ -59,8 +59,7 @@ class PagesController {
 
     signOut = async(req, res) => {
         try{
-            req.logout(()=>{});
-            const message = await createMessage('signin', req);
+            const message = await createMessage('signIn', req);
             res.render('signin', { message: message }); 
         } catch(err) {
             logger.error(err);
