@@ -217,6 +217,6 @@ The following libraries were used in this project:
 
 ## License
 
-This project is licensed under the ISC License. See the [LICENSE](LICENSE) file for more information.
+This project is licensed under the ISC License. See the [LICENSE](license.txt) file for more information.
 
 The ISC License is a permissive open-source license that allows you to use, modify, and distribute the software without many restrictions. It is considered suitable for small or experimental projects due to its simplicity and ease of understanding.
