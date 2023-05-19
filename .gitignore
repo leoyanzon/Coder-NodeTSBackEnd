@@ -6,4 +6,3 @@ development.env
 production.env
 **.env
 /.vscode
-**.txt
