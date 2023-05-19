@@ -1,6 +1,3 @@
-#!/bin/bash
-
-cat << EOF > README.md
 # CoderHouse NodeJSBackEnd
 
 A brief description of the project goes here.
@@ -35,9 +32,7 @@ Follow the steps below to get the project up and running on your local machine.
 
 To install the necessary dependencies, run the following command:
 
-\`\`\`bash
-npm install
-\`\`\`
+`npm install`
 
 ### Scripts
 
@@ -45,27 +40,20 @@ The project includes several scripts that you can run using npm. Here are some o
 
 - **Start**: Start the application in production mode.
 
-\`\`\`bash
-npm start
-\`\`\`
+`npm start`
+
 
 - **Start:dev**: Start the application in development mode using nodemon.
 
-\`\`\`bash
-npm run start:dev
-\`\`\`
+`npm run start:dev`
 
 - **Start:dev:FORK**: Start the application in development mode using nodemon with the FORK mode enabled.
 
-\`\`\`bash
-npm run start:dev:FORK
-\`\`\`
+`npm run start:dev:FORK`
 
 - **Start:dev:CLUSTER**: Start the application in development mode using nodemon with the CLUSTER mode enabled.
 
-\`\`\`bash
-npm run start:dev:CLUSTER
-\`\`\`
+`npm run start:dev:CLUSTER`
 
 - **Start:dev:CLUSTER:8082**: Start the application in development mode using nodemon with the CLUSTER mode enabled and listening on port 8082.
 
@@ -75,11 +63,13 @@ Refer to the package.json file for the full list of available scripts and their 
 
 To run the tests for the project, you can use the following command:
 
-\`\`\`bash
-npm test
-\`\`\`
+`npm testUsers`
 
-This will execute the tests using the Mocha testing framework.
+This will execute users tests using the Mocha testing framework.
+
+`npm testProducts`
+
+This will execute products tests using the Mocha testing framework.
 
 Remember to configure any necessary environment variables before running the application or the tests.
 
@@ -230,5 +220,3 @@ The following libraries were used in this project:
 This project is licensed under the ISC License. See the [LICENSE](LICENSE) file for more information.
 
 The ISC License is a permissive open-source license that allows you to use, modify, and distribute the software without many restrictions. It is considered suitable for small or experimental projects due to its simplicity and ease of understanding.
-
-EOF
