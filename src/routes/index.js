@@ -8,7 +8,7 @@ const sessionRouter = require('./session/session.routes');
 
 const PagesRouter = require('./pages/pages.routes');
 const ProductsRouter = require('./products/products.routes');
-const CartRouter = require('./cart/cart.routes');
+const CartRouter = require('./cart/cart.routes').default;
 
 const multerRouter = require('./multer/multer.routes')
 class Router{

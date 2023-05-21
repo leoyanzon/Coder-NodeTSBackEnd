@@ -15,6 +15,9 @@ class Config {
                 SERVER_PORT: argv.port || process.env.SERVER_PORT || 8080,
                 SESSION_STORAGE: process.env.SESSION_STORAGE || "MEM"
             },
+            cpu: {
+                MODE: argv.cpu || "fork"
+            },
             cookies: {
                 COOKIES_SECRET: process.env.COOKIES_SECRET || 'undefined',
             },

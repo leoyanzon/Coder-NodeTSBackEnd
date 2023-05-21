@@ -1,12 +1,16 @@
-const app = require("./app");
-const config = require("./src/loaders/config.loader")();
+import app from "./app";
+import configLoader from "./src/loaders/config.loader";
 
-const { logger } = require("./src/utils/logger/index");
+import { logger } from "./src/utils/logger/index";
 
-const cluster = require("cluster");
-if (config.cpu == "CLUSTER") {
+import cluster from "cluster";
+import os from "os";
+
+const config = configLoader();
+
+if (config.cpu.MODE == "cluster") {
   if (cluster.isPrimary) {
-    const numCPUs = require("os").cpus().length;
+    const numCPUs = os.cpus().length;
 
     for (let i = 0; i < numCPUs; i++) {
       cluster.fork();

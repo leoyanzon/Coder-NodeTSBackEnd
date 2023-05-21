@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
 const { uploadService } = require('../../utils/multer/multer.service');
-upload = uploadService();
+const upload = uploadService();
 
 router.post('/', upload.single('profile-file'), (req, res, next) => {
     var response = '<a href="/">Home</a><br>'

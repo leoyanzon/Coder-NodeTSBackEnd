@@ -1,6 +1,6 @@
-# CoderHouse NodeJSBackEnd
+# CoderHouse NodeTSBackEnd
 
-A brief description of the project goes here.
+Same CoderHouse NodeJSBackEnd project but modified with TypeScript 
 
 ## Table of Contents
 

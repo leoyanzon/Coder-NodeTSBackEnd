@@ -6,3 +6,4 @@ development.env
 production.env
 **.env
 /.vscode
+/dist
