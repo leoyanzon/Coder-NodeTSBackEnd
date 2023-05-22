@@ -114,7 +114,7 @@ To enable email notifications, configure the following variables:
 
 ### Logging Configuration
 
-- `PINO_LOG_LEVEL`: The log level for Pino logger. Example: `info`
+- `LOG_LEVEL`: The log level for Pino logger. Example: `info`
 
 ## Usage
 

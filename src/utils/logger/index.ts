@@ -1,9 +1,10 @@
-const pino = require('pino');
-const pinoHttp = require('pino-http');
-const pretty = require('pino-pretty');
+import pino from 'pino';
+import pinoHttp from 'pino-http';
+import pretty from 'pino-pretty';
 
-const config = require('../../loaders/config.loader')();
-
+import configLoader from '../../loaders/config.loader';
+const config = configLoader();
+console.info(config);
 const levels = {
   emerg: 80,
   alert: 70,
@@ -21,8 +22,9 @@ const stream = pretty({
     translateTime: "yyyy-dd-mm, h:MM:ss TT",
 })
 
+console.info(config.logger.LOG_LEVEL);
 const logger = pino({
-    level: config.logger.PINO_LOG_LEVEL || 'info',
+    level: 'info',
     transport: {
         target: 'pino-pretty',
         options: {
@@ -33,7 +35,7 @@ const logger = pino({
 });
 
 const loggerHttp = pinoHttp(stream);
-
+/*
 const streams = Object.keys(levels).map((level) => {
   return {
     level: level,
@@ -50,7 +52,7 @@ streams.push({
 
 
 const loggerToFile = pino({
-    level: config.logger.PINO_LOG_LEVEL || 'info',
+    level: config.logger.LOG_LEVEL || 'info',
     customLevels: levels,
     useOnlyCustomLevels: true,
     formatters: {
@@ -65,5 +67,5 @@ const loggerToFile = pino({
     dedupe: true,
   })
 );
-
-module.exports = { logger, loggerHttp, loggerToFile };
+*/
+export { logger, loggerHttp };

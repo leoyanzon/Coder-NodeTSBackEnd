@@ -29,7 +29,7 @@ const configLoader = () => {
     const argv = getArguments();
     const config = Config.getInstance(argv);
 
-    return config;
+    return config.config;
 }
 
 module.exports = configLoader;

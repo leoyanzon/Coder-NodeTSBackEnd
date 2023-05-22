@@ -1,9 +1,45 @@
-const dotenv = require('dotenv');
-const path = require('path');
+import * as dotenv from 'dotenv';
+import path from 'path';
+
+interface ConfigObject{
+    server: {
+        ENVIRONMENT: string,
+        HOST: string,
+        SERVER_PORT: string,
+        SESSION_STORAGE: string
+    },
+    cpu: {
+        MODE: string
+    },
+    cookies: {
+        COOKIES_SECRET: string
+    },
+    db: {
+        DB_NAME: string,
+        DATA_STORAGE: string,
+        MONGO_URI: string,
+        MONGO_ATLAS_URL: string,
+    },
+    logger: {
+        LOGGER: string,
+        LOG_LEVEL: string,
+    },
+    email:  {
+        EMAIL_USER: string,
+        EMAIL_PASS: string,
+    },
+    whatsapp: {
+        TWILIO_SID: string,
+        TWILIO_AUTH_TOKEN: string,
+    },
+
+}
 
 class Config {
+    public static instance: Config;
+    public config : ConfigObject;
 
-    constructor(argv){
+    public constructor(argv: any){ // Argv luego debere declararlo mas especifico, como Record<string, any>
         dotenv.config({
             path: path.resolve(process.cwd(), `./src/config/${argv.mode}.env`)
         });
@@ -28,7 +64,8 @@ class Config {
                 MONGO_ATLAS_URL: process.env.MONGO_ATLAS_URL || 'undefined',
             },
             logger: {
-                PINO_LOG_LEVEL: process.env.PINO_LOG_LEVEL || 'info'
+                LOGGER: 'pino',
+                LOG_LEVEL: process.env.LOG_LEVEL || 'info',
             },
             email:  {
                 EMAIL_USER: process.env.EMAIL_USER || 'undefined',
@@ -39,15 +76,13 @@ class Config {
                 TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN || 'undefined',
             },
         }
-
-
     }
 
-    static getInstance(argv){
-        if (!this.instance){
-            this.instance = new Config(argv);
+    public static getInstance(argv: any) : Config {
+        if (!Config.instance){
+            Config.instance = new Config(argv);
         }
-        return this.instance.config;
+        return Config.instance;
     }
 }
 
