@@ -4,7 +4,6 @@ import pretty from 'pino-pretty';
 
 import configLoader from '../../loaders/config.loader';
 const config = configLoader();
-console.info(config);
 const levels = {
   emerg: 80,
   alert: 70,
@@ -22,7 +21,6 @@ const stream = pretty({
     translateTime: "yyyy-dd-mm, h:MM:ss TT",
 })
 
-console.info(config.logger.LOG_LEVEL);
 const logger = pino({
     level: 'info',
     transport: {

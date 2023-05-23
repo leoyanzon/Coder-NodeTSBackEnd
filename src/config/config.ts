@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 import path from 'path';
 
-interface ConfigObject{
+export interface ConfigObject{
     server: {
         ENVIRONMENT: string,
         HOST: string,
@@ -79,11 +79,11 @@ class Config {
     }
 
     public static getInstance(argv: any) : Config {
-        if (!Config.instance){
-            Config.instance = new Config(argv);
+        if (!this.instance){
+            this.instance = new Config(argv);
         }
-        return Config.instance;
+        return this.instance;
     }
 }
 
-module.exports = Config;
+export default Config;

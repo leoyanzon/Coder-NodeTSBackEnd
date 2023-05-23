@@ -1,16 +1,17 @@
-const express = require('express');
-const compression = require('compression');
-const cors = require('cors');
+import express, { Express } from 'express';
+import compression from 'compression';
+import cors from 'cors';
 
-const path = require('path')
+import path from 'path'
 
-const config = require('../loaders/config.loader')();
+import configLoader from '../loaders/config.loader';
 
-const expressLoader = ( app ) => {
+const expressLoader = ( app : Express ): Express => {
     app.use(compression());
     app.use(express.json());
     app.use(express.urlencoded({extended:true}));
 
+    const config = configLoader();
     if (config.server.ENVIRONMENT == 'development') app.use(cors());
         
     app.set('view engine', 'ejs');
@@ -22,4 +23,4 @@ const expressLoader = ( app ) => {
     return app;
 }
 
-module.exports = expressLoader;
+export default expressLoader;

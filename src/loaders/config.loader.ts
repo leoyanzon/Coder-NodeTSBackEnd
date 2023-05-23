@@ -1,9 +1,10 @@
-const yargs = require("yargs/yargs");
-const { hideBin } = require("yargs/helpers");
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
 
-const Config = require('../config/config');
+import Config from '../config/config';
+import { ConfigObject } from '../config/config';
 
-const getArguments = () => {
+const getArguments = (): any => {
     const argv = yargs(hideBin(process.argv))
         .option('port', {
             alias: 'p',
@@ -24,12 +25,12 @@ const getArguments = () => {
     return argv;
 }
 
-const configLoader = () => {
+const configLoader = () : ConfigObject => {
 
     const argv = getArguments();
-    const config = Config.getInstance(argv);
+    const configInstance = Config.getInstance(argv);
 
-    return config.config;
+    return configInstance.config;
 }
 
-module.exports = configLoader;
+export default configLoader;

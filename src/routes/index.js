@@ -11,7 +11,7 @@ const ProductsRouter = require('./products/products.routes');
 const CartRouter = require('./cart/cart.routes').default;
 
 const multerRouter = require('./multer/multer.routes')
-class Router{
+class RouterClass{
     constructor(){
         //General info Routers
         router.use('/info', infoRouter);
@@ -47,4 +47,4 @@ class Router{
 
 }
 
-module.exports = Router;
+module.exports = RouterClass;

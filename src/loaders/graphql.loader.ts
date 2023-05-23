@@ -1,8 +1,9 @@
-const { createYoga } = require('graphql-yoga');
-const schema = require('../services/graphql/schema.graphql');
-const { useSofaWithSwaggerUI } = require('@graphql-yoga/plugin-sofa');
+import { Express } from 'express';
+import { createYoga } from 'graphql-yoga';
+import schema from '../services/graphql/schema.graphql';
+import { useSofaWithSwaggerUI } from '@graphql-yoga/plugin-sofa';
 
-const graphqlLoader = async ( app ) => {
+const graphqlLoader = ( app : Express ) : Express => {
     app.use('/graphql', createYoga({ 
         schema,
         plugins: [
@@ -26,4 +27,4 @@ const graphqlLoader = async ( app ) => {
     return app;
 }
 
-module.exports = graphqlLoader;
+export default graphqlLoader;

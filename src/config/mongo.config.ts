@@ -2,36 +2,24 @@ import configLoader from '../loaders/config.loader';
 
 const config = configLoader();
 
-interface mongoConfigObject {
-    useNewUrlParser: Boolean,
-    useUnifiedTopology: Boolean
-}
-
-interface getStoreConfigObject {
-    mongoUrl: string,
-    ttl: number,
-    mongoOptions: mongoConfigObject,
-    dbName: string
-}
-
-const getMongoConfig = () : mongoConfigObject => {
+const getMongoConfig = () : any => {
     return {
         useNewUrlParser: true,
         useUnifiedTopology: true
     }
 }
 
-const getStoreConfig = (dbURI : string) : getStoreConfigObject => {
+const getStoreConfig = (dbURI : string) : any => {
     const MONGO_URI = dbURI;
     return {
         mongoUrl: MONGO_URI,
-        ttl: 3600,
+        ttl: 14 * 24 * 60 * 60,
         mongoOptions: getMongoConfig(),
         dbName: config.db.DB_NAME
     }
 }
 
-module.exports = {
+export {
     getMongoConfig,
     getStoreConfig
 }
