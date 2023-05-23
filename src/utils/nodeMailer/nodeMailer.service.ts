@@ -1,10 +1,16 @@
-const nodemailer = require('nodemailer');
+import nodemailer from 'nodemailer';
 
-const { logger } = require('../logger/index');
+import { logger } from '../logger/index';
 
-const config = require('../../loaders/config.loader')();
+import configLoader from '../../loaders/config.loader';
+const config = configLoader();
 
-const sendEmail = async (subject="", msg, destination) => {
+interface returnMessage {
+    success: boolean,
+    message: any
+}
+
+const sendEmail = async (subject : string ="", msg : string, destination : string) : Promise<returnMessage> => {
     
     const emailSender = config.email.EMAIL_USER + '@gmail.com'
     const transportOptions = {
@@ -33,7 +39,7 @@ const sendEmail = async (subject="", msg, destination) => {
             success: true,
             message: result
         };
-    } catch (err) {
+    } catch (err : any) {
         logger.error(`NodeMailer error: ${err.message}`);
         return{
             success: false,
@@ -42,6 +48,6 @@ const sendEmail = async (subject="", msg, destination) => {
     }
 }
 
-module.exports = sendEmail;
+export default sendEmail;
 
 

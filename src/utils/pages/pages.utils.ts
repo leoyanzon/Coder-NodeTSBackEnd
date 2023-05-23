@@ -1,9 +1,34 @@
-const createMessage = ( page , req , { user = null, products = null, cart = null, err = null } = {}) => {
-    const navBar = [{ title: "Home", link: "/"}];
-    const authenticated = (typeof req.isAuthenticated == 'function') ? req.isAuthenticated() : false ;
+interface navBarInterface { 
+    title: string,
+    link: string
+}
+
+interface mainInterface {
+    user?: string,
+    isAuthenticated?: boolean,
+    products? : any[],
+    cart?: any[],
+}
+
+interface outputMessageInterface {
+    navBar: navBarInterface[],
+    main: mainInterface,
+    errors?: any
+}
+
+interface messageInputInterface{
+    user? : any | null,
+    products? : any[] | null,
+    cart? : any[] | null,
+    err? : object | null,
+}
+
+const createMessage = ( page : string , req : any , { user = "", products = null , cart = null, err = null } : messageInputInterface  = {}) : outputMessageInterface => {
+    const navBar : navBarInterface[] = [{ title: "Home", link: "/"}];
+    const authenticated : boolean = (typeof req.isAuthenticated == 'function') ? req.isAuthenticated() : false ;
     const username = user? user.username : null;
     
-    const main = {
+    const main : mainInterface = {
         user: username,
         isAuthenticated : authenticated,
     };
@@ -32,7 +57,7 @@ const createMessage = ( page , req , { user = null, products = null, cart = null
         navBar.push({ title: "Register", link: "/signup"});
     }
 
-    const message = {
+    const message : outputMessageInterface = {
         navBar: navBar,
         main: main,
         errors: err
@@ -40,4 +65,4 @@ const createMessage = ( page , req , { user = null, products = null, cart = null
     return message
 }
 
-module.exports = createMessage
+export default createMessage

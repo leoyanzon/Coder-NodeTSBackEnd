@@ -1,22 +1,18 @@
-const multer = require('multer');
-const fs = require('fs');
-const path = require('path')
-const { logger } = require('../logger/index');
+import multer from 'multer';
+import fs from 'fs';
+import path from 'path';
+import { logger } from '../logger/index';
 
 const folderName = 'tmp/images';
 
-const createFolder = () => {
+const createFolder = () : boolean => {
     try {
             fs.mkdirSync(path.join(process.cwd(), folderName), { recursive: true });
             logger.info(`Multer: Folder ${folderName} created`)
-            return {
-                success: true,
-            }
+            return true
     } catch (err) {
         logger.info(`Multer: Folder can't be created: ${err}`)
-        return {
-            success: false,
-        }
+        return false
     }
 }
 
@@ -35,4 +31,4 @@ const uploadService = () =>{
     return multer ({storage: storage})
 } 
 
-module.exports = { uploadService };
+export default { uploadService };

@@ -1,11 +1,16 @@
-const auth = require('basic-auth');
-const twilio = require('twilio');
+import twilio from 'twilio';
 
-const config = require('../../loaders/config.loader')();
+import configLoader from '../../loaders/config.loader';
+const config = configLoader();
 
-const { logger } = require('../logger/index');
+import { logger } from '../logger/index';
 
-const sendWhatsapp = async (msg = 'No message', to = 'whatsapp:+5493874137312', from = 'whatsapp:+14155238886') => {
+interface returnMessage {
+    success: boolean,
+    message: string
+}
+
+const sendWhatsapp = async (msg = 'No message', to = 'whatsapp:+5493874137312', from = 'whatsapp:+14155238886') : Promise<returnMessage> => {
     try{
         const accountSid = config.whatsapp.TWILIO_SID;
         const authToken = config.whatsapp.TWILIO_AUTH_TOKEN;
@@ -21,14 +26,14 @@ const sendWhatsapp = async (msg = 'No message', to = 'whatsapp:+5493874137312', 
             success: true,
             message: message.sid
         }
-    } catch (err) {
+    } catch (err : any) {
         logger.error(`Twilio error: ${err.message}`);
         return {
             success: false,
-            message: err,
+            message: err.message,
         }
 
     }
 }
 
-module.exports = sendWhatsapp;
+export default sendWhatsapp;

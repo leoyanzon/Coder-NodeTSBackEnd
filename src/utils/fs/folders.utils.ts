@@ -1,23 +1,19 @@
-const {logger} = require('../logger/index');
-const fs = require('fs');
-const path = require('path');
+import {logger} from '../logger/index';
+import fs from 'fs';
+import path from 'path';
 
-const createFolder = async(folderName) => {
+const createFolder = async(folderName : string) : Promise<boolean> => {
     const fullPath = path.join(process.cwd(), folderName)
     try{
         if (!fs.existsSync(fullPath)){
             fs.mkdirSync( fullPath , { recursive: true });
             logger.info(`Utils: Folder ${folderName} created`)
         }
-        return {
-            success: true,
-        }
+        return true 
     } catch(err) {
         logger.info(`Utils: Folder ${folderName} can't be created: ${err}`);
-        return {
-            success: false,
-        }
+        return false
     }
 }
 
-module.exports = createFolder;
+export default createFolder;
