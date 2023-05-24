@@ -10,9 +10,9 @@ class CartRouter {
 
     public start() : Router {
         const router = Router();
-        router.get('/', this.cartController.getAll);
-        router.post('/:productId', this.cartController.addProduct);
-        router.post('/buyCart/:cartId', this.cartController.buyCart);
+        router.get('/', async(req, res) => this.cartController.getAll);
+        router.post('/:productId', async(req, res) => this.cartController.addProduct);
+        router.post('/buyCart/:cartId', async(req, res) => this.cartController.buyCart);
         return router;
     }
 }

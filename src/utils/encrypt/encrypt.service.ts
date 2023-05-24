@@ -31,4 +31,4 @@ class EncryptService {
     }
 }
 
-module.exports = EncryptService;
+export default EncryptService;

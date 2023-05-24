@@ -77,7 +77,23 @@ class CartServices {
         } catch(err){
             throw new AppError(err.message, 'Data process', 'Carts Services','buyCart(cartId) error', 500 );
         }
-    }    
+    }
+    deleteById = async( cartId ) =>{
+        try {
+            const data = await this.cartFactory.deleteByCondition('_id', cartId);
+            return data
+        } catch(err){
+            throw new AppError(err.message, 'Data process', 'Users Services','deleteById error', 500 );
+        }
+    }  
+    deleteAll = async() =>{
+        try {
+            const data = await this.cartFactory.deleteAll();
+            return data
+        } catch(err){
+            throw new AppError(err.message, 'Data process', 'Users Services','deleteById error', 500 );
+        }
+    }  
 }
 
 

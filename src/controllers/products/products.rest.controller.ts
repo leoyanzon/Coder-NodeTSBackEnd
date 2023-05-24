@@ -1,11 +1,16 @@
-const ProductServices = require('../../services/product/product.services');
-const { logger } = require('../../utils/logger/index');
+import { Request, Response } from 'express'
 
-const httpStatus = require('http-status');
+import ProductServices from '../../services/product/product.services';
+import { logger } from '../../utils/logger/index';
 
-const productMockGenerator = require('../../tests/products/products.mocks');
+import httpStatus from 'http-status';
+
+import productMockGenerator from '../../tests/products/products.mocks';
 
 class ProductsRestController{
+    public static instance: ProductsRestController;
+    public productServices: ProductServices;
+
     constructor(){
         this.productServices = new ProductServices();
         // Create Mock of 10 products
@@ -16,7 +21,7 @@ class ProductsRestController{
         );
     }
 
-    static getInstance(){
+    static getInstance() : ProductsRestController{
         if (!this.instance){
             this.instance = new ProductsRestController();
 
@@ -24,7 +29,7 @@ class ProductsRestController{
         return this.instance
     }
 
-    getAll = async(_req, res) =>{
+    getAll = async(_req : Request, res : Response) : Promise<Response>=>{
         try {
             const data = await this.productServices.getAll();
             
@@ -41,14 +46,14 @@ class ProductsRestController{
 
         } catch(err){
             logger.error(err);
-            res.send({
+            return res.send({
                 success: false,
                 message: err
             });
         }
     }
 
-    getById = async(req, res) =>{
+    getById = async(req : Request, res : Response) : Promise<Response>=>{
         try {
             const id = req.params.id;
             const data = await this.productServices.getById(id);
@@ -67,14 +72,14 @@ class ProductsRestController{
 
         } catch(err){
             logger.error(err);
-            res.send({
+            return res.send({
                 success: false,
                 message: err
             });
         }
     }
 
-    append = async(req, res) =>{
+    append = async(req : Request, res : Response) : Promise<Response>=>{
         try {
             const data = await this.productServices.append(req.body);
             if (!data) {
@@ -83,20 +88,20 @@ class ProductsRestController{
                     message: `${httpStatus[500]}`
                 })
             }
-            res.status(200).json({
+            return res.status(200).json({
                 success: true,
                 message: `Product ${data} created`
             });
-        } catch(err){
+        } catch(err : any){
             logger.error(err);
-            res.send({
+            return res.send({
                 success: false,
                 message: err
             });
         }
     }
 
-    deleteById = async(req, res) =>{
+    deleteById = async(req : Request, res : Response) : Promise<Response>=>{
         try {
             const id = req.params.id;
             const data = await this.productServices.deleteById(id);
@@ -106,20 +111,20 @@ class ProductsRestController{
                     message: `${httpStatus[500]}`
                 })
             }
-            res.status(200).json({
+            return res.status(200).json({
                 success: true,
                 message: `Product ${data} eliminated`
             });
         } catch(err){
             logger.error(err);
-            res.send({
+            return res.send({
                 success: false,
                 message: err
             });
         }
     }
 
-    deleteAll = async(_req, res) =>{
+    deleteAll = async(_req : Request, res : Response) : Promise<Response>=>{
         try {
             const data = await this.productServices.deleteAll();
             if (!data) {
@@ -128,13 +133,13 @@ class ProductsRestController{
                     message: `${httpStatus[500]}`
                 })
             }
-            res.status(200).json({
+            return res.status(200).json({
                 success: true,
                 message: `All products eliminated`
             });
         } catch(err){
             logger.error(err);
-            res.send({
+            return res.send({
                 success: false,
                 message: err
             });
@@ -142,4 +147,4 @@ class ProductsRestController{
     }
 }
 
-module.exports = ProductsRestController;
+export default ProductsRestController;

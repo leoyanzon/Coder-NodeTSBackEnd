@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
-const ProductSchema = Schema({
+const ProductSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -25,7 +25,7 @@ const ProductSchema = Schema({
 })
 
 
-const CartSchema = Schema({
+const CartSchema = new Schema({
     userId: {
         type: String,
         required: true
@@ -40,4 +40,4 @@ const CartSchema = Schema({
     }
 })
 
-module.exports = mongoose.model('carts', CartSchema);
+export default mongoose.model('carts', CartSchema);

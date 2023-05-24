@@ -1,11 +1,16 @@
 export interface UserInterface {
-    _id?: string,
     fullName : string,
     username: string,
     address: string,
     age: number,
     email: string,
-    avatar?: string | undefined
+    avatar?: string | undefined,
+    password: string
+}
+
+export interface FullUserInterface extends UserInterface {
+    _id: string,
+    password: string
 }
 
 class UserDTO {

@@ -24,7 +24,7 @@ passport.use('signin', new localStrategy(async(username : string, password : str
             logger.error('Passport: wrong password')
             return done(null, false, {message: 'Passport: wrong password'});
         }
-        const data : UserInterface = await userServices.getByUserName( username );
+        const data : UserInterface | null = await userServices.getByUserName( username );
         if(!data){
             logger.error('Passport: User not found')
             return done(null, false, {message: 'Passport: User not found'});
@@ -66,8 +66,8 @@ passport.serializeUser((user : any, done) => {
     done(null, user._id);
 })
 
-passport.deserializeUser(async (_id, done) => {
-    const userData : UserInterface = await userServices.getById( _id );
+passport.deserializeUser(async (_id: string, done) => {
+    const userData : UserInterface | null = await userServices.getById( _id );
     done(null, userData);
 })
 

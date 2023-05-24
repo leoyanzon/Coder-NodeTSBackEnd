@@ -32,6 +32,7 @@
     "@types/passport": "^1.0.12",
     "@types/passport-local": "^1.0.35",
     "@types/session-file-store": "^1.2.2",
+    "@types/uuid": "^9.0.1",
     "@types/yargs": "^17.0.24",
     "cors": "^2.8.5",
     "nodemon": "^2.0.22",

@@ -34,7 +34,15 @@ class ProductServices{
     deleteById = async( _id ) =>{
         try {
             const data = await this.productFactory.deleteByCondition('_id', _id);
-            return data
+            return true
+        } catch(err){
+            throw new AppError(err.message, 'Data process', 'Products Services','deleteById(_id) error', 500 );
+        }
+    }
+    deleteAll = async() =>{
+        try {
+            const data = await this.productFactory.deleteAll();
+            return true
         } catch(err){
             throw new AppError(err.message, 'Data process', 'Products Services','deleteById(_id) error', 500 );
         }

@@ -1,10 +1,20 @@
 import express, { Express } from 'express';
+import { Session } from 'express-session';
 import compression from 'compression';
 import cors from 'cors';
 
 import path from 'path'
 
 import configLoader from '../loaders/config.loader';
+
+// Declaration necesary for including in Request type: req.isAuthenticated() method and req.session.passport.user propery after passport
+declare module 'express' {
+    interface Request {
+        isAuthenticated(): boolean;
+        session: Session & { passport: { user: string}};
+        err: any
+    }
+}
 
 const expressLoader = ( app : Express ): Express => {
     app.use(compression());
