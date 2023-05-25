@@ -26,9 +26,9 @@ const storage = multer.diskStorage({
     }
 })
 
-const uploadService = () =>{
+const uploadUtils = () =>{
     createFolder();
     return multer ({storage: storage})
 } 
 
-export default { uploadService };
+export default uploadUtils;

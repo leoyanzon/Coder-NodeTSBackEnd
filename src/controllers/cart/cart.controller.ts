@@ -13,6 +13,7 @@ import PagesController from '../pages/pages.controller';
 const pagesController = PagesController.getInstance();
 
 import httpStatus from 'http-status';
+import { FullProductInterface } from '../../interfaces/product.interfaces';
 
 
 
@@ -61,8 +62,8 @@ class CartController{
             let userId : string = "";
             const { productId } = req.params;
             if (!req.isAuthenticated()) userId = req.session?.passport?.user;
-            const productToAppend = await productServices.getById(productId);
-            const data = await this.cartServices.append(userId, productToAppend );
+            const productToAppend : FullProductInterface | null = await productServices.getById(productId);
+            const data = await this.cartServices.append(userId, productToAppend! );
             if (!data) {
                 return pagesController.error(req, res);
             }

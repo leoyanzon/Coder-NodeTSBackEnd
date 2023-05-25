@@ -54,11 +54,11 @@ class CartMongoRepository implements ICartRepository{
         }
     }
 
-    async getLastCart(userId : string ) : Promise<FullCartInterface | []>{
+    async getLastCart(userId : string ) : Promise<FullCartInterface | null>{
         try{
             const query : FullCartInterface = await CartsModel.findOne({ ["userId"]: userId, ["completed"]:false }).lean();
             if (!query){
-                return []
+                return null
             } 
             return query
         } catch (err: any) {
@@ -66,7 +66,7 @@ class CartMongoRepository implements ICartRepository{
         }
     }
 
-    async getByCondition( fieldName : keyof FullCartInterface, fieldValue : string ) : Promise<CartInterface | null>{
+    async getByCondition( fieldName : keyof FullCartInterface, fieldValue : string ) : Promise<FullCartInterface | null>{
         try{
             const query : FullCartInterface = await CartsModel.findOne({ [fieldName]: fieldValue }).lean();
             return query;

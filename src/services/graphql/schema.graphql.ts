@@ -1,6 +1,6 @@
-const { createSchema } = require('graphql-yoga');
-const ProductsGraphQlController = require('../../controllers/products/products.graphql.controller')
-const { UserFactory } = require('../../dao/cart.factory');
+import { createSchema } from 'graphql-yoga';
+import ProductsGraphQlController from '../../controllers/products/products.graphql.controller';
+import UserFactory from '../../dao/cart.factory';
 
 const productGraphQlController = ProductsGraphQlController.getInstance();
 const userFactory = UserFactory.getInstance();
@@ -52,7 +52,7 @@ const schema = createSchema({
   resolvers: {
     Query: {
       user(parent,args,ctx,info) {
-        return userFactory.getById(args._id)
+        return userFactory.getByCondition('_id', args._id)
       },
       users() {
         return userFactory.getAll()
@@ -65,12 +65,12 @@ const schema = createSchema({
       }
     },
     Mutation: {
-      addProduct(title) {
-        const product = productGraphQlController.append(title)
+      addProduct(req, res) {
+        const product = productGraphQlController.append(req, res)
         return product
       }
     }
   }
 })
 
-module.exports = schema;
+export default schema;

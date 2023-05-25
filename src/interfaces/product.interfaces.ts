@@ -14,7 +14,7 @@ export interface FullProductInterface extends ProductInterface {
 export interface IProductRepository{
     getAll() : Promise<FullProductInterface[]>;
     append(userData : ProductInterface) : Promise<FullProductInterface>;
-    getByCondition( fieldName : keyof FullProductInterface, fieldValue : string ) : Promise<ProductInterface | null>;
+    getByCondition( fieldName : keyof FullProductInterface, fieldValue : string ) : Promise<FullProductInterface | null>;
     deleteByCondition( fieldName : keyof FullProductInterface, fieldValue : string) : Promise<boolean>;
     deleteAll() : Promise<boolean>;
 }

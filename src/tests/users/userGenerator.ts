@@ -1,6 +1,6 @@
-const {faker} = require('@faker-js/faker/locale/es');
+import {faker} from '@faker-js/faker/locale/es';
 
-const get = () => ({
+const userGenerator = () => ({
     fullName: faker.name.fullName(),
     username: faker.internet.userName(),
     address: faker.address.direction(),
@@ -9,6 +9,4 @@ const get = () => ({
     password: faker.internet.password(),
 })
 
-module.exports = {
-    get
-}
+export default userGenerator;

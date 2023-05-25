@@ -1,9 +1,13 @@
-const httpStatus = require('http-status');
+import httpStatus from 'http-status';
 
-const { logger } = require('../utils/logger/index');
+import { logger } from '../utils/logger/index';
 
-class AppError extends Error{
-    constructor(origin, type, context, message, statusCode){
+import { ErrorInterface } from '../interfaces/error.interfaces';
+
+export default class AppError extends Error{
+    public errorList : ErrorInterface[];
+    constructor(origin : string, type : string, context : string, message : string , statusCode : number){
+
         super(origin);
         this.errorList = []
         this.errorList.push({
@@ -19,5 +23,3 @@ class AppError extends Error{
         logger.error(this.message);
     }
 }
-
-module.exports = AppError;

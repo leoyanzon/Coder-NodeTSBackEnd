@@ -8,7 +8,7 @@ import AppError from '../../middlewares/error.middleware';
 import { IUserRepository, FullUserInterface, UserInterface } from '../../interfaces/user.interfaces';
 
 class UserServices{
-    public userFactory : IUserRepository;
+    private userFactory : IUserRepository;
 
     constructor(){
         this.userFactory = UserFactory.getInstance();
@@ -16,7 +16,7 @@ class UserServices{
 
     getAll = async() : Promise<FullUserInterface[]>  =>{
         try {
-            const data = await this.userFactory.getAll();
+            const data : FullUserInterface[] = await this.userFactory.getAll();
             return data;
         } catch(err: any){
             throw new AppError(err.message, 'Data process', 'Users Services','getAll error', 500 );
@@ -25,7 +25,7 @@ class UserServices{
     getById = async( _id : string | null ) : Promise<FullUserInterface | null> => {
         try{
             if (_id === null) return null
-            const data = await this.userFactory.getByCondition('_id', _id);
+            const data : FullUserInterface | null = await this.userFactory.getByCondition('_id', _id);
             return data
         } catch(err : any){
             throw new AppError(err.message, 'Data process', 'Users Services','getByCondition error', 500 );
@@ -33,7 +33,7 @@ class UserServices{
     }
     getByUserName = async( username : string ) : Promise<FullUserInterface | null> => {
         try{
-            const data = await this.userFactory.getByCondition('username', username);
+            const data : FullUserInterface | null = await this.userFactory.getByCondition('username', username);
             return data
         } catch(err: any){
             throw new AppError(err.message, 'Data process', 'Users Services','getByCondition error', 500 );
@@ -42,8 +42,8 @@ class UserServices{
 
     userExists = async( username : string ) : Promise<boolean> => {
         try{
-            const data = await this.userFactory.getByCondition('username', username);
-            if (!data) return false
+            const data : FullUserInterface | null = await this.userFactory.getByCondition('username', username);
+            if (data !== null) return false
             return true
         } catch(err : any){
             throw new AppError(err.message, 'Data process', 'Users Services','userExists error', 500 );

@@ -1,8 +1,7 @@
-const Yargs = require('yargs/yargs')
-const yargs = Yargs();
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
 
-const { hideBin} = require('yargs/helpers');
-const argv = Yargs(hideBin(process.argv)).argv;
+const argv = yargs(hideBin(process.argv)).argv
 
 const numCPUs = require('os').cpus().length;
 
@@ -20,8 +19,8 @@ class InfoService{
             projectPath: process.cwd(),
             numCPUs: numCPUs
         }
-        return await data
+        return data
     }
 }
 
-module.exports = InfoService;
+export default InfoService;

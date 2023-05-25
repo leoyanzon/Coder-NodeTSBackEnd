@@ -1,7 +1,7 @@
-const express = require('express');
-const router = express.Router();
+import express , {  Router } from 'express';
+const router : Router = express.Router();
 
-const InfoService = require('../../services/info/info.service');
+import InfoService from '../../services/info/info.service';
 const infoService = new InfoService();
 
 router.get('/', async (_req, res) => {
@@ -11,4 +11,4 @@ router.get('/', async (_req, res) => {
     })
 })
 
-module.exports = router;
+export default router;

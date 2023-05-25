@@ -12,6 +12,8 @@ const cartServices = new CartServices();
 import createMessage from '../../utils/pages/pages.utils';
 
 import AppError from '../../middlewares/error.middleware';
+import { FullCartInterface } from '../../interfaces/cart.interfaces';
+import { FullUserInterface } from '../../interfaces/user.interfaces';
 
 class PagesController {
     public static instance : PagesController;
@@ -85,8 +87,8 @@ class PagesController {
     cart = async(req : Request, res: Response) : Promise<void> => {
         try{
             const userId = req.session.passport.user;
-            const cart = await cartServices.getLastCart(userId);
-            const user = await userServices.getById(userId); 
+            const cart : FullCartInterface | null = await cartServices.getLastCart(userId);
+            const user : FullUserInterface | null = await userServices.getById(userId); 
             const message = createMessage('cart', req, { user,  cart })
             res.render('cart', {message: message});
         } catch(err : any) {
@@ -103,7 +105,7 @@ class PagesController {
             const { code } = req.query;
             let error;
             if (req.err) error = req.err
-            if (code) {
+            if (typeof code == 'number') {
                 error = new AppError( 'error(req, res)' , 'Error page', 'Pages Controller', 'HTML query error', code);
             } else {
                 error = new AppError( 'error(req, res)' , 'Error page', 'Pages Controller', 'Unknown', 500);
@@ -111,7 +113,7 @@ class PagesController {
             const message = createMessage('error', req, { user, err: error });
             res.render('error', {message: message});
         } catch(err: any) {
-            const error = new AppError( 'error(req, res) error' , 'Error page', err.message, 500);
+            const error = new AppError( 'error(req, res) error' , 'Error page','Pages Controller', err.message, 500);
             const message = createMessage('error', req, { err: error })
             res.render('error', {message: message});
         }   

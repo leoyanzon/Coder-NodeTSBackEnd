@@ -1,15 +1,17 @@
-const supertest = require('supertest');
-const config = require('../../loaders/config.loader')();
+import supertest from 'supertest';
+import configLoader from '../../loaders/config.loader';
+const config = configLoader();
+
 const request = supertest(`http://localhost:${config.server.SERVER_PORT}`);
 
-const generator = require('./productGenerator');
+import productGenerator from './productGenerator';
 
-const { logger } = require('../../utils/logger/index');
+import { logger } from '../../utils/logger/index';
 
-const productMockGenerator = async ( qty ) => {
+const productMockGenerator = async ( qty : number ) : Promise<void> => {
     try{
         for (let i = 0; i < qty; i++ ){
-            let randomProduct = generator.get();
+            let randomProduct = productGenerator();
             const test = await request.post('/api/products').set('Accept', 'application/json').send(randomProduct);
         }
         logger.info(`Mock: ${qty} products created`)
@@ -18,4 +20,4 @@ const productMockGenerator = async ( qty ) => {
     }
 }
 
-module.exports = productMockGenerator;
+export default productMockGenerator;

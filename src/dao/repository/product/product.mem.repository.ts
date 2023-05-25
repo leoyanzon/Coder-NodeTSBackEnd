@@ -12,7 +12,7 @@ class ProductMemRepository implements IProductRepository{
         this.products = [];
     }
 
-    static getInstance() : IProductRepository{
+    static getInstance() : ProductMemRepository{
         if (!this.instance){
             this.instance = new ProductMemRepository();
             logger.info('Products Repository: Memory created');
@@ -37,14 +37,13 @@ class ProductMemRepository implements IProductRepository{
             throw new AppError(err.message, 'Memory data process', 'Products Repository','append() error', 500 );
         }
     }
-    async getByCondition( fieldName : keyof FullProductInterface = "_id", fieldValue : string) : Promise<ProductInterface | null>{
+    async getByCondition( fieldName : keyof FullProductInterface = "_id", fieldValue : string) : Promise<FullProductInterface | null>{
         try{
             const query : FullProductInterface[] = this.products.filter(it => it[fieldName] === fieldValue);
             if ( query?.length > 0 ) {
                 return null;
             }
-            const productDTO : ProductInterface = new ProductDTO(query[0]);
-            return productDTO;
+            return query[0];
         } catch(err : any) {
             throw new AppError(err.message, 'Memory data process', 'Products Repository','getByCondition(fieldName, fieldValue) error', 500 );
         }

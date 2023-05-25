@@ -1,8 +1,9 @@
-const { body , validationResult} = require('express-validator');
+import { Request, Response, NextFunction } from 'express';
+import { body , validationResult} from 'express-validator';
 
-const AppError = require('./error.middleware');
+import AppError from './error.middleware';
 
-const PagesController = require('../controllers/pages/pages.controller');
+import PagesController from '../controllers/pages/pages.controller';
 const pagesController = PagesController.getInstance();
 
 const userValidationChain = [
@@ -41,7 +42,7 @@ const userValidationChain = [
     body("email").optional().isEmail().withMessage("Provide valid email"),
 ];
 
-const userValidationMiddleware = async (req, res, next) => {
+const userValidationMiddleware = async (req : Request, res : Response, next : NextFunction) : Promise<void> => {
     const validationErrors = validationResult(req);
         if (!validationErrors.isEmpty()) {
           const validationArray = validationErrors.array();
@@ -53,5 +54,5 @@ const userValidationMiddleware = async (req, res, next) => {
     next();
 };
 
-module.exports = { userValidationChain,
+export { userValidationChain,
                    userValidationMiddleware};

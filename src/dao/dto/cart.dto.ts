@@ -1,4 +1,4 @@
-import { CartInterface } from "../../interfaces/cart.interfaces";
+import { FullCartInterface } from "../../interfaces/cart.interfaces";
 import { ProductInterface } from "../../interfaces/product.interfaces";
 class CartDTO {
     _id?: string | undefined;
@@ -6,7 +6,7 @@ class CartDTO {
     products: ProductInterface[];
     completed: boolean;
 
-    constructor(cartData : CartInterface){
+    constructor(cartData : FullCartInterface){
         this._id = cartData._id;
         this.userId = cartData.userId;
         this.products = cartData.products;

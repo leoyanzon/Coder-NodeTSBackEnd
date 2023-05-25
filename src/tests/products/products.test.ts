@@ -1,10 +1,12 @@
-const config = require('../../loaders/config.loader')();
-const expect = require('chai').expect;
-const generator = require('./productGenerator');
+import configLoader from '../../loaders/config.loader';
+const config = configLoader();
 
-const supertest = require('supertest');
+import chai from 'chai';
+const expect = chai.expect;
+import productGenerator from './productGenerator';
+
+import supertest from 'supertest';
 const request = supertest(`http://localhost:${config.server.SERVER_PORT}`);
-const assert = require('assert').strict;
 
 describe('test de creacion de products', function(){
 
@@ -23,8 +25,8 @@ describe('test de creacion de products', function(){
     });
 
     it('Deberia ingresar un producto nuevo', async() => {
-        let randomProduct = generator.get();
-        const test = await request.post('/products').set('Accept', 'application/json')
+        let randomProduct = productGenerator();
+        const test : any = await request.post('/products').set('Accept', 'application/json')
         .send(randomProduct);
         //await expect(test.body.success).to.equal(true);
         expect(test.error).to.equal(false);

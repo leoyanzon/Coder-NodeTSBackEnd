@@ -52,24 +52,24 @@ class CartMemRepository implements ICartRepository{
             throw new AppError(err.message, 'Memory data process', 'Carts Repository','update(cartData) error', 500 );
         }
     }
-    async getLastCart(userId : string ) : Promise<FullCartInterface | []>{
+    async getLastCart(userId : string ) : Promise<FullCartInterface | null>{
         try{
             const query : FullCartInterface[] = this.cart.filter(it => (it.userId === userId && it.completed == false));
             if ( !query?.length ){
-                return []
+                return null
             } 
             return query[ query.length - 1 ];
         } catch(err : any) {
             throw new AppError(err.message, 'Memory data process', 'Carts Repository','getLastCart(userId) error', 500 );
         }
     }
-    async getByCondition( fieldName : keyof FullCartInterface, fieldValue : string ) : Promise<CartInterface | null>{
+    async getByCondition( fieldName : keyof FullCartInterface, fieldValue : string ) : Promise<FullCartInterface | null>{
         try{
             const query : FullCartInterface[] = this.cart.filter(it => it[fieldName] === fieldValue);
             if ( !query?.length ){
                 return null
             } 
-            const cartDTO : CartInterface = new CartDTO(query);
+            const cartDTO : FullCartInterface = new CartDTO(query);
             return cartDTO;
         } catch(err : any) {
             throw new AppError(err.message, 'Memory data process', 'Carts Repository','getByCondition(fieldName, fieldValue) error', 500 );

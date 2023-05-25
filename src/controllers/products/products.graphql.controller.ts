@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import ProductServices from '../../services/product/product.services';
-import { ProductInterface } from '../../interfaces/product.interfaces';
+import { FullProductInterface, ProductInterface } from '../../interfaces/product.interfaces';
 
 import { logger } from '../../utils/logger/index';
 
@@ -29,9 +29,9 @@ class ProductsGraphQlController{
         }
     }
 
-    getById = async(_id : string) : Promise<ProductInterface> =>{
+    getById = async(_id : string) : Promise<FullProductInterface | null> =>{
         try {
-            const query = await this.productServices.getById(_id);
+            const query : FullProductInterface | null = await this.productServices.getById(_id);
             return query
         } catch(err : any){
             return err
@@ -50,8 +50,8 @@ class ProductsGraphQlController{
 
     deleteById = async(req : Request, res : Response) : Promise<boolean> =>{
         try {
-            const id = parseInt(req.params.id);
-            const data = await this.productServices.deleteById(id);
+            const _id = req.params._id;
+            const data = await this.productServices.deleteById(_id);
             if (!data) {
                 return false;
             }

@@ -21,7 +21,7 @@ class ProductFileRepository implements IProductRepository{
         this.createFile();
     }
 
-    static getInstance(_nombreArchivo : string) : IProductRepository{
+    static getInstance(_nombreArchivo : string) : ProductFileRepository{
         if (!this.instance){
             this.instance = new ProductFileRepository(_nombreArchivo);
             logger.info(`Products Repository: File ${this.instance.ruta} used`);
@@ -72,15 +72,14 @@ class ProductFileRepository implements IProductRepository{
             throw new AppError(err.message, 'File data process', 'Products Repository','append() error', 500 );
         }
     }
-    async getByCondition( fieldName : keyof FullProductInterface = "_id", fieldValue : string) : Promise<ProductInterface | null>{
+    async getByCondition( fieldName : keyof FullProductInterface = "_id", fieldValue : string) : Promise<FullProductInterface | null>{
         try{
             const objetosExistentes : FullProductInterface[] = await this.getAll();
             const query : FullProductInterface[] = objetosExistentes.filter(it => it[fieldName] === fieldValue);
             if ( query?.length > 0 ) {
                 return null;
             }
-            const productDTO : ProductInterface = new ProductDTO(query[0]);
-            return productDTO;
+            return query[0];
         } catch(err : any) {
             throw new AppError(err.message, 'File data process', 'Products Repository','getByCondition(fieldName, fieldValue) error', 500 );
         }

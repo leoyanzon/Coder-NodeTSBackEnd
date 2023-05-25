@@ -1,27 +1,4 @@
-interface navBarInterface { 
-    title: string,
-    link: string
-}
-
-interface mainInterface {
-    user?: string,
-    isAuthenticated?: boolean,
-    products? : any[],
-    cart?: any[],
-}
-
-interface outputMessageInterface {
-    navBar: navBarInterface[],
-    main: mainInterface,
-    errors?: any
-}
-
-interface messageInputInterface{
-    user? : any | null,
-    products? : any[] | null,
-    cart? : any[] | null,
-    err? : object | null,
-}
+import { navBarInterface, mainInterface, messageInputInterface, outputMessageInterface } from "../../interfaces/pages.interfaces";
 
 const createMessage = ( page : string , req : any , { user = "", products = null , cart = null, err = null } : messageInputInterface  = {}) : outputMessageInterface => {
     const navBar : navBarInterface[] = [{ title: "Home", link: "/"}];

@@ -61,8 +61,7 @@ class CartFileRepository implements ICartRepository{
             const objetosExistentes : CartInterface[] = await this.getAll();
             const _id : string = uuidv4();
             
-            const cartDTO : CartInterface = new CartDTO(cartData);
-            const newCart : FullCartInterface = {...cartDTO, _id:_id};
+            const newCart : FullCartInterface = {...cartData, _id:_id};
             objetosExistentes.push(newCart);
 
             const data : string = JSON.stringify(objetosExistentes);
@@ -91,12 +90,12 @@ class CartFileRepository implements ICartRepository{
         }
     }
 
-    async getLastCart(userId : string ) : Promise<FullCartInterface | []>{
+    async getLastCart(userId : string ) : Promise<FullCartInterface | null >{
         try{
             const objetosExistentes : FullCartInterface[] = await this.getAll();
             const query : FullCartInterface[] = objetosExistentes.filter(it => (it.userId === userId && it.completed == false));
             if ( !query?.length ) {
-                return [];
+                return null;
             }
             return query[ query.length - 1 ];
         } catch(err : any) {
@@ -104,15 +103,14 @@ class CartFileRepository implements ICartRepository{
         }
     }
 
-    async getByCondition( fieldName : keyof FullCartInterface, fieldValue : string ) : Promise<CartInterface | null>{
+    async getByCondition( fieldName : keyof FullCartInterface, fieldValue : string ) : Promise<FullCartInterface | null>{
         try{
             const objetosExistentes : FullCartInterface[] = await this.getAll();
             const query : FullCartInterface[] = objetosExistentes.filter(it => it[fieldName] === fieldValue);
             if ( query?.length > 0 ) {
                 return null;
             }
-            const cartDTO : CartInterface = new CartDTO(query[0]);
-            return cartDTO;
+            return query[0];
         } catch(err : any) {
             throw new AppError(err.message, 'File data process', 'Carts Repository','getByCondition(fieldName, fieldValue) error', 500 );
         }

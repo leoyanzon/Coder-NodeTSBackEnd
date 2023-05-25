@@ -13,7 +13,7 @@ class ProductMongoRepository implements IProductRepository{
         MongooseConnect.getInstance();
     }
 
-    static getInstance() : IProductRepository {
+    static getInstance() : ProductMongoRepository {
         if (!this.instance){
             this.instance = new ProductMongoRepository();
             logger.info('Products Repository: Local Mongo instance created');
@@ -40,7 +40,7 @@ class ProductMongoRepository implements IProductRepository{
         
     }
 
-    async getByCondition( fieldName : keyof FullProductInterface = "_id", fieldValue : string) : Promise<ProductInterface | null>{
+    async getByCondition( fieldName : keyof FullProductInterface = "_id", fieldValue : string) : Promise<FullProductInterface | null>{
         try{
             const query : FullProductInterface = await ProductsModel.findOne({ [fieldName]: fieldValue }).lean();
             return query;
