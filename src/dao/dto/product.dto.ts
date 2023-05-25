@@ -1,11 +1,4 @@
-export interface ProductInterface {
-    _id?: string,
-    name : string,
-    description: string,
-    price: number,
-    image: string,
-    stock: number
-}
+import { ProductInterface } from "../../interfaces/product.interfaces";
 
 class ProductDTO {
     name : string;

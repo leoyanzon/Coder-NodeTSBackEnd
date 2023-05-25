@@ -5,16 +5,9 @@ import UserMongoRepository from './repository/user/user.mongo.repository';
 import configLoader from '../loaders/config.loader';
 const config = configLoader();
 
-import { UserInterface, FullUserInterface } from './dto/user.dto';
+import { IUserRepository } from '../interfaces/user.interfaces';
 
-export interface IUserRepository{
-    getAll() : Promise<FullUserInterface[]>;
-    append(userData : UserInterface) : Promise<FullUserInterface>;
-    getByCondition( fieldName : keyof FullUserInterface, fieldValue : string ) : Promise<FullUserInterface | null>;
-    getPasswordByUserName( username : string) : Promise<string>;
-    deleteByCondition( fieldName : keyof FullUserInterface, fieldValue : string) : Promise<boolean>;
-    deleteAll() : Promise<boolean>;
-}
+
 
 export default class UserFactory{
     static getInstance() : IUserRepository {

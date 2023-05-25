@@ -1,18 +1,4 @@
-export interface UserInterface {
-    fullName : string,
-    username: string,
-    address: string,
-    age: number,
-    email: string,
-    avatar?: string | undefined,
-    password: string
-}
-
-export interface FullUserInterface extends UserInterface {
-    _id: string,
-    password: string
-}
-
+import { UserInterface } from '../../interfaces/user.interfaces';
 class UserDTO {
     fullName : string;
     username: string;

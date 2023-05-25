@@ -1,40 +1,45 @@
-const { logger } = require('../../../utils/logger');
-const { v4: uuidv4 } = require('uuid');
+import { logger } from '../../../utils/logger';
+import {v4 as uuidv4} from 'uuid';
 
 const CartDTO = require('../../dto/cart.dto');
 
-const AppError = require('../../../middlewares/error.middleware');
-class CartMemRepository{
+import AppError from '../../../middlewares/error.middleware';
+import { ICartRepository, CartInterface, FullCartInterface } from '../../../interfaces/cart.interfaces';
+
+class CartMemRepository implements ICartRepository{
+    public static instance : CartMemRepository;
+    public cart : FullCartInterface[];
+
     constructor(){
         this.cart = [];
     }
 
-    static getInstance(){
+    static getInstance() : ICartRepository{
         if (!this.instance){
             this.instance = new CartMemRepository();
             logger.info('Cart Repository: Memory created');
         }
         return this.instance;
     }
-    async getAll(){
+    async getAll() : Promise<FullCartInterface[]>{
         try{
             return this.cart;
-        } catch (err){
+        } catch (err : any){
             throw new AppError(err.message, 'Memory data process', 'Carts Repository','getAll() error', 500 );
         }
     }
-    async append(cartData){
+    async append(cartData : CartInterface) : Promise<FullCartInterface>{
         try{
-            const _id = uuidv4();
-            const cartDTO = await new CartDTO(cartData);
-            const newCart = {...cartDTO, _id:_id};
+            const _id : string = uuidv4();
+            const cartDTO : CartInterface = await new CartDTO(cartData);
+            const newCart : FullCartInterface = {...cartDTO, _id:_id};
             this.cart.push(newCart);
             return newCart
-        } catch (err){
+        } catch (err : any){
             throw new AppError(err.message, 'Memory data process', 'Carts Repository','append() error', 500 );
         }
     }
-    async update(cartData){
+    async update(cartData : FullCartInterface) : Promise<boolean>{
         try{
             this.cart.map(item => {
                 if (item._id == cartData._id){
@@ -43,53 +48,53 @@ class CartMemRepository{
                 return item
             })
             return true
-        } catch (err){
+        } catch (err: any){
             throw new AppError(err.message, 'Memory data process', 'Carts Repository','update(cartData) error', 500 );
         }
     }
-    async getLastCart(userId){
+    async getLastCart(userId : string ) : Promise<FullCartInterface | []>{
         try{
-            const query = this.cart.filter(it => (it.userId === userId && it.completed == false));
+            const query : FullCartInterface[] = this.cart.filter(it => (it.userId === userId && it.completed == false));
             if ( !query?.length ){
-                return false
+                return []
             } 
             return query[ query.length - 1 ];
-        } catch(err) {
+        } catch(err : any) {
             throw new AppError(err.message, 'Memory data process', 'Carts Repository','getLastCart(userId) error', 500 );
         }
     }
-    async getByCondition( fieldName = "_id", fieldValue ){
+    async getByCondition( fieldName : keyof FullCartInterface, fieldValue : string ) : Promise<CartInterface | null>{
         try{
-            const [ query ] = this.cart.filter(it => it[fieldName] === fieldValue);
-            if ( query == null ) {
-                return false
-            }
-            const cartDTO = new CartDTO(query);
+            const query : FullCartInterface[] = this.cart.filter(it => it[fieldName] === fieldValue);
+            if ( !query?.length ){
+                return null
+            } 
+            const cartDTO : CartInterface = new CartDTO(query);
             return cartDTO;
-        } catch(err) {
+        } catch(err : any) {
             throw new AppError(err.message, 'Memory data process', 'Carts Repository','getByCondition(fieldName, fieldValue) error', 500 );
         }
     }
-    async deleteByCondition( fieldName = "_id", fieldValue ){
+    async deleteByCondition( fieldName : keyof FullCartInterface, fieldValue : string) : Promise<boolean>{
         try{
-            const filteredObject = this.cart.filter(it => it[fieldName] != fieldValue);
+            const filteredObject : FullCartInterface[] = this.cart.filter(it => it[fieldName] != fieldValue);
             if ( this.cart  === filteredObject ) {
                 return false
             }
             this.cart = filteredObject;
             return true;
-        } catch(err) {
+        } catch(err : any) {
             throw new AppError(err.message, 'Memory data process', 'Carts Repository','deleteByCondition(fieldName, fieldValue) error', 500 );
         }
     }
-    async deleteAll(){
+    async deleteAll() : Promise<boolean> {
         try{
             this.cart = [];
             return true
-        } catch(err) {
+        } catch(err : any) {
             throw new AppError(err.message, 'Memory data process', 'Carts Repository','deleteAll error', 500 );
         }
     }
 }
 
-module.exports = CartMemRepository;
+export default CartMemRepository;

@@ -1,12 +1,5 @@
-import { ProductInterface } from "./product.dto";
-
-export interface CartInterface{
-    _id? : string,
-    userId: string,
-    products: ProductInterface[],
-    completed: boolean
-}
-
+import { CartInterface } from "../../interfaces/cart.interfaces";
+import { ProductInterface } from "../../interfaces/product.interfaces";
 class CartDTO {
     _id?: string | undefined;
     userId: string;

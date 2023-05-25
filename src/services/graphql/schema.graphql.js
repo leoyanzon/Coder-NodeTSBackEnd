@@ -1,6 +1,6 @@
 const { createSchema } = require('graphql-yoga');
 const ProductsGraphQlController = require('../../controllers/products/products.graphql.controller')
-const { UserFactory } = require('../../dao/factory');
+const { UserFactory } = require('../../dao/cart.factory');
 
 const productGraphQlController = ProductsGraphQlController.getInstance();
 const userFactory = UserFactory.getInstance();

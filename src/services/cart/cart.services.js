@@ -1,4 +1,4 @@
-const { CartFactory } = require('../../dao/factory');
+const { CartFactory } = require('../../dao/cart.factory');
 
 const sendEmail = require('../../utils/nodeMailer/nodeMailer.service');
 const sendWhatsappAsync = require('../../utils/twilio/whatsapp.services');

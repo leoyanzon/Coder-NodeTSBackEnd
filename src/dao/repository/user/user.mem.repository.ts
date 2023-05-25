@@ -3,14 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import AppError from '../../../middlewares/error.middleware';
 
-import { UserInterface } from '../../dto/user.dto';
-
-import {IUserRepository} from '../../user.factory';
-
-interface FullUserInterface extends UserInterface {
-    _id: string,
-    password: string
-}
+import {IUserRepository, UserInterface , FullUserInterface } from '../../../interfaces/user.interfaces';
 
 class UserMemRepository implements IUserRepository{
     public static instance: UserMemRepository;

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import ProductServices from '../../services/product/product.services';
-import { ProductInterface } from '../../dao/dto/product.dto';
+import { ProductInterface } from '../../interfaces/product.interfaces';
 
 import { logger } from '../../utils/logger/index';
 

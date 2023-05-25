@@ -5,8 +5,7 @@ const encryptService = new EncryptService();
 
 import AppError from '../../middlewares/error.middleware';
 
-import { FullUserInterface, UserInterface } from '../../dao/dto/user.dto';
-import { IUserRepository } from '../../dao/user.factory';
+import { IUserRepository, FullUserInterface, UserInterface } from '../../interfaces/user.interfaces';
 
 class UserServices{
     public userFactory : IUserRepository;

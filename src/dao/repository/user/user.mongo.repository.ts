@@ -4,14 +4,7 @@ import MongooseConnect from '../../../utils/mongo/connect'
 import AppError from '../../../middlewares/error.middleware';
 import { logger } from '../../../utils/logger/index';
 
-import { UserInterface } from '../../dto/user.dto';
-
-import {IUserRepository} from '../../user.factory';
-
-interface FullUserInterface extends UserInterface {
-    _id: string,
-    password: string
-}
+import {IUserRepository, UserInterface , FullUserInterface } from '../../../interfaces/user.interfaces';
 
 class UserMongoRepository implements IUserRepository{
     public static instance : UserMongoRepository;
@@ -46,7 +39,7 @@ class UserMongoRepository implements IUserRepository{
         }
     }
 
-    async getByCondition( fieldName : string = '_id' , fieldValue : string ) : Promise<FullUserInterface | null>{
+    async getByCondition( fieldName : keyof FullUserInterface = '_id' , fieldValue : string ) : Promise<FullUserInterface | null>{
         try{
             const query : FullUserInterface = await UserModel.findOne({ [fieldName]: fieldValue }).lean();
             return query

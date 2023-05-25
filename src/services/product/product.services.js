@@ -1,4 +1,4 @@
-const { ProductFactory } = require('../../dao/factory');
+const { ProductFactory } = require('../../dao/cart.factory');
 
 const AppError = require('../../middlewares/error.middleware');
 

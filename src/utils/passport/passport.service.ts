@@ -5,7 +5,7 @@ const localStrategy = LocalStrategy.Strategy;
 
 import UserServices from '../../services/user/user.services';
 const userServices = new UserServices();
-import { UserInterface } from '../../dao/dto/user.dto';
+import { UserInterface } from '../../interfaces/user.interfaces';
 
 import sendEmail from '../../utils/nodeMailer/nodeMailer.service';
 import sendWhatsappAsync from '../../utils/twilio/whatsapp.services';

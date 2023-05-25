@@ -6,20 +6,14 @@ import createFolder from '../../../utils/fs/folders.utils';
 
 import AppError from '../../../middlewares/error.middleware';
 
-import { UserInterface } from '../../dto/user.dto';
-
-import {IUserRepository} from '../../user.factory';
-
-interface FullUserInterface extends UserInterface {
-    _id: string,
-    password: string
-}
+import {IUserRepository, UserInterface , FullUserInterface } from '../../../interfaces/user.interfaces';
 
 class UserFileRepository implements IUserRepository{
     public static instance: UserFileRepository;
     private folderName : string;
     private fileName: string;
     private ruta: string;
+    
     constructor(_nombreArchivo : string){
         this.folderName = 'tmp/db/';
         this.fileName = `${_nombreArchivo}.txt`;
