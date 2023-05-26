@@ -8,7 +8,7 @@ import AppError from '../../middlewares/error.middleware';
 import { IUserRepository, FullUserInterface, UserInterface } from '../../interfaces/user.interfaces';
 
 class UserServices{
-    private userFactory : IUserRepository;
+    public userFactory : IUserRepository;
 
     constructor(){
         this.userFactory = UserFactory.getInstance();
@@ -43,7 +43,9 @@ class UserServices{
     userExists = async( username : string ) : Promise<boolean> => {
         try{
             const data : FullUserInterface | null = await this.userFactory.getByCondition('username', username);
-            if (data !== null) return false
+            if (data === null) {
+                return false
+            }
             return true
         } catch(err : any){
             throw new AppError(err.message, 'Data process', 'Users Services','userExists error', 500 );

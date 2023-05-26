@@ -4,8 +4,8 @@ import morgan from 'morgan';
 
 const loggerLoader = ( app : Express ) : Express => {
 
-    app.use(loggerHttp);
-    app.use(morgan('dev'));
+    //app.use(loggerHttp);
+   //app.use(morgan('dev'));
 
     return app;
 }

@@ -12,7 +12,7 @@ import { logger } from '../../utils/logger/index';
 import { NextFunction } from 'express-serve-static-core';
 
 router.post('/signin', 
-passport.authenticate({strategy: 'signin', failureRedirect: '/error?code=401'} as any), 
+passport.authenticate('signin', {failureRedirect: '/error?code=401'} as any), 
     async(req : any, res : Response) => {
         await pagesController.home(req,res);
 });

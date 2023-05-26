@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/server.js",
-    "start:dev": "nodemon dist/server.js",
+    "start:dev": "nodemon --exec ts-node server.ts",
     "build": "tsc"
   },
   "nodemonConfig": {
@@ -39,7 +39,8 @@
     "@types/yargs": "^17.0.24",
     "cors": "^2.8.5",
     "nodemon": "^2.0.22",
-    "pino-pretty": "^9.4.0"
+    "pino-pretty": "^9.4.0",
+    "ts-node": "^10.9.1"
   },
   "dependencies": {
     "@graphql-yoga/plugin-sofa": "^1.8.0",

@@ -1,8 +1,6 @@
 import { logger } from '../../../utils/logger';
 import {v4 as uuidv4} from 'uuid';
 
-const CartDTO = require('../../dto/cart.dto');
-
 import AppError from '../../../middlewares/error.middleware';
 import { ICartRepository, CartInterface, FullCartInterface } from '../../../interfaces/cart.interfaces';
 
@@ -31,8 +29,7 @@ class CartMemRepository implements ICartRepository{
     async append(cartData : CartInterface) : Promise<FullCartInterface>{
         try{
             const _id : string = uuidv4();
-            const cartDTO : CartInterface = await new CartDTO(cartData);
-            const newCart : FullCartInterface = {...cartDTO, _id:_id};
+            const newCart : FullCartInterface = {...cartData, _id:_id};
             this.cart.push(newCart);
             return newCart
         } catch (err : any){
@@ -68,9 +65,8 @@ class CartMemRepository implements ICartRepository{
             const query : FullCartInterface[] = this.cart.filter(it => it[fieldName] === fieldValue);
             if ( !query?.length ){
                 return null
-            } 
-            const cartDTO : FullCartInterface = new CartDTO(query);
-            return cartDTO;
+            }
+            return query[0];
         } catch(err : any) {
             throw new AppError(err.message, 'Memory data process', 'Carts Repository','getByCondition(fieldName, fieldValue) error', 500 );
         }

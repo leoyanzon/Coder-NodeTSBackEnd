@@ -76,7 +76,7 @@ class UserFileRepository implements IUserRepository{
         try{
             const objetosExistentes : FullUserInterface[] = await this.getAll();
             const query : FullUserInterface[] = objetosExistentes.filter(it => it[fieldName] === fieldValue);
-            if ( query?.length > 0 ) {
+            if ( !query?.length ) {
                 return null;
             }
             return query[0];
@@ -89,7 +89,7 @@ class UserFileRepository implements IUserRepository{
         try{
             const objetosExistentes : FullUserInterface[]= await this.getAll();
             const query : FullUserInterface[] = objetosExistentes.filter(it => it.username === username);
-            if ( query?.length > 0 ) {
+            if ( !query?.length ) {
                 return ""
             }
             return query[0].password;    

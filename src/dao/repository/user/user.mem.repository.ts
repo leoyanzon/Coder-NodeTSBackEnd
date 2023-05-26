@@ -40,7 +40,7 @@ class UserMemRepository implements IUserRepository{
     async getByCondition( fieldName : keyof FullUserInterface = "_id", fieldValue : string ) : Promise<FullUserInterface | null>{
         try{
             const query : FullUserInterface[] = this.users.filter(it => it[fieldName] === fieldValue);
-            if ( query?.length > 0 ) {
+            if ( !query?.length ) {
                 return null;
             }
             return query[0]
@@ -51,7 +51,7 @@ class UserMemRepository implements IUserRepository{
     async getPasswordByUserName( username : string ) : Promise<string>{
         try{
             const query : FullUserInterface[] = this.users.filter(it => it.username === username);
-            if ( query?.length > 0 ) {
+            if ( !query?.length ) {
                 return ""
             }
             return query[0].password;

@@ -14,12 +14,12 @@ export default class PagesRouter {
     }
 
     start() {
-        router.get('/', () => authMiddleware, (req, res) => this.pagesController.home);
-        router.get('/cart', () => authMiddleware, (req, res) => this.pagesController.cart);
-        router.get('/signin', (req, res) => this.pagesController.signIn);
-        router.get('/signup', (req, res) => this.pagesController.signUp);
-        router.get('/signout', (req, res) => this.pagesController.signOut);
-        router.get('/error', (req, res) => this.pagesController.error);
+        router.get('/', async(req : any, res : any, next : any) => await authMiddleware(req, res, next), async(req : any, res : any, next : any) => await this.pagesController.home(req, res));
+        router.get('/cart', async(req : any, res : any, next : any) => await authMiddleware(req, res, next), async(req : any, res : any, next : any) => await this.pagesController.cart(req, res));
+        router.get('/signin', async(req : any, res : any, next : any) => await this.pagesController.signIn(req, res));
+        router.get('/signup', async(req : any, res : any, next : any) => await this.pagesController.signUp(req, res));
+        router.get('/signout', async(req : any, res : any, next : any) => await this.pagesController.signOut(req, res));
+        router.get('/error', async(req : any, res : any, next : any) => await this.pagesController.error(req, res));
 
         return router
     }

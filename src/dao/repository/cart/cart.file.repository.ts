@@ -107,7 +107,7 @@ class CartFileRepository implements ICartRepository{
         try{
             const objetosExistentes : FullCartInterface[] = await this.getAll();
             const query : FullCartInterface[] = objetosExistentes.filter(it => it[fieldName] === fieldValue);
-            if ( query?.length > 0 ) {
+            if ( !query?.length ) {
                 return null;
             }
             return query[0];

@@ -11,11 +11,11 @@ export default class ProductsRouter {
     }
 
     start() {
-        router.get('/', () => this.productsRestController.getAll);
-        router.get('/:id', () => this.productsRestController.getById);
-        router.post('/', () => this.productsRestController.append);
-        router.delete('/:id', () => this.productsRestController.deleteById);
-        router.delete('/', () => this.productsRestController.deleteAll);
+        router.get('/', async(req : any, res: any) => await this.productsRestController.getAll(req, res));
+        router.get('/:id', async(req : any, res: any) => await this.productsRestController.getById(req, res));
+        router.post('/', async(req : any, res: any) => await this.productsRestController.append(req, res));
+        router.delete('/:id', async(req : any, res: any) => await this.productsRestController.deleteById(req, res));
+        router.delete('/', async(req : any, res: any) => await this.productsRestController.deleteAll(req, res));
 
         return router
     }

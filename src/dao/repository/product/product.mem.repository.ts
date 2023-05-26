@@ -40,7 +40,7 @@ class ProductMemRepository implements IProductRepository{
     async getByCondition( fieldName : keyof FullProductInterface = "_id", fieldValue : string) : Promise<FullProductInterface | null>{
         try{
             const query : FullProductInterface[] = this.products.filter(it => it[fieldName] === fieldValue);
-            if ( query?.length > 0 ) {
+            if ( !query?.length ) {
                 return null;
             }
             return query[0];

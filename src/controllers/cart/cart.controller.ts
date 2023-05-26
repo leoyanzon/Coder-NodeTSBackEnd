@@ -61,7 +61,10 @@ class CartController{
         try {
             let userId : string = "";
             const { productId } = req.params;
-            if (!req.isAuthenticated()) userId = req.session?.passport?.user;
+            if (!req.isAuthenticated()){
+                return pagesController.signIn(req, res);
+            }
+            userId = req.session?.passport?.user;
             const productToAppend : FullProductInterface | null = await productServices.getById(productId);
             const data = await this.cartServices.append(userId, productToAppend! );
             if (!data) {

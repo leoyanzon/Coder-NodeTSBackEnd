@@ -1,12 +1,11 @@
-import { Request, Response , NextFunction } from 'express';
+import { Request, Response , NextFunction, RequestHandler } from 'express';
 
 import PagesController from '../controllers/pages/pages.controller';
 const pagesController = PagesController.getInstance();
 
-const authMiddleware = (req : Request, res : Response, next : NextFunction) : void => {
+const authMiddleware = async (req : Request, res : Response, next : NextFunction) : Promise<any> => {
     if(!req.isAuthenticated()){
-        pagesController.signIn(req, res);
-        return;
+        return await pagesController.signIn(req, res);
     }
     next();
 }

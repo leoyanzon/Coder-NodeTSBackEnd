@@ -6,7 +6,7 @@ const saltRounds = 10;
 class EncryptService {
     constructor() {}
 
-    public async hashPassword( method : string = 'default', password : string) : Promise<string> {
+    async hashPassword( method : string = 'default', password : string) : Promise<string> {
         try{
             if (method == 'bcrypt'){
                 const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -19,7 +19,7 @@ class EncryptService {
         }
     }
 
-    public async checkPassword( method : string = 'default', plainPassword : string, passwordHash : string) : Promise<boolean>{
+    async checkPassword( method : string = 'default', plainPassword : string, passwordHash : string) : Promise<boolean>{
         try{
             if (method == 'bcrypt'){
                 return await bcrypt.compare(plainPassword, passwordHash)

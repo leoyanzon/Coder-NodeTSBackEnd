@@ -2,7 +2,7 @@ import { Router } from 'express';
 import CartController from '../../controllers/cart/cart.controller.js'
 
 class CartRouter {
-    private cartController: CartController;
+    public cartController: CartController;
 
     constructor(){
         this.cartController = CartController.getInstance();
@@ -10,9 +10,9 @@ class CartRouter {
 
     public start() : Router {
         const router = Router();
-        router.get('/', async(req, res) => this.cartController.getAll);
-        router.post('/:productId', async(req, res) => this.cartController.addProduct);
-        router.post('/buyCart/:cartId', async(req, res) => this.cartController.buyCart);
+        router.get('/', async(req : any, res : any) => await this.cartController.getAll(req, res));
+        router.post('/:productId', async(req : any, res : any) => await this.cartController.addProduct(req, res));
+        router.post('/buyCart/:cartId', async(req : any, res : any) => await this.cartController.buyCart(req, res));
         return router;
     }
 }

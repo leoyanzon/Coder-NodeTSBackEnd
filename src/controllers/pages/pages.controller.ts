@@ -104,9 +104,10 @@ class PagesController {
             const user = await userServices.getById(userId);
             const { code } = req.query;
             let error;
-            if (req.err) error = req.err
-            if (typeof code == 'number') {
-                error = new AppError( 'error(req, res)' , 'Error page', 'Pages Controller', 'HTML query error', code);
+            if (req.err) error = req.err;
+            if (typeof code == 'string') {
+                let codeNumber = parseInt(code);
+                error = new AppError( 'error(req, res)' , 'Error page', 'Pages Controller', 'HTML query error', codeNumber);
             } else {
                 error = new AppError( 'error(req, res)' , 'Error page', 'Pages Controller', 'Unknown', 500);
             }
